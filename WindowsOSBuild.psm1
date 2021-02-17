@@ -48,6 +48,10 @@ function Get-LatestOSBuild {
         [Parameter(Mandatory = $false)]
         [Switch]$BuildOnly
     )
+
+    $DLL = (Get-InstalledModule WindowsOSBuild).InstalledLocation + "\Microsoft.mshtml.dll"
+    Add-Type -Path $DLL
+    Add-Type -AssemblyName "Microsoft.mshtml"
     
     $Url = "https://winreleaseinfoprod.blob.core.windows.net/winreleaseinfoprod/en-US.html"
     $Webpage = Invoke-RestMethod $Url
@@ -127,7 +131,6 @@ function Get-LatestOSBuild {
         $TableNumber++
     } 
 
-
     If ($BuildOnly -eq $false) {
         ($Table | Where-Object { $_ -Match "Version $OSVersion" } | Select-Object -First $LatestReleases)
     }
@@ -135,6 +138,7 @@ function Get-LatestOSBuild {
         ($Table | Where-Object { $_ -Match "Version $OSVersion" } | Select-Object -First $LatestReleases)."OS Build"
     }
 }
+
 Function Get-CurrentOSBuild {
     <#
         .SYNOPSIS
