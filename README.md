@@ -81,6 +81,10 @@ There are no parameters required.
 
 ## Example Usage
 
+Show the currently installed OS Build release number.
+```
+Get-CurrentOSBuild
+```
 Show all information on the latest available OS Build for Version 1607 in list format.
 ```
 Get-LatestOSBuild -OSVersion 1607
