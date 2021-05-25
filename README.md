@@ -43,34 +43,41 @@ To update:
 Update-Module -Name WindowsOSBuild
 ```
 
-## Parameters
+## Get-LatestOSBuild
 
-```
--OSVersion
-```
-This parameter is mandatory and is the OS version number you want to check. Examples of some valid of OS versions are shown below.
+Gets the latest available OS Build release information for Windows 10 including Windows Server versions.
 
-| Windows 10                                          | Version                                                          |
-| :-------------------------------------------------- | :--------------------------------------------------------------- |
-| CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2 |
-| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 1507, 1607, 1809                                                 |
+#### Parameters
 
-| Windows Server                                      | Version                                                          |
-| :-------------------------------------------------- | :--------------------------------------------------------------- |
-| SAC (Semi-Annual Channel)                           | 1809, 1903, 1909, 2004, 20H2
-| LTSB/LTSC (Long-Term Servicing Build/Channel)       | Server 2016 = 1607, Server 2019 = 1809                                                |
+* **OSVersion**
 
+    This parameter is mandatory and is the OS version number you want to check. Examples of some valid of OS versions are shown below.
 
-```
--LatestReleases
-```
-This parameter is optional. Returns last x releases (where x is the number of releases you want to display). Default value is 1.
+    | Windows 10                                          | Version                                                          |
+    | :-------------------------------------------------- | :--------------------------------------------------------------- |
+    | CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2 |
+    | LTSB/LTSC (Long-Term Servicing Build/Channel)       | 1507, 1607, 1809                                                 |
 
+    | Windows Server                                      | Version                                                          |
+    | :-------------------------------------------------- | :--------------------------------------------------------------- |
+    | SAC (Semi-Annual Channel)                           | 1809, 1903, 1909, 2004, 20H2                                     |
+    | LTSB/LTSC (Long-Term Servicing Build/Channel)       | Server 2016 = 1607, Server 2019 = 1809                           |
 
-```
--BuildOnly
-```
-This is an optional parameter. Returns only the full build number/s of the OS Version. 
+* **LatestReleases**
+
+    This parameter is optional. Returns last x releases (where x is the number of releases you want to display). Default value is 1.
+
+* **BuildOnly**
+
+    This is an optional parameter. Returns only the full build number/s of the OS Version. 
+    
+## Get-CurrentOSBuild
+
+Gets the currently installed OS Build release number for Windows 10 including Windows Server versions.
+
+#### Parameters    
+    
+There are no parameters required.
 
 ## Example Usage
 
