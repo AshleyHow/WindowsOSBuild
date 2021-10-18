@@ -3,7 +3,7 @@ function Get-LatestOSBuild {
         .SYNOPSIS
             Gets the latest available OS Build release information for Windows 10 including Windows Server versions.
         .DESCRIPTION
-            Gets latest release information from https://winreleaseinfoprod.blob.core.windows.net/winreleaseinfoprod/en-US.html and presents this in a usable format.
+            Gets latest release information from https://docs.microsoft.com/en-gb/windows/release-health/release-information and presents this in a usable format.
             This source is updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always in sync with Windows Update.        
         .PARAMETER OSVersion 
             Mandatory. OS Version number. 
@@ -49,22 +49,38 @@ function Get-LatestOSBuild {
         [Switch]$BuildOnly
     )
 
-    $DLL = (Get-InstalledModule WindowsOSBuild).InstalledLocation + "\Microsoft.mshtml.dll"
-    Add-Type -Path $DLL
-    Add-Type -AssemblyName "Microsoft.mshtml"
+    #$DLL = (Get-InstalledModule WindowsOSBuild).InstalledLocation + "\Microsoft.mshtml.dll"
+    #Add-Type -Path $DLL
+    #Add-Type -AssemblyName "Microsoft.mshtml"
     
-    $Url = "https://winreleaseinfoprod.blob.core.windows.net/winreleaseinfoprod/en-US.html"
+    $Url = "https://docs.microsoft.com/en-gb/windows/release-health/release-information"
     $Webpage = Invoke-RestMethod $Url
     $HTML = New-Object -Com "HTMLFile"
 
     # Write HTML content according to DOM Level2 
-    $HTML.IHTMLDocument2_write($Webpage)
+    try {
+        # This works in PowerShell with Office installed
+        $html.IHTMLDocument2_write($Webpage)
+    }
+    catch {
+        # This works when Office is not installed    
+        $src = [System.Text.Encoding]::Unicode.GetBytes($Webpage)
+        $HTML.write($src)
+    }
 
-    $Version = @($HTML.all.tags("h4"))
-    $ReleaseVersions = ($Version.outerText).Substring(2)
+    $Version = @($HTML.all.tags("strong"))
+    $ReleaseVersions = ($Version.outerText).Substring(0)
     
     $TableNumber = 2
-    $HTML.IHTMLDocument2_write($Webpage)
+        try {
+        # This works in PowerShell with Office installed
+        $html.IHTMLDocument2_write($Webpage)
+    }
+    catch {
+        # This works when Office is not installed    
+        $src = [System.Text.Encoding]::Unicode.GetBytes($Webpage)
+        $HTML.write($src)
+    }
 
     $table = foreach ($Version in $ReleaseVersions) {
    
