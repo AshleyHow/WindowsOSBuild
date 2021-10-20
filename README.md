@@ -19,8 +19,7 @@ https://www.powershellgallery.com/packages/WindowsOSBuild
 
 Gets the latest available OS Build release information for Windows 10 including Windows Server versions. 
 
-Uses release information from [Microsoft](https://winreleaseinfoprod.blob.core.windows.net/winreleaseinfoprod/en-US.html) and presents this in a usable format.
-This source is updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always in sync with Windows Update.   
+Uses release information from [Microsoft](https://docs.microsoft.com/en-gb/windows/release-health/release-information) and presents this in a usable format which can be used for scripting purposes. This source is updated regularly by Microsoft after new patches are released. This means at times this info may not always in sync with Windows Update.   
 
 The majority of this code came from [Get-Windows10ReleaseInformation](https://github.com/FredrikWall/PowerShell/blob/master/Windows/Get-Windows10ReleaseInformation.ps1), credit to Fredrik Wall.
     
@@ -53,15 +52,15 @@ Gets the latest available OS Build release information for Windows 10 including 
 
     This parameter is mandatory and is the OS version number you want to check. Examples of some valid of OS versions are shown below.
 
-    | Windows 10                                          | Version                                                          |
-    | :-------------------------------------------------- | :--------------------------------------------------------------- |
-    | CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2 |
-    | LTSB/LTSC (Long-Term Servicing Build/Channel)       | 1507, 1607, 1809                                                 |
+    | Windows 10                                          | Version                                                                |
+    | :-------------------------------------------------- | :--------------------------------------------------------------------- |
+    | CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1 |
+    | LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2015 = 1507, 2016 = 1607, 2019 = 1809                                                       |
 
-    | Windows Server                                      | Version                                                          |
-    | :-------------------------------------------------- | :--------------------------------------------------------------- |
-    | SAC (Semi-Annual Channel)                           | 1809, 1903, 1909, 2004, 20H2                                     |
-    | LTSB/LTSC (Long-Term Servicing Build/Channel)       | Server 2016 = 1607, Server 2019 = 1809                           |
+    | Windows Server                                      | Version                                                                |
+    | :-------------------------------------------------- | :--------------------------------------------------------------------- |
+    | SAC (Semi-Annual Channel)                           | 1809, 1903, 1909, 2004, 20H2                                           |
+    | LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2             |
 
 * **LatestReleases**
 
