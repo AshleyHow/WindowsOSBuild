@@ -17,9 +17,9 @@ https://www.powershellgallery.com/packages/WindowsOSBuild
 
 ## About
 
-Gets the latest available OS Build release information for Windows 10 including Windows Server versions. 
+Gets windows patch release information (Build, KB Number, Release Date etc) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards.
 
-Uses release information from [Microsoft](https://docs.microsoft.com/en-gb/windows/release-health/release-information) and presents this in a usable format which can be used for scripting purposes. This source is updated regularly by Microsoft after new patches are released. This means at times this info may not always in sync with Windows Update.   
+Gets windows patch release information from [Microsoft](https://docs.microsoft.com/en-gb/windows/release-health/release-information) and presents this in a usable format which can be used for scripting purposes. This source is updated regularly by Microsoft after new patches are released. This means at times this info may not always in sync with Windows Update.   
 
 The majority of this code came from [Get-Windows10ReleaseInformation](https://github.com/FredrikWall/PowerShell/blob/master/Windows/Get-Windows10ReleaseInformation.ps1), credit to Fredrik Wall.
     
