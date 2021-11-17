@@ -1,18 +1,18 @@
 Function Get-LatestOSBuild {
     <#
         .SYNOPSIS
-            Gets windows patch release information information (Build, KB Number, Release Date etc) for Windows client and server versions. Useful for scripting and automation purposes.
+            Gets windows patch release information (Build, KB Number, Release Date etc) for Windows client and server versions. Useful for scripting and automation purposes.
             Supports Windows 10 and Windows Server 2016 onwards.
         .DESCRIPTION
-            Gets windows patch release information from https://docs.microsoft.com/en-gb/windows/release-health/release-information and presents this in a usable format.
+            Patch information retrieved from https://docs.microsoft.com/en-gb/windows/release-health/release-information and outputted in a usable format.
             This source is updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always in sync with Windows Update.
         .PARAMETER OSName
-            Optional - OS Name. Default value is Win10. Accepted values: 
+            This parameter is optional. OS name you want to check. Default value is Win10. Accepted values: 
 
             Windows Client OS Names                              - Win10, Win11.
             Windows Server OS Names                              - Server2016, Server2019, Server2022.
         .PARAMETER OSVersion 
-            Mandatory - OS Version number. Accepted values:
+            This parameter is mandatory. OS version number you want to check. Accepted values:
             
             Windows Client OS Versions:
             CB/CBB/SAC (Semi-Annual Channel)                     - 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H2, 21H2. 
@@ -22,9 +22,9 @@ Function Get-LatestOSBuild {
             SAC (Semi-Annual Channel)                            - 1809, 1903, 1909, 2004, 20H2.
             LTSB/LTSC (Long-Term Servicing Build/Channel)        - Server 2016 = 1607, Server 2019 = 1809, Server 2022 = 21H2.
         .PARAMETER LatestReleases
-            Optional - Returns last x releases (where x is the number of releases you want to display). Default value is 1.
+            This parameter is optional. Returns last x releases (where x is the number of releases you want to display). Default value is 1.
         .PARAMETER BuildOnly
-            Returns only the full build number/s of the OS Version. This is an optional parameter.
+            This parameter is optional. Returns only the full build number/s of the OS Version.
         .EXAMPLE
             Get-LatestOSBuild -OSVersion 21H1
             Will show all information on the latest available OS Build for Version 21H1 in list format.
