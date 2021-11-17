@@ -1,148 +1,129 @@
-function Get-LatestOSBuild {
+Function Get-LatestOSBuild {
     <#
         .SYNOPSIS
-            Gets the latest available OS Build release information for Windows 10 including Windows Server versions.
+            Gets windows patch release information information (Build, KB Number, Release Date etc) for Windows client and server versions. Useful for scripting and automation purposes.
+            Supports Windows 10 and Windows Server 2016 onwards.
         .DESCRIPTION
-            Gets latest release information from https://docs.microsoft.com/en-gb/windows/release-health/release-information and presents this in a usable format.
-            This source is updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always in sync with Windows Update.        
-        .PARAMETER OSVersion 
-            Mandatory. OS Version number. 
-            
-            Windows 10 OS Versions:
-            CB/CBB/SAC (Semi-Annual Channel)                     - e.g 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2. 
-            LTSB/LTSC (Long-Term Servicing Build/Channel)        - e.g 1507, 1607, 1809.
+            Gets windows patch release information from https://docs.microsoft.com/en-gb/windows/release-health/release-information and presents this in a usable format.
+            This source is updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always in sync with Windows Update.
+        .PARAMETER OSName
+            Optional - OS Name. Default value is Win10. Accepted values: 
 
+            Windows Client OS Names                              - Win10, Win11.
+            Windows Server OS Names                              - Server2016, Server2019, Server2022.
+        .PARAMETER OSVersion 
+            Mandatory - OS Version number. Accepted values:
+            
+            Windows Client OS Versions:
+            CB/CBB/SAC (Semi-Annual Channel)                     - 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H2, 21H2. 
+            LTSB/LTSC (Long-Term Servicing Build/Channel)        - 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.
+            
             Window Server OS Versions:
-            SAC (Semi-Annual Channel)                            - e.g 1809, 1903, 1909, 2004, 20H2.
-            LTSB/LTSC (Long-Term Servicing Build/Channel)        - e.g Server 2016 = 1607, Server 2019 = 1809.
+            SAC (Semi-Annual Channel)                            - 1809, 1903, 1909, 2004, 20H2.
+            LTSB/LTSC (Long-Term Servicing Build/Channel)        - Server 2016 = 1607, Server 2019 = 1809, Server 2022 = 21H2.
         .PARAMETER LatestReleases
-            Optional. Returns last x releases (where x is the number of releases you want to display). Default value is 1.
+            Optional - Returns last x releases (where x is the number of releases you want to display). Default value is 1.
         .PARAMETER BuildOnly
             Returns only the full build number/s of the OS Version. This is an optional parameter.
         .EXAMPLE
-            Get-LatestOSBuild -OSVersion 1607
-            Will show all information on the latest available OS Build for Version 1607 in list format.
+            Get-LatestOSBuild -OSVersion 21H1
+            Will show all information on the latest available OS Build for Version 21H1 in list format.
         .EXAMPLE
-            Get-LatestOSBuild -OSVersion 1607 -LatestReleases 2
-            Will show all information on the latest 2 releases of OS Builds for Version 1607 in list format.
+            Get-LatestOSBuild -OSVersion 21H1 -LatestReleases 2
+            Will show all information on the latest 2 releases of OS Builds for Version 21H1 in list format.
         .EXAMPLE
-            Get-LatestOSBuild -OSVersion 1607 -BuildOnly
-            Will show only the latest available OS Build for Version 1607 in list format.        
+            Get-LatestOSBuild -OSVersion 21H1 -BuildOnly
+            Will show only the latest available OS Build for Version 21H1 in list format.
         .EXAMPLE
-            Get-LatestOSBuild -OSVersion 1607 | ConvertTo-Json
-            Will show all information on the latest available OS Build for Version 1607 in json format.
+            Get-LatestOSBuild -OSVersion 21H1 | ConvertTo-Json
+            Will show all information on the latest available OS Build for Version 21H1 in json format.
         .EXAMPLE
-            Get-LatestOSBuild -OSVersion 1607 | ConvertTo-Json | Out-File .\Get-LatestOSBuild.json
-            Will save the json format to a file on the latest available OS Build for Version 1607.
+            Get-LatestOSBuild -OSVersion 21H1 | ConvertTo-Json | Out-File .\Get-LatestOSBuild.json
+            Will save the json format to a file on the latest available OS Build for Version 21H1.
         .NOTES
-            The majority of this code came from Get-Windows10ReleaseInformation, credit to Fredrik Wall.
+            Large portions of this code came originally from Get-Windows10ReleaseInformation, credit to Fredrik Wall.
             https://github.com/FredrikWall/PowerShell/blob/master/Windows/Get-Windows10ReleaseInformation.ps1
     #>
 
-        param(
+        Param(
         [CmdletBinding()]
         [Parameter(Mandatory = $true)]
         [String]$OSVersion,
+        
         [Parameter(Mandatory = $false)]
         [String]$LatestReleases = 1,
+        
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Win10','Win11','Server2016','Server2019','Server2022')]
+        [String]$OSName = "Win10",
+        
         [Parameter(Mandatory = $false)]
         [Switch]$BuildOnly
     )
-
-    #$DLL = (Get-InstalledModule WindowsOSBuild).InstalledLocation + "\Microsoft.mshtml.dll"
-    #Add-Type -Path $DLL
-    #Add-Type -AssemblyName "Microsoft.mshtml"
     
-    $Url = "https://docs.microsoft.com/en-gb/windows/release-health/release-information"
+    If (($OSName) -eq "Win11") {
+        $Url = "https://docs.microsoft.com/en-gb/windows/release-health/windows11-release-information"
+        $TableNumber = 1
+    }
+    ElseIf (($OSName) -eq "Win10" -or  "Server2016" -or "Server2019" -or "Server2022" ) {
+        $Url = "https://docs.microsoft.com/en-gb/windows/release-health/release-information"
+        $TableNumber = 2
+    }
+    Else {
+        Throw "Unsupported Operating System"
+    }
+
     $Webpage = Invoke-RestMethod $Url
     $HTML = New-Object -Com "HTMLFile"
 
     # Write HTML content according to DOM Level2 
-    try {
+    Try {
         # This works in PowerShell with Office installed
         $html.IHTMLDocument2_write($Webpage)
     }
-    catch {
-        # This works when Office is not installed    
-        $src = [System.Text.Encoding]::Unicode.GetBytes($Webpage)
-        $HTML.write($src)
+    Catch {
+        # This works when Office is not installed
+        $Src = [System.Text.Encoding]::Unicode.GetBytes($Webpage)
+        $HTML.write($Src)
     }
 
     $Version = @($HTML.all.tags("strong"))
     $ReleaseVersions = ($Version.outerText).Substring(0)
-    
-    $TableNumber = 2
-        try {
-        # This works in PowerShell with Office installed
-        $html.IHTMLDocument2_write($Webpage)
-    }
-    catch {
-        # This works when Office is not installed    
-        $src = [System.Text.Encoding]::Unicode.GetBytes($Webpage)
-        $HTML.write($src)
-    }
-
-    $table = foreach ($Version in $ReleaseVersions) {
-   
+    $Table = Foreach ($Version in $ReleaseVersions) {
         $Tables = @($HTML.all.tags("table"))
-   
         $Table = $Tables[$TableNumber]
-
         $Titles = @()
-
         $Rows = @($Table.Rows)
-    
-        foreach ($Row in $Rows) {
-
+        Foreach ($Row in $Rows) {
             $Cells = @($Row.Cells)
 
             ## If we've found a table header, remember its titles
-
-            if ($Cells[0].tagName -eq "TH") {
-
+            If ($Cells[0].tagName -eq "TH") {
                 $Titles = @($Cells | ForEach-Object { ("" + $_.InnerText).Trim() })
-
-                continue
-
+                Continue
             }
 
             ## If we haven't found any table headers, make up names "P1", "P2", etc.
-
-            if (-not $Titles) {
-
+            If (-not $Titles) {
                 $Titles = @(1..($Cells.Count + 2) | ForEach-Object { "P$_" })
-
             }
 
-            ## Now go through the cells in the the row. For each, try to find the
-
-            ## title that represents that column and create a hash table mapping those
-
-            ## titles to content
-
+            ## Now go through the cells in the the row. For each, try to find the title that represents that column and create a hash table mapping those titles to content
             $ResultObject = [Ordered] @{}
-
-            for ($Counter = 0; $Counter -lt $Cells.Count; $Counter++) {
-            
+            For ($Counter = 0; $Counter -lt $Cells.Count; $Counter++) {
                 $Title = "Version"
                 $ResultObject[$Title] = $Version
-
             }
-
-            for ($Counter = 0; $Counter -lt $Cells.Count; $Counter++) {
-            
+            For ($Counter = 0; $Counter -lt $Cells.Count; $Counter++) {
                 $Title = $Titles[$Counter]
-
-                if (-not $Title) { continue }
-
+                If (-not $Title) { 
+                    Continue 
+                }
                 $ResultObject[$Title] = ("" + $Cells[$Counter].InnerText).Trim()
-
             }
 
             ## And finally cast that hash table to a PSCustomObject
-
             [PSCustomObject]$ResultObject 
-
         }
         $TableNumber++
     } 
@@ -151,7 +132,7 @@ function Get-LatestOSBuild {
         ($Table | Where-Object { $_ -Match "Version $OSVersion" } | Select-Object -First $LatestReleases)
     }
     If ($BuildOnly -eq $true) {
-        ($Table | Where-Object { $_ -Match "Version $OSVersion" } | Select-Object -First $LatestReleases)."OS Build"
+        ($Table | Where-Object { $_ -Match "Version $OSVersion" } | Select-Object -First $LatestReleases)."Build"
     }
 }
 
@@ -162,8 +143,8 @@ Function Get-CurrentOSBuild {
         .DESCRIPTION
             Installed OS Build release number is obtained from the registry. 
         .EXAMPLE
-            C:\PS> Get-LatestOSBuild -OSVersion 1607
-            Will show all information on the latest available OS Build information for Version 1607 in list format.
+            C:\PS> Get-LatestOSBuild -OSVersion 21H1
+            Will show all information on the latest available OS Build information for Version 21H1 in list format.
     #>
 
     $CurrentBuild = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name CurrentBuild).CurrentBuild
