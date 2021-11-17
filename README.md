@@ -71,7 +71,7 @@ Gets windows patch release information (Build, KB Number, Release Date etc) for 
 
     | Windows Server OS                                   | Version                                                                      |
     | :-------------------------------------------------- | :--------------------------------------------------------------------------- |
-    | SAC (Semi-Annual Channel)                           | 1809, 1903, 1909, 2004, 20H2                                                 |
+    | SAC (Semi-Annual Channel)                           | 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2                                     |
     | LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2                                        |
 
 * **LatestReleases**
