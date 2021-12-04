@@ -53,7 +53,7 @@ Gets windows patch release information (Build, KB Number, Release Date etc) for 
 
 * **OSVersion**
     
-    This parameter is optional. OS name you want to check. Default value is Win10. Accepted values: 
+    This parameter is optional. OS name you want to check. Default value is Win10. Supported accepted values: 
     
     | OS Name                                             | Version                                                                      |
     | :---------------------------------------------------| :--------------------------------------------------------------------------- |
@@ -62,7 +62,7 @@ Gets windows patch release information (Build, KB Number, Release Date etc) for 
 
 * **OSVersion**
 
-    This parameter is mandatory. OS version number you want to check. Accepted values:
+    This parameter is mandatory. OS version number you want to check. Supported accepted values:
 
     | Windows Client OS                                   | Version                                                                      |
     | :-------------------------------------------------- | :--------------------------------------------------------------------------- |
@@ -71,7 +71,7 @@ Gets windows patch release information (Build, KB Number, Release Date etc) for 
 
     | Windows Server OS                                   | Version                                                                      |
     | :-------------------------------------------------- | :--------------------------------------------------------------------------- |
-    | SAC (Semi-Annual Channel)                           | 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2                                     |
+    | SAC (Semi-Annual Channel)                           | 1709, 1803, 1809, 1903, 1909, 2004, 20H2                                     |
     | LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2                                        |
 
 * **LatestReleases**
