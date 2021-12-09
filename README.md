@@ -1,44 +1,40 @@
-
-![alt text](https://github.com/AshleyHow/WindowsOSBuild/blob/main/WindowsOSBuild.png)
-# WindowsOSBuild
-
+# About
 [![License][license-badge]][license]
 [![PowerShell Gallery][psgallery-badge]][psgallery]
 [![PowerShell Gallery Version][psgallery-version-badge]][psgallery]
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/ec81538145f64de7ad264606ed790407)](https://www.codacy.com/gh/AshleyHow/WindowsOSBuild/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AshleyHow/WindowsOSBuild&amp;utm_campaign=Badge_Grade)
 
-Module for Windows OS Build management. Functions to obtain currently installed OS Build number and the latest available OS Build number/s from Windows Update. Supports Windows 10 and associated Windows Server versions only.
+![alt text](https://github.com/AshleyHow/WindowsOSBuild/blob/main/WindowsOSBuild.png)
 
-https://www.powershellgallery.com/packages/WindowsOSBuild
+Gets windows patch release information (Version, Build, Availability date, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards.
 
-## About
+Patch information retrieved from the [release health portal](https://docs.microsoft.com/en-gb/windows/release-health/release-information) and outputted in a usable format. This source is updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always in sync with Windows Update.
 
-Gets windows patch release information (Build, KB Number, Release Date etc) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards.
+## Installing the Module
 
-Patch information retrieved from [Microsoft](https://docs.microsoft.com/en-gb/windows/release-health/release-information) and outputted in a usable format. This source is updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always in sync with Windows Update. 
-
-Large portions of this code came originally from [Get-Windows10ReleaseInformation](https://github.com/FredrikWall/PowerShell/blob/master/Windows/Get-Windows10ReleaseInformation.ps1), credit to Fredrik Wall.
-    
-## Supported Powershell Versions
+### PowerShell Support
 
 This has been tested with Powershell 5.0 and 5.1, and the module manifests lists the minimum supported version as 5.0.
 
-## Installation
-Powershell Gallery
+### Install from the PowerShell Gallery
 
-Simply install directly from the Powershell Gallery by running the following command:
+The Evergreen module is published to the PowerShell Gallery and can be found here: [WindowsOSBuild](https://www.powershellgallery.com/packages/WindowsOSBuild/). This is the best and recommend method to install Evergreen.
 
-```
+The module can be installed from the gallery with:
+
+```powershell
 Install-Module -Name WindowsOSBuild
 ```
 
-To update:
+### Updating the Module
 
-```
-Update-Module -Name WindowsOSBuild
+If you have installed a previous version of the module from the gallery, you can install the latest update with `Update-Module` and the `-Force` parameter:
+
+```powershell
+Update-Module -Name WindowsOSBuild -Force
 ```
 
-## Get-LatestOSBuild
+## Get-LatestOSBuild Function
 
 Gets windows patch release information (Build, KB Number, Release Date etc) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards.
 
@@ -48,24 +44,24 @@ Gets windows patch release information (Build, KB Number, Release Date etc) for 
     
 This parameter is optional. OS name you want to check. Default value is Win10. Supported accepted values: 
     
-| OS Name                                             | Version                                                                      |
-| :---------------------------------------------------| :--------------------------------------------------------------------------- |
-| Windows Client OS Names                             | Win10, Win11                                                                 |
-| Windows Server OS Names                             | Server2016, Server2019, Server2022                                           |
+| OS Name                                             | Version                                                                       |
+| :---------------------------------------------------| :---------------------------------------------------------------------------  |
+| Windows Client OS Names                             | Win10, Win11.                                                                 |
+| Windows Server OS Names                             | Server2016, Server2019, Server2022, Server Semi-annual = ServerSAC.           |
 
   - OSVersion
 
 This parameter is mandatory. OS version number you want to check. Supported accepted values:
 
-| Windows Client OS                                   | Version                                                                      |
-| :-------------------------------------------------- | :--------------------------------------------------------------------------- |
-| CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2 |
-| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2                           |
+| Windows Client OS                                   | Version                                                                       |
+| :-------------------------------------------------- | :---------------------------------------------------------------------------- |
+| CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2. |
+| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.                           |
 
-| Windows Server OS                                   | Version                                                                      |
-| :-------------------------------------------------- | :--------------------------------------------------------------------------- |
-| SAC (Semi-Annual Channel)                           | 1709, 1803, 1809, 1903, 1909, 2004, 20H2                                     |
-| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2                                        |
+| Windows Server OS                                   | Version                                                                       |
+| :-------------------------------------------------- | :---------------------------------------------------------------------------- |
+| SAC (Semi-Annual Channel)                           | 1709, 1803, 1809, 1903, 1909, 2004, 20H2.                                     |
+| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2.                                        |
 
   - LatestReleases
 
@@ -74,10 +70,20 @@ This parameter is optional. Returns last x releases (where x is the number of re
   - BuildOnly
 
 This parameter is optional. Returns only the full build number/s of the OS Version.
-    
-## Get-CurrentOSBuild
 
-Gets the currently installed OS Build release number for Windows 10 including Windows Server versions.
+  - ExcludePreview
+
+This parameter is optional. Excludes preview releases.
+
+  - ExcludeOutOfBand
+
+This parameter is optional. Excludes out-of-band releases.
+    
+## Get-CurrentOSBuild Function
+
+Gets the currently installed OS Build release number for Windows 10 including Windows Server versions. 
+
+Installed OS Build release number is obtained from the registry.
 
 ### Parameters    
     
@@ -86,34 +92,42 @@ There are no parameters required.
 ## Usage
 
 Show the currently installed OS Build release number.
-```
+```powershell
 Get-CurrentOSBuild
 ```
 Show all information on the latest available OS Build for Version 21H1 in list format.
-```
-Get-LatestOSBuild -OSVersion 21H1
+```powershell
+Get-LatestOSBuild -OSName Win10 -OSVersion 21H1
 ```
 Show all information on the latest 2 releases of OS Builds for Version 21H1 in list format.
+```powershell
+Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 2
 ```
-Get-LatestOSBuild -OSVersion 21H1 -LatestReleases 2
+Show all information on the latest 2 releases (excluding preview) of OS Builds for Windows 10 Version 21H1 in list format.
+```powershell
+Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -ExcludePreview -LatestReleases 2
+```
+Show all information on the latest 2 releases (excluding out-of-band) of OS Builds for Windows 10 Version 21H1 in list format.
+```powershell
+Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -ExcludeOutOfBand -LatestReleases 2
 ```
 Show only the latest available OS Build for Version 21H1 in list format.  
-```
-Get-LatestOSBuild -OSVersion 21H1 -BuildOnly
+```powershell
+Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -BuildOnly
 ```
 Show all information on the latest available OS Build for Version 21H1 in json format.
-```
-Get-LatestOSBuild -OSVersion 21H1 | ConvertTo-Json
+```powershell
+Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 | ConvertTo-Json
 ```
 Save the json format to a file on the latest available OS Build for Version 21H1.
-```
-Get-LatestOSBuild -OSVersion 21H1 | ConvertTo-Json | Out-File .\Get-LatestOSBuild.json
+```powershell
+Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 | ConvertTo-Json | Out-File .\Get-LatestOSBuild.json
 ```
 
 ## Output
 
-```
-PS C:\Users\Ashley> Get-LatestOSBuild -OSVersion 21H1 -LatestReleases 2
+```powershell
+PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 2
 
 Version           : Version 21H1 (OS build 19043)
 OS build          : 19043.1266
@@ -128,13 +142,16 @@ Servicing option  : Semi-Annual Channel
 Kb article        : KB 5005565
 ```
 
-```
-PS C:\Users\Ashley> Get-LatestOSBuild -OSVersion 21H1 -LatestReleases 2 -BuildOnly
+```powershell
+PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 2 -BuildOnly
+
 19043.1266
 19043.1237
 ```
 
-```
+```powershell
+PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 20
+
 Version                       Build      Availability date Preview Out-of-band Servicing option    KB article KB URL                                     Catalog URL
 -------                       -----      ----------------- ------- ----------- ----------------    ---------- ------                                     -----------
 Version 21H1 (OS build 19043) 19043.1387 2021-11-22        True    False       Semi-Annual Channel KB5007253  https://support.microsoft.com/help/5007253 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5007253
@@ -155,6 +172,19 @@ Version 21H1 (OS build 19043) 19043.1052 2021-06-08        False   False       S
 Version 21H1 (OS build 19043) 19043.1023 2021-05-25        True    False       Semi-Annual Channel KB5003214  https://support.microsoft.com/help/5003214 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5003214
 Version 21H1 (OS build 19043) 19043.985  2021-05-18        False   False       Semi-Annual Channel KB5003173  https://support.microsoft.com/help/5003173 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5003173
 ```
+
+## Who
+
+This module is maintained by the following
+
+* Ashley How, [@AshleyHow1](https://twitter.com/AshleyHow1)
+
+## Credits
+
+Forked from [Get-Windows10ReleaseInformation.ps1](https://github.com/FredrikWall/PowerShell/blob/master/Windows/Get-Windows10ReleaseInformation.ps1) created by [Fredrik Wall](https://github.com/FredrikWall)
+
+
+Uses code adapted from [Get-CurrentPatchInfo.ps1](https://gist.githubusercontent.com/SMSAgentSoftware/79fb091a4b7806378fc0daa826dbfb47/raw/0f6b52cddf82b2aa836a813cf6bc910a52a48c9f/Get-CurrentPatchInfo.ps1) created by [Trevor Jones](https://github.com/SMSAgentSoftware)
 
 [psgallery-badge]: https://img.shields.io/powershellgallery/v/WindowsOSBuild.svg?logo=PowerShell&style=flat-square
 [psgallery]: https://www.powershellgallery.com/packages/WindowsOSBuild
