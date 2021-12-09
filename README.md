@@ -18,7 +18,7 @@ This has been tested with Powershell 5.0 and 5.1, and the module manifests lists
 
 ### Install from the PowerShell Gallery
 
-The Evergreen module is published to the PowerShell Gallery and can be found here: [WindowsOSBuild](https://www.powershellgallery.com/packages/WindowsOSBuild/). This is the best and recommend method to install Evergreen.
+The WindowsOSBuild module is published to the PowerShell Gallery and can be found here: [WindowsOSBuild](https://www.powershellgallery.com/packages/WindowsOSBuild/). This is the best and recommend method to install WindowsOSBuild.
 
 The module can be installed from the gallery with:
 
