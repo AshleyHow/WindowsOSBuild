@@ -6,6 +6,7 @@
 [![License][license-badge]][license]
 [![PowerShell Gallery][psgallery-badge]][psgallery]
 [![PowerShell Gallery Version][psgallery-version-badge]][psgallery]
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/ec81538145f64de7ad264606ed790407)](https://www.codacy.com/gh/AshleyHow/WindowsOSBuild/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AshleyHow/WindowsOSBuild&amp;utm_campaign=Badge_Grade)
 
 Module for Windows OS Build management. Functions to obtain currently installed OS Build number and the latest available OS Build number/s from Windows Update. Supports Windows 10 and associated Windows Server versions only.
 
