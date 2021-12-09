@@ -1,6 +1,5 @@
 
 ![alt text](https://github.com/AshleyHow/WindowsOSBuild/blob/main/WindowsOSBuild.png)
-
 # WindowsOSBuild
 
 [![License][license-badge]][license]
@@ -43,44 +42,44 @@ Update-Module -Name WindowsOSBuild
 
 Gets windows patch release information (Build, KB Number, Release Date etc) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards.
 
-#### Parameters
+### Parameters
 
-* **OSVersion**
+- OSName
     
-    This parameter is optional. OS name you want to check. Default value is Win10. Supported accepted values: 
+This parameter is optional. OS name you want to check. Default value is Win10. Supported accepted values: 
     
-    | OS Name                                             | Version                                                                      |
-    | :---------------------------------------------------| :--------------------------------------------------------------------------- |
-    | Windows Client OS Names                             | Win10, Win11                                                                 |
-    | Windows Server OS Names                             | Server2016, Server2019, Server2022                                           |
+| OS Name                                             | Version                                                                      |
+| :---------------------------------------------------| :--------------------------------------------------------------------------- |
+| Windows Client OS Names                             | Win10, Win11                                                                 |
+| Windows Server OS Names                             | Server2016, Server2019, Server2022                                           |
 
-* **OSVersion**
+- OSVersion
 
-    This parameter is mandatory. OS version number you want to check. Supported accepted values:
+This parameter is mandatory. OS version number you want to check. Supported accepted values:
 
-    | Windows Client OS                                   | Version                                                                      |
-    | :-------------------------------------------------- | :--------------------------------------------------------------------------- |
-    | CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2 |
-    | LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2                           |
+| Windows Client OS                                   | Version                                                                      |
+| :-------------------------------------------------- | :--------------------------------------------------------------------------- |
+| CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2 |
+| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2                           |
 
-    | Windows Server OS                                   | Version                                                                      |
-    | :-------------------------------------------------- | :--------------------------------------------------------------------------- |
-    | SAC (Semi-Annual Channel)                           | 1709, 1803, 1809, 1903, 1909, 2004, 20H2                                     |
-    | LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2                                        |
+| Windows Server OS                                   | Version                                                                      |
+| :-------------------------------------------------- | :--------------------------------------------------------------------------- |
+| SAC (Semi-Annual Channel)                           | 1709, 1803, 1809, 1903, 1909, 2004, 20H2                                     |
+| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2                                        |
 
-* **LatestReleases**
+- LatestReleases
 
-    This parameter is optional. Returns last x releases (where x is the number of releases you want to display). Default value is 1.
+This parameter is optional. Returns last x releases (where x is the number of releases you want to display). Default value is 1.
 
-* **BuildOnly**
+- BuildOnly
 
-    This parameter is optional. Returns only the full build number/s of the OS Version.
+This parameter is optional. Returns only the full build number/s of the OS Version.
     
 ## Get-CurrentOSBuild
 
 Gets the currently installed OS Build release number for Windows 10 including Windows Server versions.
 
-#### Parameters    
+### Parameters    
     
 There are no parameters required.
 
