@@ -3,6 +3,8 @@
 
 # WindowsOSBuild
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/396d1fc092824fec88aed8c09d2b95e0)](https://app.codacy.com/gh/AshleyHow/WindowsOSBuild?utm_source=github.com&utm_medium=referral&utm_content=AshleyHow/WindowsOSBuild&utm_campaign=Badge_Grade_Settings)
+
 [![License][license-badge]][license]
 [![PowerShell Gallery][psgallery-badge]][psgallery]
 [![PowerShell Gallery Version][psgallery-version-badge]][psgallery]
