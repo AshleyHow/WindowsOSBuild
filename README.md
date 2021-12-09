@@ -133,29 +133,6 @@ PS C:\Users\Ashley> Get-LatestOSBuild -OSVersion 21H1 -LatestReleases 2 -BuildOn
 19043.1266
 19043.1237
 ```
-
-```
-Version                       Build      Availability date Preview Out-of-band Servicing option    KB article KB URL                                     Catalog URL
--------                       -----      ----------------- ------- ----------- ----------------    ---------- ------                                     -----------
-Version 21H1 (OS build 19043) 19043.1387 2021-11-22        True    False       Semi-Annual Channel KB5007253  https://support.microsoft.com/help/5007253 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5007253
-Version 21H1 (OS build 19043) 19043.1348 2021-11-09        False   False       Semi-Annual Channel KB5007186  https://support.microsoft.com/help/5007186 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5007186
-Version 21H1 (OS build 19043) 19043.1320 2021-10-26        True    False       Semi-Annual Channel KB5006738  https://support.microsoft.com/help/5006738 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5006738
-Version 21H1 (OS build 19043) 19043.1288 2021-10-12        False   False       Semi-Annual Channel KB5006670  https://support.microsoft.com/help/5006670 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5006670
-Version 21H1 (OS build 19043) 19043.1266 2021-09-30        True    False       Semi-Annual Channel KB5005611  https://support.microsoft.com/help/5005611 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5005611
-Version 21H1 (OS build 19043) 19043.1237 2021-09-14        False   False       Semi-Annual Channel KB5005565  https://support.microsoft.com/help/5005565 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5005565
-Version 21H1 (OS build 19043) 19043.1202 2021-09-01        True    False       Semi-Annual Channel KB5005101  https://support.microsoft.com/help/5005101 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5005101
-Version 21H1 (OS build 19043) 19043.1165 2021-08-10        False   False       Semi-Annual Channel KB5005033  https://support.microsoft.com/help/5005033 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5005033
-Version 21H1 (OS build 19043) 19043.1151 2021-07-29        True    False       Semi-Annual Channel KB5004296  https://support.microsoft.com/help/5004296 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5004296
-Version 21H1 (OS build 19043) 19043.1110 2021-07-13        False   False       Semi-Annual Channel KB5004237  https://support.microsoft.com/help/5004237 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5004237
-Version 21H1 (OS build 19043) 19043.1083 2021-07-06        False   True        Semi-Annual Channel KB5004945  https://support.microsoft.com/help/5004945 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5004945
-Version 21H1 (OS build 19043) 19043.1082 2021-06-29        False   True        Semi-Annual Channel KB5004760  https://support.microsoft.com/help/5004760 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5004760
-Version 21H1 (OS build 19043) 19043.1081 2021-06-21        True    False       Semi-Annual Channel KB5003690  https://support.microsoft.com/help/5003690 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5003690
-Version 21H1 (OS build 19043) 19043.1055 2021-06-11        False   True        Semi-Annual Channel KB5004476  https://support.microsoft.com/help/5004476 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5004476
-Version 21H1 (OS build 19043) 19043.1052 2021-06-08        False   False       Semi-Annual Channel KB5003637  https://support.microsoft.com/help/5003637 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5003637
-Version 21H1 (OS build 19043) 19043.1023 2021-05-25        True    False       Semi-Annual Channel KB5003214  https://support.microsoft.com/help/5003214 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5003214
-Version 21H1 (OS build 19043) 19043.985  2021-05-18        False   False       Semi-Annual Channel KB5003173  https://support.microsoft.com/help/5003173 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5003173
-```
-
 [psgallery-badge]: https://img.shields.io/powershellgallery/v/WindowsOSBuild.svg?logo=PowerShell&style=flat-square
 [psgallery]: https://www.powershellgallery.com/packages/WindowsOSBuild
 [psgallery-version-badge]: https://img.shields.io/powershellgallery/dt/WindowsOSBuild.svg?logo=PowerShell&style=flat-square
