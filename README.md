@@ -130,16 +130,24 @@ Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 | ConvertTo-Json | Out-File .\Ge
 PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 2
 
 Version           : Version 21H1 (OS build 19043)
-OS build          : 19043.1266
-Availability date : 2021-09-30
+Build             : 19043.1387
+Availability date : 2021-11-22
+Preview           : True
+Out-of-band       : False
 Servicing option  : Semi-Annual Channel
-Kb article        : KB 5005611
+KB article        : KB5007253
+KB URL            : https://support.microsoft.com/help/5007253
+Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB5007253
 
 Version           : Version 21H1 (OS build 19043)
-OS build          : 19043.1237
-Availability date : 2021-09-14
+Build             : 19043.1348
+Availability date : 2021-11-09
+Preview           : False
+Out-of-band       : False
 Servicing option  : Semi-Annual Channel
-Kb article        : KB 5005565
+KB article        : KB5007186
+KB URL            : https://support.microsoft.com/help/5007186
+Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB5007186
 ```
 
 ```powershell
