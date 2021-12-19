@@ -17,6 +17,7 @@ test_script:
       param ()
 
       Import-Module Pester -Force
+      Import-Module -Name C:\projects\windowsosbuild
 
       If (Test-Path -Path "env:APPVEYOR_BUILD_FOLDER") {
           # AppVeyor Testing
