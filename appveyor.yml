@@ -40,7 +40,7 @@ test_script:
 
           # Configure the test environment
           $testsPath = $projectRoot
-          $testOutput = Join-Path -Path $projectRoot -ChildPath "TestsResults.xml"
+          $testOutput = ".\TestsResults.xml"
           $testConfig = [PesterConfiguration]@{
               Run        = @{
                   Path     = $testsPath
