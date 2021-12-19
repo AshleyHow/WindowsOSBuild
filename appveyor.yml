@@ -3,9 +3,11 @@ skip_commits:
     - "**/*.md"
 
 install:
-  - cinst pester
+  - Install-Module Pester -Force
 
 build: off
 
 test_script:
-  - ps: Invoke-Pester -Path .\WindowOSBuild.Tests.ps1
+- ps: >-
+    Import-Module -Name C:\projects\windowsosbuild\WindowOSBuild.psm1
+    Invoke-Pester -Path C:\projects\windowsosbuild\WindowOSBuild.Tests.ps1
