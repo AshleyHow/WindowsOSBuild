@@ -16,6 +16,8 @@ test_script:
       [OutputType()]
       param ()
 
+      Import-Module Pester -Force
+
       If (Test-Path -Path "env:APPVEYOR_BUILD_FOLDER") {
           # AppVeyor Testing
           $projectRoot = Resolve-Path -Path $env:APPVEYOR_BUILD_FOLDER
