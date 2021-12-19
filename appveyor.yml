@@ -8,6 +8,5 @@ install:
 build: off
 
 test_script:
-- ps: dir
-- ps: Import-Module -Name C:\projects\windowsosbuild\WindowOSBuild.psm1
+- ps: Import-Module -Name C:\projects\windowsosbuild
 - ps: Invoke-Pester -Path C:\projects\windowsosbuild\WindowOSBuild.Tests.ps1
