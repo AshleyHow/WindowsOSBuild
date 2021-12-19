@@ -15,7 +15,7 @@ Patch information retrieved from the [release health portal](https://docs.micros
 
 ### PowerShell Support
 
-This has been tested with Powershell 5.0 and 5.1, and the module manifests lists the minimum supported version as 5.0.
+WindowsOSBuild supports Windows PowerShell 5.0, 5.1 and 7.0+.
 
 ### Install from the PowerShell Gallery
 
