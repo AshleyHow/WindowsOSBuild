@@ -1,0 +1,11 @@
+skip_commits:
+  files:
+    - "**/*.md"
+
+install:
+  - cinst pester
+
+build: off
+
+test_script:
+  - ps: Invoke-Pester -Path .\WindowOSBuild.Tests.ps1
