@@ -5,7 +5,7 @@ Function Get-LatestOSBuild {
             Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards.
         .DESCRIPTION
             Patch information retrieved from the release health portal (https://docs.microsoft.com/en-gb/windows/release-health/release-information) and outputted in a usable format.
-            This source is updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always in sync with Windows Update.
+            This source is updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
         .PARAMETER OSName
             This parameter is optional. OS name you want to check. Default value is Win10. Accepted values:
 
