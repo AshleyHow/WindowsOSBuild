@@ -36,7 +36,7 @@ test_script:
       If (Get-Variable -Name "projectRoot" -ErrorAction "SilentlyContinue") {
 
           # Configure the test environment
-          $testsPath = Join-Path -Path $projectRoot -ChildPath "tests"
+          $testsPath = $projectRoot
           $testOutput = Join-Path -Path $projectRoot -ChildPath "TestsResults.xml"
           $testConfig = [PesterConfiguration]@{
               Run        = @{
