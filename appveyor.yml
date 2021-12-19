@@ -3,7 +3,7 @@ skip_commits:
     - "**/*.md"
 
 install:
-  - Install-Module Pester -Force
+- ps: Install-Module Pester -Force
 
 build: off
 
