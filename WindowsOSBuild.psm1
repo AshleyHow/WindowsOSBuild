@@ -69,7 +69,7 @@ Function Get-LatestOSBuild {
         [String]$LatestReleases = 1,
 
         [Parameter(Mandatory = $false)]
-        [ValidateSet('Win10','Win11','Server2016','Server2019','Server2022', 'ServerSAC')]
+        [ValidateSet('Win10','Win11','Server2016','Server2019','Server2022','ServerSAC')]
         [String]$OSName = "Win10",
 
         [Parameter(Mandatory = $false)]
@@ -114,6 +114,22 @@ Function Get-LatestOSBuild {
         $OSVersion = "21H2"
     }
 
+    # Function used for to convert raw array from support URL to a parsed array (currently used only for Server 2022)
+    Function Convert-ParsedArray {
+        Param($Array)
+
+        $ArrayList = New-Object System.Collections.ArrayList
+        ForEach ($item in $Array) {
+            [Void]$ArrayList.Add([PSCustomObject]@{
+                Update = $item.outerHTML.Split('>')[1].Replace('</a','').Replace('&#x2014;',' - ')
+                KB = "KB" + $item.href.Split('/')[-1]
+                InfoURL = "https://support.microsoft.com" + $item.href
+                OSBuild = [regex]::Match($item.outerHTML,"Build (.*)\)").Groups[1].Value
+            })
+        }
+        Return $ArrayList
+    }
+
     # Obtain data from webpage
     Try {
         If ($OSName -eq "Server2022") {
@@ -132,11 +148,11 @@ Function Get-LatestOSBuild {
         $Table = @()
         $Table =  @(
             $VersionDataRaw = $Webpage.Links | Where-Object {$_.outerHTML -match "supLeftNavLink" -and $_.outerHTML -match "KB"} | Sort-Object -Property href -Unique
-            $UniqueList = (Convert-ParsedArray -Array $VersionDataRaw) | Sort-Object OSBuild -Descending
+            $UniqueList =  (Convert-ParsedArray -Array $VersionDataRaw) | Sort-Object OSBuild -Descending
             ForEach ($Update in $UniqueList) {
                 $ResultObject = [Ordered] @{}
-                $ResultObject["Version"] = "Version 21H2 (OS build 20348)"
-                $ResultObject["Build"] = [regex]::Match($Update.Update,"Build (20348.*)\)").Groups[1].Value
+                $ResultObject["Version"] = "Version $OSVersion (OS build $($Update.OSBuild.Split('.')[0]))"
+                $ResultObject["Build"] = $Update.OSBuild
                 $GetDate = [regex]::Match($Update.Update,"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}").Value
                 Try {
                     $ConvertToDate = [Datetime]::ParseExact($GetDate, 'MMMM dd, yyyy', $null)
@@ -187,10 +203,10 @@ Function Get-LatestOSBuild {
         $GetVersions = @($HTML.all.tags("strong"))
         $ReleaseVersions = ($GetVersions.outerText).Substring(0)
         $TableMapping = @()
-        ForEach ($Version in $ReleaseVersions) {
+        $TableMapping = ForEach ($Version in $ReleaseVersions) {
             # Windows 11 Base OS
             If ($OSBase -eq "Windows 11") {
-                $TableMapping += New-Object -TypeName PSCustomObject -Property @{
+                [PSCustomObject]@{
                     'Base' = $OSBase
                     'Version' = $Version
                     'TableNumber'=  $ReleaseVersions.IndexOf($Version) + 1
@@ -198,7 +214,7 @@ Function Get-LatestOSBuild {
             }
             # Windows 10 Base OS
             Else {
-                $TableMapping += New-Object -TypeName PSCustomObject -Property @{
+                [PSCustomObject]@{
                     'Base' = $OSName
                     'Version' = $Version
                     'TableNumber'=  $ReleaseVersions.IndexOf($Version) + 2
@@ -252,7 +268,17 @@ Function Get-LatestOSBuild {
                         $ResultObject["KB URL"] = $KBURL
                         $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $ResultObject.'KB article'
                         If ($KBURL -ne "https://support.microsoft.com/help/") {
-                            $RedirectedKBURL = "https://support.microsoft.com" + (Invoke-WebRequest  -Uri $KBURL -UseBasicParsing -MaximumRedirection 0 -ErrorAction SilentlyContinue).Headers.Location
+                            If ($PSVersionTable.PSVersion.Major -ge 6) {
+                                Try {
+                                    $RedirectedKBURL = "https://support.microsoft.com" + (Invoke-WebRequest  -Uri $KBURL -UseBasicParsing -MaximumRedirection 0 -ErrorAction Stop).Headers.Location
+                                }
+                                Catch {
+                                    $RedirectedKBURL = $_.Exception.Response.Headers.Location
+                                }
+                            }
+                            Else {
+                                $RedirectedKBURL = "https://support.microsoft.com" + (Invoke-WebRequest  -Uri $KBURL -UseBasicParsing -MaximumRedirection 0 -ErrorAction SilentlyContinue).Headers.Location
+                            }
                             If ([string]::IsNullOrEmpty($RedirectedKBURL)) {
                                 Throw "Unable to obtain preview/out-of-band information. Please check your internet connectivity. If you believe this is incorrect please submit an issue at https://github.com/AshleyHow/WindowsOSBuild/issues and include the following info :- `nURL: $RedirectedKBURL, Error: $($_.Exception.Message)"
                             }
