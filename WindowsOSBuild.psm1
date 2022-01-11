@@ -371,8 +371,8 @@ Function Get-CurrentOSBuild {
 
     Function Get-Build {
         $ReleaseID = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name ReleaseId).ReleaseId
-        $DisplayVersion = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name DisplayVersion).DisplayVersion
         If ($ReleaseID -eq '2009') {
+            $DisplayVersion = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name DisplayVersion).DisplayVersion
             Return $DisplayVersion
         }
         Else {
@@ -386,7 +386,7 @@ Function Get-CurrentOSBuild {
 
     If ($Detailed -eq $true) {
         Try {
-            $GetOSCaption = (Get-CIMInstance win32_operatingsystem).Caption
+            $GetOSCaption = (Get-CIMInstance Win32_OperatingSystem).Caption
         }
         Catch {
             Throw "Unable to get operating system caption. If you believe this is incorrect please submit an issue at https://github.com/AshleyHow/WindowsOSBuild/issues and include the following info :- `nOS Caption: $GetOSCaption, Error: $($_.Exception.Message)"
