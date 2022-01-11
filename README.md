@@ -161,6 +161,13 @@ Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB500
 ### Get-LatestOSBuild
 
 ```powershell
+PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 2 -BuildOnly
+
+19043.1266
+19043.1237
+```
+
+```powershell
 PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 2
 
 Version           : Version 21H1 (OS build 19043)
@@ -182,13 +189,6 @@ Servicing option  : Semi-Annual Channel
 KB article        : KB5007186
 KB URL            : https://support.microsoft.com/help/5007186
 Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB5007186
-```
-
-```powershell
-PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 2 -BuildOnly
-
-19043.1266
-19043.1237
 ```
 
 ```powershell
