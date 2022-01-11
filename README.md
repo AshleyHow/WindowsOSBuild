@@ -84,18 +84,28 @@ This parameter is optional. Excludes out-of-band releases.
 
 Gets the currently installed OS Build release number for Windows 10 including Windows Server versions. 
 
-Installed OS Build release number is obtained from the registry.
+Installed OS Build number or detailed information (Version, Build, Availability date, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL).
 
 ### Parameters    
-    
-There are no parameters required.
+
+   - Detailed 
+   
+This parameter is optional. Returns detailed information about the installed OS Build.
 
 ## Usage
 
-Show the currently installed OS Build release number.
+### Get-CurrentOSBuild
+
+Show only the build number for the installed OS Build.
 ```powershell
 Get-CurrentOSBuild
 ```
+Show detailed information for the installed OS Build.
+```powershell
+Get-CurrentOSBuild -Detailed
+```
+### Get-LatestOSBuild
+
 Show all information on the latest available OS Build for Version 21H1 in list format.
 ```powershell
 Get-LatestOSBuild -OSName Win10 -OSVersion 21H1
@@ -126,6 +136,29 @@ Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 | ConvertTo-Json | Out-File .\Ge
 ```
 
 ## Output
+
+### Get-CurrentOSBuild
+
+```powershell
+PS C:\Users\Ashley> Get-CurrentOSBuild          
+
+19044.1415
+```
+
+```powershell
+PS C:\Users\Ashley> Get-CurrentOSBuild -Detailed
+
+Version           : Version 21H2 (OS build 19044)      
+Build             : 19044.1415
+Availability date : 2021-12-14
+Preview           : False
+Out-of-band       : False
+Servicing option  : LTSC • General Availability Channel
+KB article        : KB5008212
+KB URL            : https://support.microsoft.com/help/5008212
+Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB5008212
+```
+### Get-LatestOSBuild
 
 ```powershell
 PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 2
