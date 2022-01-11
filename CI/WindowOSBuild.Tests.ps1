@@ -1,11 +1,10 @@
 BeforeAll {
-    BeforeAll {
-        . $PSScriptRoot/CI/WindowsOSBuild.psm1
-    }
+    $Path =  (Get-Item $PsScriptRoot).parent.FullName + "\WindowsOSBuild.psm1"
+    . Import-Module -Name $Path -Verbose
 }
 
 If ($PSVersionTable.PSVersion.Major -le 6) {
-    Describe "PS" {
+    Describe "PS - Get-LatestOSBuild" {
         Context "Win 10 (1507)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
@@ -250,6 +249,29 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName ServerSAC -OSVersion 1709 -latestreleases 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
+                $Results.Version | Should -Not -BeNullOrEmpty
+                $Results.Build | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Preview | Should -Not -BeNullOrEmpty
+                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Not -BeNullOrEmpty
+                $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            }
+        }
+    }
+    Describe "PS - Get-CurrentOSBuild" {
+        Context "Build only" {
+            It "Results" {
+                $Results = Get-CurrentOSBuild
+                $Results.Count | Should -Be 1
+            }
+        }
+        Context "Detailed" {
+            It "Results" {
+                $Results = Get-CurrentOSBuild -Detailed
+                $Results.Build.Count | Should -Be 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
                 $Results.'Availability date' | Should -Not -BeNullOrEmpty
@@ -264,7 +286,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
     }
 }
 Else {
-    Describe "PWSH" {
+    Describe "PWSH - Get-LatestOSBuild" {
         Context "Win 10 (1507)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
@@ -509,6 +531,30 @@ Else {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName ServerSAC -OSVersion 1709 -latestreleases 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
+                $Results.Version | Should -Not -BeNullOrEmpty
+                $Results.Build | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Preview | Should -Not -BeNullOrEmpty
+                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Not -BeNullOrEmpty
+                $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            }
+        }
+    }
+
+    Describe "PWSH - Get-CurrentOSBuild" {
+        Context "Build only" {
+            It "Results" {
+                $Results = Get-CurrentOSBuild
+                $Results.Count | Should -Be 1
+            }
+        }
+        Context "Detailed" {
+            It "Results" {
+                $Results = Get-CurrentOSBuild -Detailed
+                $Results.Build.Count | Should -Be  1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
                 $Results.'Availability date' | Should -Not -BeNullOrEmpty
