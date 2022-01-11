@@ -410,9 +410,6 @@ Function Get-CurrentOSBuild {
         ElseIf ($GetOSCaption -match "Windows Server Standard" -or $GetOSCaption -match "Windows Server Datacenter") {
             $DetectedOS = "ServerSAC"
         }
-        ElseIf ($GetOSCaption -match "Windows Server Datacenter") {
-            $DetectedOS = "ServerSAC"
-        }
         Else {
             Throw "Unable to detect operating system. If you believe this is incorrect please submit an issue at https://github.com/AshleyHow/WindowsOSBuild/issues and include the following info :- `nOS Caption: $GetOSCaption, Detected OS: $GetOSCaption"
         }
