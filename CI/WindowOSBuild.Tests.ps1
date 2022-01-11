@@ -271,7 +271,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Detailed" {
             It "Results" {
                 $Results = Get-CurrentOSBuild -Detailed
-                $Results.Count | Should -Be 1
+                $Results.Build.Count | Should -Be 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
                 $Results.'Availability date' | Should -Not -BeNullOrEmpty
