@@ -280,17 +280,19 @@ Function Get-LatestOSBuild {
                                 $RedirectedKBURL = "https://support.microsoft.com" + (Invoke-WebRequest  -Uri $KBURL -UseBasicParsing -MaximumRedirection 0 -ErrorAction SilentlyContinue).Headers.Location
                             }
                             If ([string]::IsNullOrEmpty($RedirectedKBURL)) {
-                                Throw "Unable to obtain preview/out-of-band information. Please check your internet connectivity. If you believe this is incorrect please submit an issue at https://github.com/AshleyHow/WindowsOSBuild/issues and include the following info :- `nURL: $RedirectedKBURL, Error: $($_.Exception.Message)"
+                                $ResultObject["Preview"] = "Unknown"
                             }
-
-                            If ($RedirectedKBURL-match 'Preview') {
+                            ElseIf ($RedirectedKBURL-match 'Preview') {
                                 $ResultObject["Preview"] = "True"
                             }
                             Else {
                                 $ResultObject["Preview"] = "False"
                             }
 
-                            If ($RedirectedKBURL-match 'Out-of-band') {
+                            If ([string]::IsNullOrEmpty($RedirectedKBURL)) {
+                                $ResultObject["Out-of-band"] = "Unknown"
+                            }
+                            ElseIf ($RedirectedKBURL-match 'Out-of-band') {
                                 $ResultObject["Out-of-band"] = "True"
                             }
                             Else {
@@ -315,27 +317,27 @@ Function Get-LatestOSBuild {
     # Return filtered results based upon parameters
     If ($ExcludePreview -eq $true -and $ExcludeOutOfBand -eq $true -and $BuildOnly -eq $true) {
         # Excluding Preview and Out-of-band - Build
-        ($Table | Where-Object { $_.Preview -eq "False" -and  $_.'Out-of-band' -eq "False" } | Select-Object -First $LatestReleases)."Build"
+        ($Table | Where-Object { (($_.Preview -eq "False" -or $_.Preview -eq "Unknown") -and  ($_.'Out-of-band' -eq "False" -or $_.'Out-of-band' -eq "Unknown")) } | Select-Object -First $LatestReleases)."Build"
     }
     ElseIf ($ExcludePreview -eq $true -and $ExcludeOutOfBand -eq $false -and $BuildOnly -eq $true) {
         # Excluding Preview - Build
-        ($Table | Where-Object { $_.Preview -eq "False" } | Select-Object -First $LatestReleases)."Build"
+        ($Table | Where-Object { $_.Preview -eq "False" -or $_.Preview -eq "Unknown" } | Select-Object -First $LatestReleases)."Build"
     }
     ElseIf ($ExcludePreview -eq $false -and $ExcludeOutOfBand -eq $true -and $BuildOnly -eq $true) {
         # Excluding Out-of-band - Build
-        ($Table | Where-Object { $_.'Out-of-band' -eq "False" } | Select-Object -First $LatestReleases)."Build"
+        ($Table | Where-Object { $_.'Out-of-band' -eq "False" -or $_.'Out-of-band' -eq "Unknown" } | Select-Object -First $LatestReleases)."Build"
     }
     ElseIf ($ExcludePreview -eq $true -and $ExcludeOutOfBand -eq $true -and $BuildOnly -eq $false) {
         # Excluding Preview and Out-of-band
-        ($Table | Where-Object { $_.Preview -eq "False" -and  $_.'Out-of-band' -eq "False" } | Select-Object -First $LatestReleases)
+        ($Table | Where-Object { (($_.Preview -eq "False" -or $_.Preview -eq "Unknown") -and  ($_.'Out-of-band' -eq "False" -or $_.'Out-of-band' -eq "Unknown")) } | Select-Object -First $LatestReleases)
     }
     ElseIf ($ExcludePreview -eq $true -and $ExcludeOutOfBand -eq $false -and $BuildOnly -eq $false) {
         # Excluding Preview
-        ($Table | Where-Object { $_.Preview -eq "False" } | Select-Object -First $LatestReleases)
+        ($Table | Where-Object { $_.Preview -eq "False" -or $_.Preview -eq "Unknown" } | Select-Object -First $LatestReleases)
     }
     ElseIf ($ExcludePreview -eq $false -and $ExcludeOutOfBand -eq $true -and $BuildOnly -eq $false) {
         # Excluding Out-of-band
-        ($Table | Where-Object { $_.'Out-of-band' -eq "False" } | Select-Object -First $LatestReleases)
+        ($Table | Where-Object { $_.'Out-of-band' -eq "False" -or $_.'Out-of-band' -eq "Unknown" } | Select-Object -First $LatestReleases)
     }
     ElseIf ($BuildOnly -eq $true) {
         # Build
