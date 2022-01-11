@@ -192,7 +192,7 @@ PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestRelea
 ```
 
 ```powershell
-PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 20
+PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 20 | Format-Table
 
 Version                       Build      Availability date Preview Out-of-band Servicing option    KB article KB URL                                     Catalog URL
 -------                       -----      ----------------- ------- ----------- ----------------    ---------- ------                                     -----------
