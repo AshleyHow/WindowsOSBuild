@@ -372,13 +372,19 @@ Function Get-CurrentOSBuild {
     )
 
     Function Get-Build {
-        $ReleaseID = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name ReleaseId).ReleaseId
-        If ($ReleaseID -eq '2009') {
-            $DisplayVersion = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name DisplayVersion).DisplayVersion
-            Return $DisplayVersion
+        # Check for Windows 10 1507 as ReleaseId does not exist until 1511
+        If ((Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name CurrentBuild).CurrentBuild -eq "10240") {
+            Return "1507"
         }
         Else {
-            Return $ReleaseID
+            $ReleaseID = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name ReleaseId).ReleaseId
+            If ($ReleaseID -eq '2009') {
+                $DisplayVersion = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion" -Name DisplayVersion).DisplayVersion
+                Return $DisplayVersion
+            }
+            Else {
+                Return $ReleaseID
+            }
         }
     }
 
