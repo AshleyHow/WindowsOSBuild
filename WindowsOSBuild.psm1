@@ -155,10 +155,10 @@ Function Get-LatestOSBuild {
                 $ResultObject["Build"] = $Update.OSBuild
                 $GetDate = [regex]::Match($Update.Update,"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}").Value
                 Try {
-                    $ConvertToDate = [Datetime]::ParseExact($GetDate, 'MMMM dd, yyyy', $null)
+                    $ConvertToDate = [Datetime]::ParseExact($GetDate, 'MMMM dd, yyyy', [Globalization.CultureInfo]::CreateSpecificCulture('en-US'))
                 }
                 Catch {
-                    $ConvertToDate = [Datetime]::ParseExact($GetDate, 'MMMM d, yyyy', $null)
+                    $ConvertToDate = [Datetime]::ParseExact($GetDate, 'MMMM d, yyyy', [Globalization.CultureInfo]::CreateSpecificCulture('en-US'))
                 }
                 $FormatDate =  Get-Date($ConvertToDate) -Format 'yyyy-MM-dd'
                 $ResultObject["Availability date"] = $FormatDate
