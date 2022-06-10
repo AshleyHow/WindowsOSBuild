@@ -13,4 +13,4 @@
     }
 
 # Export the public functions. This requires them to match the standard Noun-Verb powershell cmdlet format as a safety mechanism
-Export-ModuleMember -Function ($PublicFunctions.Basename | Where-Object {$PSitem -match '^\w+-\w+$'})
+Export-ModuleMember -Function ($Public.Basename | Where-Object {$PSitem -match '^\w+-\w+$'})
