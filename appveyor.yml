@@ -1,10 +1,16 @@
 skip_commits:
   files:
     - "**/*.md"
+    - "**/*.png"
+    - "**/*LICENCE"
 
 install:
-- ps: Install-Module Pester -Force
-- pwsh: Install-Module Pester -Force
+- ps: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Install-Module Pester -Force
+- pwsh: |
+      [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+      Install-Module Pester -Force
 
 build: off
 
