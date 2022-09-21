@@ -215,6 +215,24 @@ Version 21H1 (OS build 19043) 19043.1023 2021-05-25        True    False       S
 Version 21H1 (OS build 19043) 19043.985  2021-05-18        False   False       Semi-Annual Channel KB5003173  https://support.microsoft.com/help/5003173 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5003173
 ```
 
+## How to compare current vs latest OS build
+
+To compare you can use the following code example. This will compare a device's current OS build against the latest available OS build of Windows 10 21H2 (including out-of-band and excluding preview builds) this can be changed as required and guidance can be found above. The $Status variable can used in your RMM, monitoring solution or scripts as required.
+
+```powershell
+$InstalledOSBuild = Get-CurrentOSBuild
+$LatestOSBuilds = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -LatestReleases 1 -ExcludePreview
+
+If ($LatestOSBuilds -like "*$InstalledOSBuild*") {
+    Write-Output "OK - OS Build is up to date"
+    $Status = "OK"
+}
+Else {
+    Write-Output "Warning - OS Build is out of date"
+    $Status = "Warning"
+}
+````
+
 ## Who
 
 This module is maintained by the following
