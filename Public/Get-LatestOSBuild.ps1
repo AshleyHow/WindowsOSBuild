@@ -124,7 +124,7 @@
                 Update = $item.outerHTML.Split('>')[1].Replace('</a','').Replace('&#x2014;',' - ')
                 KB = "KB" + $item.href.Split('/')[-1]
                 InfoURL = "https://support.microsoft.com" + $item.href
-                OSBuild = [regex]::Match($item.outerHTML,"Build (.*)\)").Groups[1].Value
+                OSBuild = [regex]::Match($item.outerHTML,"Build (.*)\)").Groups[1].Value -as [System.Version]
             })
         }
         Return $ArrayList
@@ -152,7 +152,7 @@
             $UniqueList =  (Convert-ParsedArray -Array $VersionDataRaw) | Sort-Object OSBuild -Descending
             ForEach ($Update in $UniqueList) {
                 $ResultObject = [Ordered] @{}
-                $ResultObject["Version"] = "Version $OSVersion (OS build $($Update.OSBuild.Split('.')[0]))"
+                $ResultObject["Version"] = "Version $OSVersion (OS build $($Update.OSBuild.Major))"
                 $ResultObject["Build"] = $Update.OSBuild
                 $GetDate = [regex]::Match($Update.Update,"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}").Value
                 Try {
