@@ -53,7 +53,7 @@
             $DetectedOS = "Win10"
         }
         ElseIf ($GetOSCaption -match "Windows 11") {
-            $DetectedOS = "Win10"
+            $DetectedOS = "Win11"
         }
         ElseIf ($GetOSCaption -match "Server 2016") {
             $DetectedOS = "Server2016"
