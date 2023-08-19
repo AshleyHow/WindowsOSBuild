@@ -4,7 +4,7 @@
             Gets windows patch release information (Version, Build, Availability date, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions.
             Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards.
         .DESCRIPTION
-            Patch information retrieved from the release health portal (https://docs.microsoft.com/en-gb/windows/release-health/release-information) and outputted in a usable format.
+            Patch information retrieved from the Microsoft Release Health / Update History (Server 2022) pages and outputted in a usable format.
             This source is updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
         .PARAMETER OSName
             This parameter is optional. OS name you want to check. Default value is Win10. Accepted values:
@@ -15,7 +15,7 @@
             This parameter is mandatory. OS version number you want to check. Accepted values:
 
             Windows Client OS Versions:
-            CB/CBB/SAC (Semi-Annual Channel)                     - 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H2, 21H2.
+            CB/CBB/SAC (Semi-Annual Channel)                     - 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H2, 22H2.
             LTSB/LTSC (Long-Term Servicing Build/Channel)        - 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.
 
             Window Server OS Versions:
@@ -24,35 +24,51 @@
         .PARAMETER LatestReleases
             This parameter is optional. Returns last x releases (where x is the number of releases you want to display). Default value is 1.
         .PARAMETER BuildOnly
-            This parameter is optional. Returns only the full build number/s of the OS Version.
+            This parameter is optional. Returns full build number/s only.
         .PARAMETER ExcludePreview
-            This parameter is optional. Excludes preview releases.
+            This parameter is optional. Excludes preview release/s.
         .PARAMETER ExcludeOutOfBand
-            This parameter is optional. Excludes out-of-band releases.
+            This parameter is optional. Excludes out-of-band release/s.
+        .PARAMETER PreviewOnly
+            This parameter is optional. Returns preview release/s only.
+        .PARAMETER OutOfBandOnly
+            This parameter is optional. Returns out-of-band/s only.
         .EXAMPLE
             Get-CurrentOSBuild
-            Show the currently installed OS Build release number.
+            Show the currently installed OS build release number.
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 21H1
-            Show all information on the latest available OS Build for Windows 10 Version 21H1 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2
+            Show all information on the latest available OS build for Windows 10 Version 22H2 in list format.
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 2
-            Show all information on the latest 2 releases of OS Builds for Windows 10 Version 21H1 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 2
+            Show all information on the latest 2 releases of OS builds for Windows 10 Version 22H2 in list format.
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -ExcludePreview -LatestReleases 2
-            Show all information on the latest 2 releases (excluding preview) of OS Builds for Windows 10 Version 21H1 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -ExcludePreview -LatestReleases 2
+            Show all information on the latest 2 releases excluding preview of OS builds for Windows 10 Version 22H2 in list format.
          .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -ExcludeOutOfBand -LatestReleases 2
-            Show all information on the latest 2 releases (excluding out-of-band) of OS Builds for Windows 10 Version 21H1 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -ExcludeOutOfBand -LatestReleases 2
+            Show all information on the latest 2 releases excluding out-of-band of OS builds for Windows 10 Version 22H2 in list format.
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -BuildOnly
-            Show only the latest available OS Build for Windows 10 Version 21H1 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -PreviewOnly -LatestReleases 2
+            Show all information on the latest 2 preview releases of OS builds for Windows 10 Version 22H2 in list format.
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 | ConvertTo-Json
-            Show all information on the latest available OS Build for Windows 10 Version 21H1 in json format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -OutOfBandOnly -LatestReleases 2
+            Show all information on the latest 2 out-of-band releases of OS builds for Windows 10 Version 22H2 in list format.
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 | ConvertTo-Json | Out-File .\Get-LatestOSBuild.json
-            Save the json format to a file on the latest available OS Build for Windows 10 Version 21H1.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -BuildOnly
+            Show only the latest available OS build for Windows 10 Version 22H2 in list format.
+        .EXAMPLE
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -PreviewOnly -BuildOnly
+            Show only the latest available preview OS build for Windows 10 Version 22H2 in list format.
+        .EXAMPLE
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -OutOfBandOnly -BuildOnly
+            Show only the latest available out-of-band OS build for for Windows 10 Version 22H2 in list format.
+        .EXAMPLE
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 | ConvertTo-Json
+            Show all information on the latest available OS build for Windows 10 Version 22H2 in json format.
+        .EXAMPLE
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 | ConvertTo-Json | Out-File .\Get-LatestOSBuild.json
+            Save the json format to a file on the latest available OS build for Windows 10 Version 22H2.
         .NOTES
             Forked from 'Get-Windows10ReleaseInformation.ps1' created by Fredrik Wall.
             https://github.com/FredrikWall/PowerShell/blob/master/Windows/Get-Windows10ReleaseInformation.ps1
@@ -79,7 +95,13 @@
         [Switch]$ExcludePreview,
 
         [Parameter(Mandatory = $false)]
-        [Switch]$ExcludeOutOfBand
+        [Switch]$ExcludeOutOfBand,
+
+        [Parameter(Mandatory = $false)]
+        [Switch]$PreviewOnly,
+
+        [Parameter(Mandatory = $false)]
+        [Switch]$OutOfBandOnly
     )
 
     # Disable progress bar to speed up Invoke-WebRequest calls
@@ -100,7 +122,7 @@
         $URL = "https://support.microsoft.com/en-us/help/5005454"
     }
     Else {
-        Throw "Unsupported Operating System. Supported operating systems can be found here: https://github.com/AshleyHow/WindowsOSBuild/blob/main/README.md"
+        Throw "Unsupported Operating System"
     }
 
     # Enforce OSVersion for LTSC Server OSName to prevent incorrect OSVersion input
@@ -141,7 +163,12 @@
         }
     }
     Catch {
-        Throw "Unable to obtain patch release information. Please check your internet connectivity. If you believe this is incorrect please submit an issue at https://github.com/AshleyHow/WindowsOSBuild/issues and include the following info :- `nURL: $URL, Error: $($_.Exception.Message)"
+        If ($_.Exception.Message -like '*Access*Denied*You*') {
+            Throw "Unable to obtain patch release information. Akamai CDN denial-of-service protection active. Error: $($_.Exception.Message)"
+        }
+        Else {
+            Throw "Unable to obtain patch release information. Please check your internet connectivity. Error: $($_.Exception.Message)"
+        }
     }
 
     # Server 2022
@@ -153,7 +180,7 @@
             ForEach ($Update in $UniqueList) {
                 $ResultObject = [Ordered] @{}
                 $ResultObject["Version"] = "Version $OSVersion (OS build $($Update.OSBuild.Major))"
-                $ResultObject["Build"] = $Update.OSBuild
+                $ResultObject["Build"] = [String]$Update.OSBuild
                 $GetDate = [regex]::Match($Update.Update,"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}").Value
                 Try {
                     $ConvertToDate = [Datetime]::ParseExact($GetDate, 'MMMM dd, yyyy', [Globalization.CultureInfo]::CreateSpecificCulture('en-US'))
@@ -183,7 +210,24 @@
                 [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date', 'Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
             }
         )
+
+       # Include build information for Server 2022 RTM not included in Windows Update History
+       $Server2022RTM = [PsCustomObject]@{
+                        'Version' = "Version 21H2 (OS build 20348)"
+                        'Build' = "20348.169"
+                        'Availability date' = "2021-08-18"
+                        'Preview' = "False"
+                        'Out-of-band' = "False"
+                        'Servicing option' = "LTSC"
+                        'KB article' = "N/A"
+                        'KB URL' = "N/A"
+                        'Catalog URL' = "N/A"
+       }
+
+       # Add arrays
+       $Table = $Table + $Server2022RTM
     }
+
     # All other OS
     Else {
         # Create HTML object using HTML Agility Pack
@@ -224,7 +268,7 @@
                 $Table = $Tables[$SearchTable]
             }
             Catch {
-                Throw "Operating system name and version combination not supported. If you believe this is incorrect please submit an issue at https://github.com/AshleyHow/WindowsOSBuild/issues and include the following info :- `nOS Name: $OSname, OS Version: $OSVersion, Error: $($_.Exception.Message)"
+                Throw "Operating system name and version combination not supported. OS Name: $OSname, OS Version: $OSVersion, Error: $($_.Exception.Message)"
             }
             $Titles = @()
             $Rows = @($Table.Descendants("tr"))
@@ -334,6 +378,22 @@
     ElseIf ($ExcludePreview -eq $false -and $ExcludeOutOfBand -eq $true -and $BuildOnly -eq $false) {
         # Excluding Out-of-band
         ($Table | Where-Object { $_.'Out-of-band' -eq "False" -or $_.'Out-of-band' -eq "Unknown" } | Select-Object -First $LatestReleases)
+    }
+    ElseIf ($PreviewOnly -eq $true -and $BuildOnly -eq $false) {
+        # Preview Only
+        ($Table | Where-Object { $_.Preview -eq "True" } | Select-Object -First $LatestReleases)
+    }
+    ElseIf ($PreviewOnly -eq $true -and $BuildOnly -eq $true) {
+        # Preview Only - Build
+        ($Table | Where-Object { $_.Preview -eq "True" } | Select-Object -First $LatestReleases)."Build"
+    }
+    ElseIf ($OutOfBandOnly -eq $true -and $BuildOnly -eq $false) {
+        # Out-of-band Only
+        ($Table | Where-Object { $_.'Out-of-band' -eq "True" } | Select-Object -First $LatestReleases)
+    }
+    ElseIf ($OutOfBandOnly -eq $true -and $BuildOnly -eq $true) {
+        # Out-of-band Only - Build
+        ($Table | Where-Object { $_.'Out-of-band' -eq "True" } | Select-Object -First $LatestReleases)."Build"
     }
     ElseIf ($BuildOnly -eq $true) {
         # Build
