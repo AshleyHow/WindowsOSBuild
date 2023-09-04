@@ -7,11 +7,10 @@
         .PARAMETER Detailed
             This parameter is optional. Returns detailed information about the installed OS Build.
         .EXAMPLE
+            Show detailed information for the installed OS Build.
             Get-CurrentOSBuild
-            Show only the build number for the installed OS Build.
         .EXAMPLE
             Get-CurrentOSBuild -Detailed
-            Show detailed information for the installed OS Build.
     #>
 
     Param(
