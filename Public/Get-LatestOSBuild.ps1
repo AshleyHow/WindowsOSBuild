@@ -1,7 +1,7 @@
 ﻿Function Get-LatestOSBuild {
     <#
         .SYNOPSIS
-            Gets windows patch release information (Version, Build, Availability date, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions.
+            Gets Windows patch release information (Version, Build, Availability date, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions.
             Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards.
         .DESCRIPTION
             Patch information retrieved from the Microsoft Release Health / Update History (Server 2022) pages and outputted in a usable format.
@@ -45,7 +45,7 @@
         .EXAMPLE
             Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -ExcludePreview -LatestReleases 2
             Show all information on the latest 2 releases excluding preview of OS builds for Windows 10 Version 22H2 in list format.
-         .EXAMPLE
+        .EXAMPLE
             Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -ExcludeOutOfBand -LatestReleases 2
             Show all information on the latest 2 releases excluding out-of-band of OS builds for Windows 10 Version 22H2 in list format.
         .EXAMPLE
@@ -122,7 +122,7 @@
         $URL = "https://support.microsoft.com/en-us/help/5005454"
     }
     Else {
-        Throw "Unsupported Operating System"
+        Throw "Get-LatestOSBuild: Unsupported Operating System"
     }
 
     # Enforce OSVersion for LTSC Server OSName to prevent incorrect OSVersion input
@@ -164,10 +164,10 @@
     }
     Catch {
         If ($_.Exception.Message -like '*Access*Denied*You*') {
-            Throw "Unable to obtain patch release information. Akamai CDN denial-of-service protection active. Error: $($_.Exception.Message)"
+            Throw "Get-LatestOSBuild: Unable to obtain patch release information. Akamai CDN denial-of-service protection active. Error: $($_.Exception.Message)"
         }
         Else {
-            Throw "Unable to obtain patch release information. Please check your internet connectivity. Error: $($_.Exception.Message)"
+            Throw "Get-LatestOSBuild: Unable to obtain patch release information. Please check your internet connectivity. Error: $($_.Exception.Message)"
         }
     }
 
@@ -211,8 +211,8 @@
             }
         )
 
-       # Include build information for Server 2022 RTM not included in Windows Update History
-       $Server2022RTM = [PsCustomObject]@{
+        # Include build information for Server 2022 RTM not included in Windows Update History
+        $Server2022RTM = [PsCustomObject]@{
                         'Version' = "Version 21H2 (OS build 20348)"
                         'Build' = "20348.169"
                         'Availability date' = "2021-08-18"
@@ -222,10 +222,10 @@
                         'KB article' = "N/A"
                         'KB URL' = "N/A"
                         'Catalog URL' = "N/A"
-       }
+        }
 
-       # Add arrays
-       $Table = $Table + $Server2022RTM
+        # Add arrays
+        $Table = $Table + $Server2022RTM
     }
 
     # All other OS
@@ -268,7 +268,7 @@
                 $Table = $Tables[$SearchTable]
             }
             Catch {
-                Throw "Operating system name and version combination not supported. OS Name: $OSname, OS Version: $OSVersion, Error: $($_.Exception.Message)"
+                Throw "Get-LatestOSBuild: Operating system name and version combination not supported. OS Name: $OSname, OS Version: $OSVersion, Error: $($_.Exception.Message)"
             }
             $Titles = @()
             $Rows = @($Table.Descendants("tr"))
