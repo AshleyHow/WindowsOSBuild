@@ -4,8 +4,8 @@
             Gets Windows patch release information (Version, Build, Availability date, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions.
             Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards.
         .DESCRIPTION
-            Patch information retrieved from the Microsoft Release Health / Update History (Server 2022) pages and outputted in a usable format.
-            This source is updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
+            Patch information retrieved from Microsoft Release Health / Update History (Server 2022) pages and outputted in a usable format.
+            These sources are updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
         .PARAMETER OSName
             This parameter is optional. OS name you want to check. Default value is Win10. Accepted values:
 
@@ -34,41 +34,39 @@
         .PARAMETER OutOfBandOnly
             This parameter is optional. Returns out-of-band/s only.
         .EXAMPLE
-            Get-CurrentOSBuild
-            Show the currently installed OS build release number.
-        .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2
             Show all information on the latest available OS build for Windows 10 Version 22H2 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 2
             Show all information on the latest 2 releases of OS builds for Windows 10 Version 22H2 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 2
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -ExcludePreview -LatestReleases 2
             Show all information on the latest 2 releases excluding preview of OS builds for Windows 10 Version 22H2 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -ExcludePreview -LatestReleases 2
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -ExcludeOutOfBand -LatestReleases 2
             Show all information on the latest 2 releases excluding out-of-band of OS builds for Windows 10 Version 22H2 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -ExcludeOutOfBand -LatestReleases 2
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -PreviewOnly -LatestReleases 2
             Show all information on the latest 2 preview releases of OS builds for Windows 10 Version 22H2 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -PreviewOnly -LatestReleases 2
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -OutOfBandOnly -LatestReleases 2
             Show all information on the latest 2 out-of-band releases of OS builds for Windows 10 Version 22H2 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -OutOfBandOnly -LatestReleases 2
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -BuildOnly
             Show only the latest available OS build for Windows 10 Version 22H2 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -BuildOnly
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -PreviewOnly -BuildOnly
             Show only the latest available preview OS build for Windows 10 Version 22H2 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -PreviewOnly -BuildOnly
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -OutOfBandOnly -BuildOnly
             Show only the latest available out-of-band OS build for for Windows 10 Version 22H2 in list format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -OutOfBandOnly -BuildOnly
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 | ConvertTo-Json
             Show all information on the latest available OS build for Windows 10 Version 22H2 in json format.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 | ConvertTo-Json
         .EXAMPLE
-            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 | ConvertTo-Json | Out-File .\Get-LatestOSBuild.json
             Save the json format to a file on the latest available OS build for Windows 10 Version 22H2.
+            Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 | ConvertTo-Json | Out-File .\Get-LatestOSBuild.json
+
         .NOTES
             Forked from 'Get-Windows10ReleaseInformation.ps1' created by Fredrik Wall.
             https://github.com/FredrikWall/PowerShell/blob/master/Windows/Get-Windows10ReleaseInformation.ps1
