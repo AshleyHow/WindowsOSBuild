@@ -45,24 +45,24 @@ Gets windows patch release information (Build, KB Number, Release Date etc) for 
     
 This parameter is optional. OS name you want to check. Default value is Win10. Supported accepted values: 
     
-| OS Name                                             | Version                                                                       |
-| :---------------------------------------------------| :---------------------------------------------------------------------------  |
-| Windows Client OS Names                             | Win10, Win11.                                                                 |
-| Windows Server OS Names                             | Server2016, Server2019, Server2022, Server Semi-annual = ServerSAC.           |
+| OS Name                                             | Version                                                                            |
+| :---------------------------------------------------| :--------------------------------------------------------------------------------- |
+| Windows Client OS Names                             | Win10, Win11.                                                                      |
+| Windows Server OS Names                             | Server2016, Server2019, Server2022, Server Semi-annual = ServerSAC.                |
 
   - OSVersion
 
 This parameter is mandatory. OS version number you want to check. Supported accepted values:
 
-| Windows Client OS                                   | Version                                                                       |
-| :-------------------------------------------------- | :---------------------------------------------------------------------------- |
-| CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2. |
-| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.                           |
+| Windows Client OS                                   | Version                                                                            |
+| :-------------------------------------------------- | :--------------------------------------------------------------------------------- |
+| CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2, 22H2 |
+| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.                                |
 
-| Windows Server OS                                   | Version                                                                       |
-| :-------------------------------------------------- | :---------------------------------------------------------------------------- |
-| SAC (Semi-Annual Channel)                           | 1709, 1803, 1809, 1903, 1909, 2004, 20H2.                                     |
-| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2.                                        |
+| Windows Server OS                                   | Version                                                                            |
+| :-------------------------------------------------- | :--------------------------------------------------------------------------------- |
+| SAC (Semi-Annual Channel)                           | 1709, 1803, 1809, 1903, 1909, 2004, 20H2.                                          |
+| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2.                                             |
 
   - LatestReleases
 
@@ -79,6 +79,14 @@ This parameter is optional. Excludes preview releases.
   - ExcludeOutOfBand
 
 This parameter is optional. Excludes out-of-band releases.
+
+  - PreviewOnly
+
+This parameter is optional. Returns preview release/s only.
+
+  - OutOfBandOnly
+
+This parameter is optional. Returns out-of-band/s only.
     
 ## Get-CurrentOSBuild Function
 
@@ -106,33 +114,49 @@ Get-CurrentOSBuild -Detailed
 ```
 ### Get-LatestOSBuild
 
-Show all information on the latest available OS Build for Version 21H1 in list format.
+Show all information on the latest available OS build for Windows 10 Version 22H2 in list format.
 ```powershell
-Get-LatestOSBuild -OSName Win10 -OSVersion 21H1
+Get-LatestOSBuild -OSName Win10 -OSVersion 22H2
 ```
-Show all information on the latest 2 releases of OS Builds for Version 21H1 in list format.
+Show all information on the latest 2 releases of OS builds for Windows 10 Version 22H2 in list format.
 ```powershell
-Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 2
+Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 2
 ```
-Show all information on the latest 2 releases (excluding preview) of OS Builds for Windows 10 Version 21H1 in list format.
+Show all information on the latest 2 releases excluding preview of OS builds for Windows 10 Version 22H2 in list format.
 ```powershell
-Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -ExcludePreview -LatestReleases 2
+Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -ExcludePreview -LatestReleases 2
 ```
-Show all information on the latest 2 releases (excluding out-of-band) of OS Builds for Windows 10 Version 21H1 in list format.
+Show all information on the latest 2 releases excluding out-of-band of OS builds for Windows 10 Version 22H2 in list format.
 ```powershell
-Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -ExcludeOutOfBand -LatestReleases 2
+Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -ExcludeOutOfBand -LatestReleases 2
 ```
-Show only the latest available OS Build for Version 21H1 in list format.  
+Show all information on the latest 2 preview releases of OS builds for Windows 10 Version 22H2 in list format.
 ```powershell
-Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -BuildOnly
+Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -PreviewOnly -LatestReleases 2
 ```
-Show all information on the latest available OS Build for Version 21H1 in json format.
+Show all information on the latest 2 out-of-band releases of OS builds for Windows 10 Version 22H2 in list format.
 ```powershell
-Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 | ConvertTo-Json
+Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -OutOfBandOnly -LatestReleases 2
 ```
-Save the json format to a file on the latest available OS Build for Version 21H1.
+Show only the latest available OS build for Windows 10 Version 22H2 in list format.
 ```powershell
-Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 | ConvertTo-Json | Out-File .\Get-LatestOSBuild.json
+Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -BuildOnly
+```
+Show only the latest available preview OS build for Windows 10 Version 22H2 in list format.
+```powershell
+Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -PreviewOnly -BuildOnly
+```
+Show only the latest available out-of-band OS build for for Windows 10 Version 22H2 in list format. 
+```powershell
+Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -OutOfBandOnly -BuildOnly
+```
+Show all information on the latest available OS build for Windows 10 Version 22H2 in json format.
+```powershell
+Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 | ConvertTo-Json
+```
+Save the json format to a file on the latest available OS build for Windows 10 Version 22H2.
+```powershell
+Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 | ConvertTo-Json | Out-File .\Get-LatestOSBuild.json
 ```
 
 ## Output
