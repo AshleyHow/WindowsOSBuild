@@ -166,86 +166,89 @@ Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 | ConvertTo-Json | Out-File .\Ge
 ```powershell
 PS C:\Users\Ashley> Get-CurrentOSBuild          
 
-19044.1415
+19045.3324
 ```
 
 ```powershell
 PS C:\Users\Ashley> Get-CurrentOSBuild -Detailed
 
-Version           : Version 21H2 (OS build 19044)      
-Build             : 19044.1415
-Availability date : 2021-12-14
+Version           : Version 22H2 (OS build 19045)
+Build             : 19045.3324
+Availability date : 2023-08-08
 Preview           : False
 Out-of-band       : False
-Servicing option  : LTSC • General Availability Channel
-KB article        : KB5008212
-KB URL            : https://support.microsoft.com/help/5008212
-Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB5008212
+Servicing option  : General Availability Channel
+KB article        : KB5029244
+KB URL            : https://support.microsoft.com/help/5029244
+Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB5029244
 ```
 ### Get-LatestOSBuild
 
 ```powershell
-PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 2 -BuildOnly
+PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 2 -BuildOnly
 
-19043.1266
-19043.1237
+19045.3393
+19045.3324
 ```
 
 ```powershell
-PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 2
+PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 2
 
-Version           : Version 21H1 (OS build 19043)
-Build             : 19043.1387
-Availability date : 2021-11-22
+Version           : Version 22H2 (OS build 19045)
+Build             : 19045.3393
+Availability date : 2023-08-22
 Preview           : True
 Out-of-band       : False
-Servicing option  : Semi-Annual Channel
-KB article        : KB5007253
-KB URL            : https://support.microsoft.com/help/5007253
-Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB5007253
+Servicing option  : General Availability Channel
+KB article        : KB5029331
+KB URL            : https://support.microsoft.com/help/5029331
+Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB5029331
 
-Version           : Version 21H1 (OS build 19043)
-Build             : 19043.1348
-Availability date : 2021-11-09
+Version           : Version 22H2 (OS build 19045)
+Build             : 19045.3324
+Availability date : 2023-08-08
 Preview           : False
 Out-of-band       : False
-Servicing option  : Semi-Annual Channel
-KB article        : KB5007186
-KB URL            : https://support.microsoft.com/help/5007186
-Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB5007186
+Servicing option  : General Availability Channel
+KB article        : KB5029244
+KB URL            : https://support.microsoft.com/help/5029244
+Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB5029244
 ```
 
 ```powershell
-PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -LatestReleases 20 | Format-Table
+PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 20 | Format-Table
 
-Version                       Build      Availability date Preview Out-of-band Servicing option    KB article KB URL                                     Catalog URL
--------                       -----      ----------------- ------- ----------- ----------------    ---------- ------                                     -----------
-Version 21H1 (OS build 19043) 19043.1387 2021-11-22        True    False       Semi-Annual Channel KB5007253  https://support.microsoft.com/help/5007253 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5007253
-Version 21H1 (OS build 19043) 19043.1348 2021-11-09        False   False       Semi-Annual Channel KB5007186  https://support.microsoft.com/help/5007186 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5007186
-Version 21H1 (OS build 19043) 19043.1320 2021-10-26        True    False       Semi-Annual Channel KB5006738  https://support.microsoft.com/help/5006738 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5006738
-Version 21H1 (OS build 19043) 19043.1288 2021-10-12        False   False       Semi-Annual Channel KB5006670  https://support.microsoft.com/help/5006670 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5006670
-Version 21H1 (OS build 19043) 19043.1266 2021-09-30        True    False       Semi-Annual Channel KB5005611  https://support.microsoft.com/help/5005611 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5005611
-Version 21H1 (OS build 19043) 19043.1237 2021-09-14        False   False       Semi-Annual Channel KB5005565  https://support.microsoft.com/help/5005565 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5005565
-Version 21H1 (OS build 19043) 19043.1202 2021-09-01        True    False       Semi-Annual Channel KB5005101  https://support.microsoft.com/help/5005101 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5005101
-Version 21H1 (OS build 19043) 19043.1165 2021-08-10        False   False       Semi-Annual Channel KB5005033  https://support.microsoft.com/help/5005033 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5005033
-Version 21H1 (OS build 19043) 19043.1151 2021-07-29        True    False       Semi-Annual Channel KB5004296  https://support.microsoft.com/help/5004296 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5004296
-Version 21H1 (OS build 19043) 19043.1110 2021-07-13        False   False       Semi-Annual Channel KB5004237  https://support.microsoft.com/help/5004237 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5004237
-Version 21H1 (OS build 19043) 19043.1083 2021-07-06        False   True        Semi-Annual Channel KB5004945  https://support.microsoft.com/help/5004945 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5004945
-Version 21H1 (OS build 19043) 19043.1082 2021-06-29        False   True        Semi-Annual Channel KB5004760  https://support.microsoft.com/help/5004760 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5004760
-Version 21H1 (OS build 19043) 19043.1081 2021-06-21        True    False       Semi-Annual Channel KB5003690  https://support.microsoft.com/help/5003690 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5003690
-Version 21H1 (OS build 19043) 19043.1055 2021-06-11        False   True        Semi-Annual Channel KB5004476  https://support.microsoft.com/help/5004476 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5004476
-Version 21H1 (OS build 19043) 19043.1052 2021-06-08        False   False       Semi-Annual Channel KB5003637  https://support.microsoft.com/help/5003637 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5003637
-Version 21H1 (OS build 19043) 19043.1023 2021-05-25        True    False       Semi-Annual Channel KB5003214  https://support.microsoft.com/help/5003214 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5003214
-Version 21H1 (OS build 19043) 19043.985  2021-05-18        False   False       Semi-Annual Channel KB5003173  https://support.microsoft.com/help/5003173 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5003173
+Version                       Build      Availability date Preview Out-of-band Servicing option                    KB article KB URL                                     Catalog URL
+-------                       -----      ----------------- ------- ----------- ----------------                    ---------- ------                                     -----------
+Version 21H2 (OS build 19044) 19044.3324 2023-08-08        False   False       LTSC • General Availability Channel KB5029244  https://support.microsoft.com/help/5029244 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5029244
+Version 21H2 (OS build 19044) 19044.3208 2023-07-11        False   False       LTSC • General Availability Channel KB5028166  https://support.microsoft.com/help/5028166 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5028166
+Version 21H2 (OS build 19044) 19044.3086 2023-06-13        False   False       LTSC • General Availability Channel KB5027215  https://support.microsoft.com/help/5027215 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5027215
+Version 21H2 (OS build 19044) 19044.2965 2023-05-09        False   False       LTSC • General Availability Channel KB5026361  https://support.microsoft.com/help/5026361 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5026361
+Version 21H2 (OS build 19044) 19044.2846 2023-04-11        False   False       LTSC • General Availability Channel KB5025221  https://support.microsoft.com/help/5025221 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5025221
+Version 21H2 (OS build 19044) 19044.2788 2023-03-21        True    False       LTSC • General Availability Channel KB5023773  https://support.microsoft.com/help/5023773 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5023773
+Version 21H2 (OS build 19044) 19044.2728 2023-03-14        False   False       LTSC • General Availability Channel KB5023696  https://support.microsoft.com/help/5023696 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5023696
+Version 21H2 (OS build 19044) 19044.2673 2023-02-21        True    False       LTSC • General Availability Channel KB5022906  https://support.microsoft.com/help/5022906 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5022906
+Version 21H2 (OS build 19044) 19044.2604 2023-02-14        False   False       LTSC • General Availability Channel KB5022834  https://support.microsoft.com/help/5022834 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5022834
+Version 21H2 (OS build 19044) 19044.2546 2023-01-19        True    False       LTSC • General Availability Channel KB5019275  https://support.microsoft.com/help/5019275 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5019275
+Version 21H2 (OS build 19044) 19044.2486 2023-01-10        False   False       LTSC • General Availability Channel KB5022282  https://support.microsoft.com/help/5022282 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5022282
+Version 21H2 (OS build 19044) 19044.2364 2022-12-13        False   False       LTSC • General Availability Channel KB5021233  https://support.microsoft.com/help/5021233 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5021233
+Version 21H2 (OS build 19044) 19044.2311 2022-11-15        True    False       LTSC • General Availability Channel KB5020030  https://support.microsoft.com/help/5020030 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5020030
+Version 21H2 (OS build 19044) 19044.2251 2022-11-08        False   False       LTSC • General Availability Channel KB5019959  https://support.microsoft.com/help/5019959 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5019959
+Version 21H2 (OS build 19044) 19044.2194 2022-10-28        False   True        LTSC • General Availability Channel KB5020953  https://support.microsoft.com/help/5020953 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5020953
+Version 21H2 (OS build 19044) 19044.2193 2022-10-25        True    False       LTSC • General Availability Channel KB5018482  https://support.microsoft.com/help/5018482 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5018482
+Version 21H2 (OS build 19044) 19044.2132 2022-10-17        False   True        LTSC • General Availability Channel KB5020435  https://support.microsoft.com/help/5020435 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5020435
+Version 21H2 (OS build 19044) 19044.2130 2022-10-11        False   False       LTSC • General Availability Channel KB5018410  https://support.microsoft.com/help/5018410 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5018410
+Version 21H2 (OS build 19044) 19044.2075 2022-09-20        True    False       LTSC • General Availability Channel KB5017380  https://support.microsoft.com/help/5017380 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5017380
+Version 21H2 (OS build 19044) 19044.2006 2022-09-13        False   False       LTSC • General Availability Channel KB5017308  https://support.microsoft.com/help/5017308 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5017308
 ```
 
 ## How to compare current vs latest OS build
 
-To compare you can use the following code example. This will compare a device's current OS build against the latest available OS build of Windows 10 21H2 (including out-of-band and excluding preview builds) this can be changed as required and guidance can be found above. The $Status variable can used in your RMM, monitoring solution or scripts as required.
+To compare you can use the following code example. This will compare a device's current OS build against the latest available OS build of Windows 10 22H2 (including out-of-band and excluding preview builds) this can be changed as required and guidance can be found above. The $Status variable can used in your RMM, monitoring solution or scripts as required.
 
 ```powershell
 $InstalledOSBuild = Get-CurrentOSBuild
-$LatestOSBuilds = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -LatestReleases 1 -ExcludePreview
+$LatestOSBuilds = Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 1 -ExcludePreview
 
 If ($LatestOSBuilds -match $InstalledOSBuild) {
     Write-Output "OK - OS Build is up to date"
