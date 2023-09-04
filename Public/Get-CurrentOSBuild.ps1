@@ -7,11 +7,10 @@
         .PARAMETER Detailed
             This parameter is optional. Returns detailed information about the installed OS Build.
         .EXAMPLE
+            Show detailed information for the installed OS Build.
             Get-CurrentOSBuild
-            Show only the build number for the installed OS Build.
         .EXAMPLE
             Get-CurrentOSBuild -Detailed
-            Show detailed information for the installed OS Build.
     #>
 
     Param(
@@ -46,7 +45,7 @@
             $GetOSCaption = (Get-CIMInstance Win32_OperatingSystem).Caption
         }
         Catch {
-            Throw "Unable to get operating system caption. If you believe this is incorrect please submit an issue at https://github.com/AshleyHow/WindowsOSBuild/issues and include the following info :- `nOS Caption: $GetOSCaption, Error: $($_.Exception.Message)"
+            Throw "Get-CurrentOSBuild: Unable to get operating system caption. Error: $($_.Exception.Message)"
         }
 
         If ($GetOSCaption -match "Windows 10") {
@@ -68,7 +67,7 @@
             $DetectedOS = "ServerSAC"
         }
         Else {
-            Throw "Unable to detect operating system. If you believe this is incorrect please submit an issue at https://github.com/AshleyHow/WindowsOSBuild/issues and include the following info :- `nOS Caption: $GetOSCaption, Detected OS: $GetOSCaption"
+            Throw "Get-CurrentOSBuild: Unable to detect operating system. OS Caption: $GetOSCaption, Detected OS: $DetectedOS"
         }
 
         Get-LatestOSBuild -OSName $DetectedOS -OSversion $(Get-Build) -LatestReleases 1000 | Where-Object -Property Build -eq $CurrentOSBuild
