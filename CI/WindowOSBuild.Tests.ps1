@@ -50,21 +50,6 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
             }
         }
-        Context "Win 10 (1607)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1607 -latestreleases 1000
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
-            }
-        }
         Context "Win 10 (1703)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1703 -latestreleases 1000
@@ -215,7 +200,37 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
             }
         }
+        Context "Win 10 (22H2)" {
+            It "Results" {
+                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -latestreleases 1000
+                $Results.Build.Count | Should -BeGreaterThan 1
+                $Results.Version | Should -Not -BeNullOrEmpty
+                $Results.Build | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Preview | Should -Not -BeNullOrEmpty
+                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Not -BeNullOrEmpty
+                $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            }
+        }
         Context "Win 11 (21H2)" {
+            It "Results" {
+                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
+                $Results.Build.Count | Should -BeGreaterThan 1
+                $Results.Version | Should -Not -BeNullOrEmpty
+                $Results.Build | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Preview | Should -Not -BeNullOrEmpty
+                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Not -BeNullOrEmpty
+                $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            }
+        }
+        Context "Win 11 (22H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
@@ -332,21 +347,6 @@ Else {
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
             }
         }
-        Context "Win 10 (1607)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1607 -latestreleases 1000
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
-            }
-        }
         Context "Win 10 (1703)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1703 -latestreleases 1000
@@ -497,7 +497,37 @@ Else {
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
             }
         }
+        Context "Win 10 (22H2)" {
+            It "Results" {
+                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -latestreleases 1000
+                $Results.Build.Count | Should -BeGreaterThan 1
+                $Results.Version | Should -Not -BeNullOrEmpty
+                $Results.Build | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Preview | Should -Not -BeNullOrEmpty
+                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Not -BeNullOrEmpty
+                $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            }
+        }
         Context "Win 11 (21H2)" {
+            It "Results" {
+                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
+                $Results.Build.Count | Should -BeGreaterThan 1
+                $Results.Version | Should -Not -BeNullOrEmpty
+                $Results.Build | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Preview | Should -Not -BeNullOrEmpty
+                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Not -BeNullOrEmpty
+                $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            }
+        }
+        Context "Win 11 (22H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
