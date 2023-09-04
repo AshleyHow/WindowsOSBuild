@@ -247,7 +247,7 @@ To compare you can use the following code example. This will compare a device's 
 $InstalledOSBuild = Get-CurrentOSBuild
 $LatestOSBuilds = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -LatestReleases 1 -ExcludePreview
 
-If ($LatestOSBuilds -like "*$InstalledOSBuild*") {
+If ($LatestOSBuilds -match $InstalledOSBuild) {
     Write-Output "OK - OS Build is up to date"
     $Status = "OK"
 }
