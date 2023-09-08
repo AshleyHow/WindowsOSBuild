@@ -216,7 +216,7 @@ Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB502
 ```
 
 ```powershell
-PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 20 | Format-Table
+PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -LatestReleases 20 | Format-Table
 
 Version                       Build      Availability date Preview Out-of-band Servicing option                    KB article KB URL                                     Catalog URL
 -------                       -----      ----------------- ------- ----------- ----------------                    ---------- ------                                     -----------
