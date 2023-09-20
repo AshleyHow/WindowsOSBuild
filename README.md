@@ -42,9 +42,9 @@ Gets windows patch release information (Build, KB Number, Release Date etc) for 
 ### Parameters
 
   - OSName
-
+    
 This parameter is optional. OS name you want to check. Default value is Win10. Supported accepted values: 
-
+    
 | OS Name                                             | Version                                                                            |
 | :---------------------------------------------------| :--------------------------------------------------------------------------------- |
 | Windows Client OS Names                             | Win10, Win11.                                                                      |
@@ -87,7 +87,7 @@ This parameter is optional. Returns preview release/s only.
   - OutOfBandOnly
 
 This parameter is optional. Returns out-of-band/s only.
-
+    
 ## Get-CurrentOSBuild Function
 
 Gets the currently installed OS Build release number for Windows 10 including Windows Server versions. 
@@ -97,7 +97,7 @@ Installed OS Build number or detailed information (Version, Build, Availability 
 ### Parameters    
 
    - Detailed 
-
+   
 This parameter is optional. Returns detailed information about the installed OS Build.
 
 ## Usage
@@ -165,10 +165,13 @@ Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 | ConvertTo-Json | Out-File .\Ge
 
 ```powershell
 PS C:\Users\Ashley> Get-CurrentOSBuild          
+
 19045.3324
 ```
+
 ```powershell
 PS C:\Users\Ashley> Get-CurrentOSBuild -Detailed
+
 Version           : Version 22H2 (OS build 19045)
 Build             : 19045.3324
 Availability date : 2023-08-08
@@ -183,11 +186,14 @@ Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB502
 
 ```powershell
 PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 2 -BuildOnly
+
 19045.3393
 19045.3324
 ```
+
 ```powershell
 PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 2
+
 Version           : Version 22H2 (OS build 19045)
 Build             : 19045.3393
 Availability date : 2023-08-22
@@ -197,6 +203,7 @@ Servicing option  : General Availability Channel
 KB article        : KB5029331
 KB URL            : https://support.microsoft.com/help/5029331
 Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB5029331
+
 Version           : Version 22H2 (OS build 19045)
 Build             : 19045.3324
 Availability date : 2023-08-08
@@ -209,7 +216,8 @@ Catalog URL       : https://www.catalog.update.microsoft.com/Search.aspx?q=KB502
 ```
 
 ```powershell
-PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -LatestReleases 20 | Format-Table
+PS C:\Users\Ashley> Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 20 | Format-Table
+
 Version                       Build      Availability date Preview Out-of-band Servicing option                    KB article KB URL                                     Catalog URL
 -------                       -----      ----------------- ------- ----------- ----------------                    ---------- ------                                     -----------
 Version 21H2 (OS build 19044) 19044.3324 2023-08-08        False   False       LTSC • General Availability Channel KB5029244  https://support.microsoft.com/help/5029244 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5029244
@@ -233,12 +241,15 @@ Version 21H2 (OS build 19044) 19044.2130 2022-10-11        False   False       L
 Version 21H2 (OS build 19044) 19044.2075 2022-09-20        True    False       LTSC • General Availability Channel KB5017380  https://support.microsoft.com/help/5017380 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5017380
 Version 21H2 (OS build 19044) 19044.2006 2022-09-13        False   False       LTSC • General Availability Channel KB5017308  https://support.microsoft.com/help/5017308 https://www.catalog.update.microsoft.com/Search.aspx?q=KB5017308
 ```
+
 ## How to compare current vs latest OS build
+
 To compare you can use the following code example. This will compare a device's current OS build against the latest available OS build of Windows 10 22H2 (including out-of-band and excluding preview builds) this can be changed as required and guidance can be found above. The $Status variable can used in your RMM, monitoring solution or scripts as required.
 
 ```powershell
 $InstalledOSBuild = Get-CurrentOSBuild
 $LatestOSBuilds = Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -LatestReleases 1 -ExcludePreview
+
 If ($LatestOSBuilds -match $InstalledOSBuild) {
     Write-Output "OK - OS Build is up to date"
     $Status = "OK"
@@ -256,8 +267,12 @@ This module is maintained by the following
 * Ashley How, [@AshleyHow1](https://twitter.com/AshleyHow1)
 
 ## Credits
+
 Forked from [Get-Windows10ReleaseInformation.ps1](https://github.com/FredrikWall/PowerShell/blob/master/Windows/Get-Windows10ReleaseInformation.ps1) created by [Fredrik Wall](https://github.com/FredrikWall)
+
+
 Uses code adapted from [Get-CurrentPatchInfo.ps1](https://gist.githubusercontent.com/SMSAgentSoftware/79fb091a4b7806378fc0daa826dbfb47/raw/0f6b52cddf82b2aa836a813cf6bc910a52a48c9f/Get-CurrentPatchInfo.ps1) created by [Trevor Jones](https://github.com/SMSAgentSoftware)
+
 [psgallery-badge]: https://img.shields.io/powershellgallery/v/WindowsOSBuild.svg?logo=PowerShell&style=flat-square
 [psgallery]: https://www.powershellgallery.com/packages/WindowsOSBuild
 [psgallery-version-badge]: https://img.shields.io/powershellgallery/dt/WindowsOSBuild.svg?logo=PowerShell&style=flat-square
