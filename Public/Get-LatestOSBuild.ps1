@@ -173,7 +173,7 @@
     If ($OSName -eq "Server2022") {
         $Table = @()
         $Table =  @(
-            $VersionDataRaw = $Webpage.Links | Where-Object {$_.outerHTML -match "supLeftNavLink" -and $_.outerHTML -match "KB"} | Sort-Object -Property href -Unique
+            $VersionDataRaw = $Webpage.Links | Where-Object {$_.outerHTML -match "supLeftNavLink" -and $_.outerHTML -match "KB" -and $_.outerHTML -notmatch "25398."} | Sort-Object -Property href -Unique
             $UniqueList =  (Convert-ParsedArray -Array $VersionDataRaw) | Sort-Object OSBuild -Descending
             ForEach ($Update in $UniqueList) {
                 $ResultObject = [Ordered] @{}
