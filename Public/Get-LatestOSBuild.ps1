@@ -116,9 +116,9 @@
         $URL = "https://docs.microsoft.com/en-us/windows/release-health/release-information"
         $TableNumber = 2
     }
-    ElseIf (($OSName) -eq "Server2022" -or "Server2022Hotpatch") {
+    ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
         $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
-        if ($HotpatchOS -or $OSName -eq "Server2022Hotpatch") {
+        if ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
             $URL = "https://support.microsoft.com/en-gb/topic/release-notes-for-hotpatch-in-azure-automanage-for-windows-server-2022-4e234525-5bd5-4171-9886-b475dabe0ce8"
         }
         Else {
@@ -136,7 +136,7 @@
     ElseIf ($OSName -eq "Server2019") {
         $OSVersion = "1809"
     }
-    ElseIf ($OSName -eq "Server2022" -or "Server2022Hotpatch") {
+    ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
         $OSVersion = "21H2"
     }
 
@@ -159,7 +159,7 @@
     # Obtain data from webpage
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Try {
-        If ($OSName -eq "Server2022" -or "Server2022Hotpatch") {
+        If ($OSName -eq "Server2022" -or $HotpatchOS) {
             $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -ErrorAction Stop
         }
         Else {
@@ -176,7 +176,7 @@
     }
 
     # Server 2022
-    If ($OSName -eq "Server2022" -or "Server2022Hotpatch") {
+    If ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
         $Table = @()
         $Table =  @(
             $VersionDataRaw = $Webpage.Links | Where-Object { $_.outerHTML -match "supLeftNavLink" -and ($_.outerHTML -match "KB" -or $_.outerHTML -match "Hotpatch baseline") -and $_.outerHTML -notmatch "25398.|17784.|20348.344|20348.410|KB5010614|KB5004312|April 13, 2021 Hotpatch baseline" } | ForEach-Object { $_.outerHTML = $_.outerHTML -replace "20346", "20348" ;  $_ } |  Sort-Object -Property href -Unique
@@ -231,7 +231,7 @@
                 }
                 $FormatDate =  Get-Date($ConvertToDate) -Format 'yyyy-MM-dd'
                 $ResultObject["Availability date"] = $FormatDate
-                if ($HotpatchOS -or $OSName -eq "Server2022Hotpatch") {
+                if ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
                     If ($Update.Update -match 'Hotpatch baseline') {
                         $ResultObject["Hotpatch"] = "False"
                     }
@@ -254,14 +254,14 @@
                 $ResultObject["Servicing option"] = "LTSC"
                 $ResultObject["KB article"] = $Update.KB
                 $ResultObject["KB URL"] = $Update.InfoURL
-                if ($HotpatchOS -or $OSName -eq "Server2022Hotpatch") {
+                if ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
                     $ResultObject["Catalog URL"] =  "N/A"
                 }
                 Else {
                     $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $Update.KB
                 }
                 # Cast hash table to a PSCustomObject
-                if ($HotpatchOS -or $OSName -eq "Server2022Hotpatch") {
+                if ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
                     [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date', 'Hotpatch', 'Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
                 }
                 Else {
@@ -284,7 +284,7 @@
         }
 
         # Add / Sort Arrays
-        If ($HotpatchOS -or $OSName -eq "Server2022Hotpatch") {
+        If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
             $Table = $Table | Sort-Object -Property 'Availability date' -Descending
         }
         Else {
