@@ -159,7 +159,7 @@
     # Obtain data from webpage
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Try {
-        If ($OSName -eq "Server2022" -or $HotpatchOS) {
+        If ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
             $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -ErrorAction Stop
         }
         Else {
