@@ -282,6 +282,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
                 $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Hotpatch | Should -Not -BeNullOrEmpty
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
@@ -609,6 +610,7 @@ Else {
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
                 $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Hotpatch | Should -Not -BeNullOrEmpty
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
