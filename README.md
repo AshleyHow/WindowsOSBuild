@@ -48,7 +48,7 @@ This parameter is optional. OS name you want to check. Default value is Win10. S
 | OS Name                                             | Version                                                                                       |
 | :---------------------------------------------------| :-------------------------------------------------------------------------------------------- |
 | Windows Client OS Names                             | Win10, Win11.                                                                                 |
-| Windows Server OS Names                             | Server2016, Server2019, Server2022, Server Semi-annual = ServerSAC.                           |
+| Windows Server OS Names                             | Server2016, Server2019, Server2022, Server2022Hotpatch, Server Semi-annual = ServerSAC.       |
 
   - OSVersion
 
@@ -90,11 +90,9 @@ This parameter is optional. Returns out-of-band/s only.
     
 ## Get-CurrentOSBuild Function
 
-Gets the currently installed OS Build release number for Windows 10 including Windows Server versions. 
+Gets the currently installed OS Build release information. Supports Windows 10 and Windows Server 2016 onwards.
 
-Installed OS Build number or detailed information (Version, Build, Availability date, Hotpatch*, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL).
-
-*Windows Server 2022 Azure Edition only.
+Installed OS Build number or detailed information (Version, Build, Availability date, Hotpatch, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL).
 
 ### Parameters    
 
