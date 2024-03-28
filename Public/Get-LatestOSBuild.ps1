@@ -1,21 +1,21 @@
 ﻿Function Get-LatestOSBuild {
     <#
         .SYNOPSIS
-            Gets Windows patch release information (Version, Build, Availability date, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions.
-            Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards.
+            Gets Windows patch release information (Version, Build, Availability date, Hotpatch, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions.
+            Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022 Azure Edition.
         .DESCRIPTION
-            Patch information retrieved from Microsoft Release Health / Update History (Server 2022) pages and outputted in a usable format.
+            Patch information retrieved from Microsoft Release Health / Update History (Server 2022 | Server 2022 Hotpatch) pages and outputted in a usable format.
             These sources are updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
         .PARAMETER OSName
             This parameter is optional. OS name you want to check. Default value is Win10. Accepted values:
 
             Windows Client OS Names                              - Win10, Win11.
-            Windows Server OS Names                              - Server2016, Server2019, Server2022, Server Semi-annual = ServerSAC.
+            Windows Server OS Names                              - Server2016, Server2019, Server2022, Server2022Hotpatch, Server Semi-annual = ServerSAC.
         .PARAMETER OSVersion
             This parameter is mandatory. OS version number you want to check. Accepted values:
 
             Windows Client OS Versions:
-            CB/CBB/SAC (Semi-Annual Channel)                     - 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H2, 22H2.
+            CB/CBB/SAC (Semi-Annual Channel)                     - 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H2, 22H2, 23H2.
             LTSB/LTSC (Long-Term Servicing Build/Channel)        - 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.
 
             Window Server OS Versions:
@@ -83,7 +83,7 @@
         [String]$LatestReleases = 1,
 
         [Parameter(Mandatory = $false)]
-        [ValidateSet('Win10','Win11','Server2016','Server2019','Server2022','ServerSAC')]
+        [ValidateSet('Win10','Win11','Server2016','Server2019','Server2022','Server2022Hotpatch','ServerSAC')]
         [String]$OSName = "Win10",
 
         [Parameter(Mandatory = $false)]
@@ -116,8 +116,14 @@
         $URL = "https://docs.microsoft.com/en-us/windows/release-health/release-information"
         $TableNumber = 2
     }
-    ElseIf (($OSName) -eq "Server2022") {
-        $URL = "https://support.microsoft.com/en-us/help/5005454"
+    ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
+        $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
+        if ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+            $URL = "https://support.microsoft.com/en-gb/topic/release-notes-for-hotpatch-in-azure-automanage-for-windows-server-2022-4e234525-5bd5-4171-9886-b475dabe0ce8"
+        }
+        Else {
+            $URL = "https://support.microsoft.com/en-us/help/5005454"
+        }
     }
     Else {
         Throw "Get-LatestOSBuild: Unsupported Operating System"
@@ -130,7 +136,7 @@
     ElseIf ($OSName -eq "Server2019") {
         $OSVersion = "1809"
     }
-    ElseIf ($OSName -eq "Server2022") {
+    ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
         $OSVersion = "21H2"
     }
 
@@ -153,7 +159,7 @@
     # Obtain data from webpage
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Try {
-        If ($OSName -eq "Server2022") {
+        If ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
             $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -ErrorAction Stop
         }
         Else {
@@ -170,15 +176,52 @@
     }
 
     # Server 2022
-    If ($OSName -eq "Server2022") {
+    If ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
         $Table = @()
         $Table =  @(
-            $VersionDataRaw = $Webpage.Links | Where-Object {$_.outerHTML -match "supLeftNavLink" -and $_.outerHTML -match "KB" -and $_.outerHTML -notmatch "25398."} | Sort-Object -Property href -Unique
+            $VersionDataRaw = $Webpage.Links | Where-Object { $_.outerHTML -match "supLeftNavLink" -and ($_.outerHTML -match "KB" -or $_.outerHTML -match "Hotpatch baseline") -and $_.outerHTML -notmatch "25398.|17784.|20348.344|20348.410|KB5010614|KB5004312|April 13, 2021 Hotpatch baseline" } | ForEach-Object { $_.outerHTML = $_.outerHTML -replace "20346", "20348" ;  $_ } |  Sort-Object -Property href -Unique
             $UniqueList =  (Convert-ParsedArray -Array $VersionDataRaw) | Sort-Object OSBuild -Descending
             ForEach ($Update in $UniqueList) {
                 $ResultObject = [Ordered] @{}
-                $ResultObject["Version"] = "Version $OSVersion (OS build $($Update.OSBuild.Major))"
+                # Support for Hotpatch
+                If ($null -eq $Update.OSBuild.Major) {
+                    $ResultObject["Version"] = "Version $OSVersion (OS build 20348)"
+                }
+                Else {
+                    $ResultObject["Version"] = "Version $OSVersion (OS build $($Update.OSBuild.Major))"
+                }
+                # Support for Hotpatch
+                If ($null -eq $Update.OSBuild) {
+                    $UpdateURLWebpage = Invoke-WebRequest -Uri $Update.InfoURL -UseBasicParsing -ErrorAction Stop
+                    $HotpatchSourceKBNumber = ($UpdateURLWebpage.Links |
+                    Where-Object { $_."href" -match "kb" -and $_."data-bi-type" -match "anchor" -and  $_."class" -match "ocpArticleLink" } |
+                    ForEach-Object { $_.outerHTML -match 'KB(\d+)' ; $_ | Add-Member -NotePropertyName "SourceKBNumber" -NotePropertyValue $matches[1] -PassThru -Force }).SourceKBNumber
+                    $SourceKBURL = "https://support.microsoft.com/en-gb/help/" + $HotpatchSourceKBNumber
+
+                    # Support for Hotpatch - Load HTML content into HtmlAgilityPack
+                    $HTMLSourceKB = (New-Object HtmlAgilityPack.HtmlWeb).Load($SourceKBURL)
+
+                    # Find all elements with class "ocpLegacyBold" that contain "OS Build"
+                    $OSBuildMatches = $HTMLSourceKB.DocumentNode.SelectNodes("//*[@class='ocpLegacyBold' and starts-with(text(), 'OS Build')]")
+
+                    # Output the matched strings
+                    if ($null -ne $OSBuildMatches) {
+                        foreach ($OSBuildMatch in $OSBuildMatches) {
+                            $SourceOSBuild = $OSBuildMatch.InnerText
+                            # Remove "OS Build" from the version number
+                            $SourceOSBuild = $SourceOSBuild -replace 'OS Build ', ''
+                            # Workaround for Microsoft Error
+                            If ($SourceOSBuild -eq "17784.2364") {
+                                $SourceOSBuild = "20348.643"
+                            }
+                        }
+                    }
+
+                    $ResultObject["Build"] = [String]$SourceOSBuild
+                }
+                Else {
                 $ResultObject["Build"] = [String]$Update.OSBuild
+                }
                 $GetDate = [regex]::Match($Update.Update,"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}").Value
                 Try {
                     $ConvertToDate = [Datetime]::ParseExact($GetDate, 'MMMM dd, yyyy', [Globalization.CultureInfo]::CreateSpecificCulture('en-US'))
@@ -188,13 +231,21 @@
                 }
                 $FormatDate =  Get-Date($ConvertToDate) -Format 'yyyy-MM-dd'
                 $ResultObject["Availability date"] = $FormatDate
-                If ($Update.Update-match 'Preview') {
+                if ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+                    If ($Update.Update -match 'Hotpatch baseline') {
+                        $ResultObject["Hotpatch"] = "False"
+                    }
+                    Else {
+                        $ResultObject["Hotpatch"] = "True"
+                    }
+                }
+                If ($Update.Update -match 'Preview') {
                     $ResultObject["Preview"] = "True"
                 }
                 Else {
                     $ResultObject["Preview"] = "False"
                 }
-                If ($Update.Update-match 'Out-of-band') {
+                If ($Update.Update -match 'Out-of-band') {
                     $ResultObject["Out-of-band"] = "True"
                 }
                 Else {
@@ -203,9 +254,19 @@
                 $ResultObject["Servicing option"] = "LTSC"
                 $ResultObject["KB article"] = $Update.KB
                 $ResultObject["KB URL"] = $Update.InfoURL
-                $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $Update.KB
+                if ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+                    $ResultObject["Catalog URL"] =  "N/A"
+                }
+                Else {
+                    $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $Update.KB
+                }
                 # Cast hash table to a PSCustomObject
-                [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date', 'Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
+                if ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+                    [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date', 'Hotpatch', 'Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
+                }
+                Else {
+                    [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date', 'Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
+                }
             }
         )
 
@@ -222,8 +283,14 @@
                         'Catalog URL' = "N/A"
         }
 
-        # Add arrays
-        $Table = $Table + $Server2022RTM
+        # Add / Sort Arrays
+        If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+            $Table = $Table | Sort-Object -Property 'Availability date' -Descending
+        }
+        Else {
+            $Table = $Table + $Server2022RTM | Sort-Object -Property 'Availability date' -Descending
+        }
+
     }
 
     # All other OS
@@ -279,7 +346,7 @@
 
                 ## If we've found a table header, remember its titles
                 If ($null -ne $Cells[0]) {
-                   $Titles = $Cells[0].ParentNode.ParentNode.SelectNodes(".//th").Innertext
+                    $Titles = $Cells[0].ParentNode.ParentNode.SelectNodes(".//th").Innertext
                 }
 
                 ## If we haven't found any table headers, make up names "P1", "P2", etc.
@@ -320,7 +387,7 @@
                             If ([string]::IsNullOrEmpty($RedirectedKBURL)) {
                                 $ResultObject["Preview"] = "Unknown"
                             }
-                            ElseIf ($RedirectedKBURL-match 'Preview') {
+                            ElseIf ($RedirectedKBURL -match 'Preview') {
                                 $ResultObject["Preview"] = "True"
                             }
                             Else {
@@ -330,7 +397,7 @@
                             If ([string]::IsNullOrEmpty($RedirectedKBURL)) {
                                 $ResultObject["Out-of-band"] = "Unknown"
                             }
-                            ElseIf ($RedirectedKBURL-match 'Out-of-band') {
+                            ElseIf ($RedirectedKBURL -match 'Out-of-band') {
                                 $ResultObject["Out-of-band"] = "True"
                             }
                             Else {
@@ -347,7 +414,7 @@
                     }
                 }
                 # Cast hash table to a PSCustomObject
-                [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date', 'Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
+                [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date','Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
             }
         )
     }

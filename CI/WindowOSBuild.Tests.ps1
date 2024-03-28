@@ -202,7 +202,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         }
         Context "Win 10 (22H2)" {
             It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -latestreleases 1000
+                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -latestreleases 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -232,7 +232,22 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         }
         Context "Win 11 (22H2)" {
             It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
+                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 22H2 -latestreleases 1000
+                $Results.Build.Count | Should -BeGreaterThan 1
+                $Results.Version | Should -Not -BeNullOrEmpty
+                $Results.Build | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Preview | Should -Not -BeNullOrEmpty
+                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Not -BeNullOrEmpty
+                $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            }
+        }
+        Context "Win 11 (23H2)" {
+            It "Results" {
+                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 23H2 -latestreleases 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -252,6 +267,22 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
                 $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Preview | Should -Not -BeNullOrEmpty
+                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Not -BeNullOrEmpty
+                $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            }
+        }
+        Context "Server 2022 Hotpatch (21H2)" {
+            It "Results" {
+                $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
+                $Results.Build.Count | Should -BeGreaterThan 1
+                $Results.Version | Should -Not -BeNullOrEmpty
+                $Results.Build | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Hotpatch | Should -Not -BeNullOrEmpty
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
@@ -499,7 +530,7 @@ Else {
         }
         Context "Win 10 (22H2)" {
             It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -latestreleases 1000
+                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -latestreleases 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -529,7 +560,22 @@ Else {
         }
         Context "Win 11 (22H2)" {
             It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
+                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 22H2 -latestreleases 1000
+                $Results.Build.Count | Should -BeGreaterThan 1
+                $Results.Version | Should -Not -BeNullOrEmpty
+                $Results.Build | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Preview | Should -Not -BeNullOrEmpty
+                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Not -BeNullOrEmpty
+                $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            }
+        }
+        Context "Win 11 (23H2)" {
+            It "Results" {
+                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 23H2 -latestreleases 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -549,6 +595,22 @@ Else {
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
                 $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Preview | Should -Not -BeNullOrEmpty
+                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Not -BeNullOrEmpty
+                $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            }
+        }
+        Context "Server 2022 Hotpatch (21H2)" {
+            It "Results" {
+                $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
+                $Results.Build.Count | Should -BeGreaterThan 1
+                $Results.Version | Should -Not -BeNullOrEmpty
+                $Results.Build | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                $Results.Hotpatch | Should -Not -BeNullOrEmpty
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
