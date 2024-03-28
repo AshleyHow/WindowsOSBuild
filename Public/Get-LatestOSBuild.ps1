@@ -2,9 +2,9 @@
     <#
         .SYNOPSIS
             Gets Windows patch release information (Version, Build, Availability date, Hotpatch, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions.
-            Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Support for hotpatch on Windows Server 2022 Azure Edition.
+            Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022 Azure Edition.
         .DESCRIPTION
-            Patch information retrieved from Microsoft Release Health / Update History (Server 2022) pages and outputted in a usable format.
+            Patch information retrieved from Microsoft Release Health / Update History (Server 2022 | Server 2022 Hotpatch) pages and outputted in a usable format.
             These sources are updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
         .PARAMETER OSName
             This parameter is optional. OS name you want to check. Default value is Win10. Accepted values:
