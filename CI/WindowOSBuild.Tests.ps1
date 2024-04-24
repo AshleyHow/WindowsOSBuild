@@ -329,20 +329,20 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
             }
         }
-        Describe "Code Signing Certificate Test - WindowsOSServicing.psm1" {
+        Describe "Code Signing Certificate Test - WindowsOSBuild.psm1" {
             Context "File Signature Check" {
                 It "Results" {
-                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\WindowsOSServicing.psm1"
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\WindowsOSBuild.psm1"
                     $signature | Should -Not -BeNullOrEmpty
                     $signature.SignatureType| Should -Be "Authenticode"
                     $signature.Status | Should -Be "Valid"
                 }
             }
         }
-        Describe "Code Signing Certificate Test - WindowsOSServicing.psd1" {
+        Describe "Code Signing Certificate Test - WindowsOSBuild.psd1" {
             Context "File Signature Check" {
                 It "Results" {
-                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\WindowsOSServicing.psd1"
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\WindowsOSBuild.psd1"
                     $signature | Should -Not -BeNullOrEmpty
                     $signature.SignatureType| Should -Be "Authenticode"
                     $signature.Status | Should -Be "Valid"
@@ -718,20 +718,20 @@ Else {
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
             }
         }
-        Describe "Code Signing Certificate Test - WindowsOSServicing.psm1" {
+        Describe "Code Signing Certificate Test - WindowsOSBuild.psm1" {
             Context "File Signature Check" {
                 It "Results" {
-                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\WindowsOSServicing.psm1"
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\WindowsOSBuild.psm1"
                     $signature | Should -Not -BeNullOrEmpty
                     $signature.SignatureType| Should -Be "Authenticode"
                     $signature.Status | Should -Be "Valid"
                 }
             }
         }
-        Describe "Code Signing Certificate Test - WindowsOSServicing.psd1" {
+        Describe "Code Signing Certificate Test - WindowsOSBuild.psd1" {
             Context "File Signature Check" {
                 It "Results" {
-                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\WindowsOSServicing.psd1"
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\WindowsOSBuild.psd1"
                     $signature | Should -Not -BeNullOrEmpty
                     $signature.SignatureType| Should -Be "Authenticode"
                     $signature.Status | Should -Be "Valid"
@@ -783,8 +783,8 @@ Else {
 # SIG # Begin signature block
 # MIImcgYJKoZIhvcNAQcCoIImYzCCJl8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUBbzhRurRsHSbbuC35BqnQfR7
-# qEyggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUPbLfVyre/2QpMP6qduRhL6dp
+# 97+ggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -960,31 +960,31 @@ Else {
 # QS4xJDAiBgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzem
 # d0ILREkKU+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKA
 # ADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYK
-# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUIOz2mRWNi6XSxUtSfZCP988FmSww
-# DQYJKoZIhvcNAQEBBQAEggGAFd9o3+6hd+sb13HtaliMWH+tDmD78SL2EFPFvRvG
-# mu1v7SKHrAfwHvB7s3OGpJ2LxFT4dp38gDflQzaE4WXG3l2kS5KFWOFUMDN+0jMb
-# 1cTZFwF+IkrMPL3ob7Do2OkzC33HvRmQdahho4hpZ1d7s51FcsWP0MfNAELTBU3G
-# X4iYrxfg3h2Imtt4fnCAnXqe4D8+FbiH70SpwOlEfmf/9x+tGPi4GvDahkShTWiW
-# CoqHoB3fN4NNVbO2XpQjdUHt18YaxLXHP62hzMW0aOvHBv79f1911K5kX0/5fIqp
-# AAIXVHPrmapzFcuKDFY1bIvkQmcxB7mXsbtCfadsD6LV74oQFdjhAu3877sRR7dk
-# oNiUCKAmKCgpU6mzu27lTS1Ns5wkO+4Fn6Qqt+3+r/bgBP5wXRvsc9rx64zcdKVP
-# arhBz547Peue5gmh40Id/GDKx575NSDyQA/Ae0SBsZdyOGFdbMdvH2SyrBO2yJYH
-# X0WjizJcSoKXiT0iR1tjRWZ9oYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
+# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUdqyhdhtGHVy5D9rtnT+XOwwrilww
+# DQYJKoZIhvcNAQEBBQAEggGAVlROtoYD9MAHVNZJjD5Q8CPCFgynsjc60DKJELdc
+# r3OSIBPZGO5BPAls830N/zkoDJbMwPrjf7t01amGefrqNQ7aYmARozRvPnuyRA1b
+# RzzgiO/ogDoIbZzWOmk+y+djzmRO0YTFqsmCJ1KBHNmIhlro8BU3jFcH4ghN8sfe
+# 9qlg/E4u1Z+vH4qs8Jg9ZNXdnwiBPjOOkaOXqZTrtXjkOYHaisgcT/t2wD1MiOus
+# wnKN7pVgGQ0o6xWNrAqMw0pz/YhvDXZCUrjddZOCB7M8XUhVJCUW+OQq12F0b6P1
+# n0XhGmKqkiTJ1B1e4DHweHyVfEIYQaiuYsGZMmf6zK0+FYRJl8tgn0YYq6dD6aII
+# Tv4MFVdWtyFJw+QfLCWELVW8lMJZQiW48RgPOrU6d7tqKGUa/ELc3nqdT2g5U5fh
+# DlD7U0fN4bcCKPFO9yxr3wBoEyhoRrQolw8ZJSIcrrNTH54cvm8zZ9jdTR2Ifi1R
+# /Kmf807aIhbNn6sX1bwrm5HYoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
 # MHcwYzELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYD
 # VQQDEzJEaWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFt
 # cGluZyBDQQIQBUSv85SdCDmmv9s/X+VhFjANBglghkgBZQMEAgEFAKBpMBgGCSqG
-# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDQyNDIyMDkx
-# MlowLwYJKoZIhvcNAQkEMSIEIAvVDsR81Sk0QpIR9NQnvv4CumQaPCCRyS3UUlPn
-# NT+OMA0GCSqGSIb3DQEBAQUABIICADIaBZYCNmYrba0rbbWXpcMA1m/Boa8n2sV7
-# eVvunCsQf90NGiegcRGl17U1PsT7jTpzKoCeQkdDQNPImt+1YDUIjqcmA2oH7oOA
-# 9gEaxEZxd3lBSdwmjmFBoRaRSDRDNGJl3RYYkWIoQFrzmspwbtUUZRn8cpKag8JF
-# eiF+R0lUZ8mqB4tbO6wFb7jI8a8ZpM/h7Ftg1NtotMYTFm++71GWbvjXs+5UVvDW
-# gdQpiu6jaga1is8AbGZ8e9k/UEQtHnWKYRitcm1UvgZej3KCyHkE19ZBtmXTLCxp
-# tjBBy0/wjCJ7/3ggeiiCmVTkhZBBTh0/qgquvv7PqRUIBfefJ1kMcX5SYvJvgVLp
-# HFH26st9rN/cNMsAD4kyMYwreXOWN8QylRF67R6Mc3DC5bL6CHnBDEjpiCD24Zbu
-# Y0Mui92apvQOpj2WdBm6+qtdTiCddUtJ0eKFjywR50rSqQPhKR8b760AOw5O/RFC
-# b58i4wXv1MLzXoumP2v9IN1kfha5BZy0WW5uTphpFc6Mwj73xyRm0xe47lbJQjOR
-# 59aYKdbEBB+dXhLwlmLYPS/REFJblqqCV2rGIRrTE13ODjM5kXSPErLWZtQKfm8Y
-# Ftsfczs688TiltG6rGGZ9VGEnWQrk9vlQgg9D8OwA0p6nJAUPU9CXqIIAiMD25Wi
-# 3kjPM74W
+# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDQyNDIyMzgz
+# OFowLwYJKoZIhvcNAQkEMSIEIEIq/4c9TvVx7tSnCWSNVsc1cnQKvvN1hAS1unNn
+# UnG0MA0GCSqGSIb3DQEBAQUABIICACaSq0WXziOZR+q2jcR48KYvon//4P+aLEzr
+# FfGYiyIcFzY8dp/Dfq3NxlrqU/5SXNZu7YG+Gq/A00fxfFpEg3dGf5ju6tbkEzUL
+# 9f71dCEyZMD4mXoRkQFwgQEAmDrN0opZhb9f3QXTugjWczI81DaZmTLGEfslvsUG
+# oswjieYhRcDgzbnFySGW7WMbCmrsSsEpAGOXNZ4NSNbDjlceW+6Et5O1XMUqq2B6
+# 7vGt1Hm1prVyzivZIedNGX7Yx7xbLsecZ1ua0SQvi5tNYWQNGjRlLrszkVwN1kq8
+# av9QfQidTm5ZWgVLHsMhozV8HvhXiTNVccz1oRSJW30yyaUlhg3UGjint+6rxsvO
+# jQCJlV6kDvRaCXHLQ951RgLLcovdoeqrJFwPH1WbaHFdpdtRmzrcl3AXyPOl6TcR
+# 8xoBu1cjkHc4HPM78r87fQPqQfTVsYQcmv/uh/IXBE2PxGdBiRA07pKMZNv+ETaU
+# LlpT5JGmiE82YfgF2lBDyBqgQkLu75kSB8cx+6sKl3kVQx8MtLdTVNu1BOYRuL0v
+# uGPKl4X2osStFNOM87eu1SPBmMYyFCSjjleZnMcEauZ/kS0aVnHEhXuRRN78G+0M
+# vXenFaGms8Io+Lay+tSiwhf1khV5A3p18BE/vJsUcc3hzufaf5YdulXQcpATMj3W
+# /2QOzyzs
 # SIG # End signature block
