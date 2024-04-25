@@ -365,7 +365,8 @@
                         Continue
                     }
                     If (![string]::IsNullOrEmpty($ResultObject.'Servicing option')) {
-                    $ResultObject['Servicing option'] = $ResultObject.'Servicing option'.Replace(' &bull; ','•')
+                        # Resolve bullet encoding issue
+                        $ResultObject['Servicing option'] = $ResultObject.'Servicing option' -replace '\s*â¢\s*', ' • '
                     }
                     $ResultObject[$Title] = ("" + $Cells[$Counter].InnerText).Trim()
                     If ((![string]::IsNullOrEmpty($ResultObject.'KB article')) -and ($ResultObject.'KB article' -ne "N/A")) {
