@@ -8,6 +8,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1507)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -15,6 +16,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -23,6 +25,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1511)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1511 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -30,6 +33,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -38,6 +42,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 / Server 2016 (1607)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1607 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -45,6 +50,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -53,6 +59,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1703)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1703 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -60,6 +67,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -68,6 +76,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1709)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1709 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -75,6 +84,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -83,6 +93,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1803)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1803 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -90,6 +101,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -98,6 +110,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 / Server 2019 (1809)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1809 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -105,6 +118,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -113,6 +127,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1903)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1903 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -128,6 +143,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1909)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1909 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -143,6 +159,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (2004)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 2004 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -158,6 +175,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (20H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 20H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -173,6 +191,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (21H1)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -188,6 +207,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (21H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -195,6 +215,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -203,6 +224,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (22H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -218,6 +240,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 11 (21H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -233,6 +256,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 11 (22H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 22H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -248,6 +272,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 11 (23H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 23H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -263,6 +288,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Server 2022 (21H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Server2022 -OSVersion 21H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -278,6 +304,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Server 2022 Hotpatch (21H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -294,6 +321,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Server SAC (1709)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName ServerSAC -OSVersion 1709 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -311,12 +339,14 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Build only" {
             It "Results" {
                 $Results = Get-CurrentOSBuild
+                Start-Sleep -Milliseconds 1000
                 $Results.Count | Should -Be 1
             }
         }
         Context "Detailed" {
             It "Results" {
                 $Results = Get-CurrentOSBuild -Detailed
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -Be 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -396,6 +426,7 @@ Else {
         Context "Win 10 (1507)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -403,6 +434,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -411,6 +443,7 @@ Else {
         Context "Win 10 (1511)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1511 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -418,6 +451,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -426,6 +460,7 @@ Else {
         Context "Win 10 / Server 2016 (1607)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1607 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -433,6 +468,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -441,6 +477,7 @@ Else {
         Context "Win 10 (1703)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1703 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -448,6 +485,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -456,6 +494,7 @@ Else {
         Context "Win 10 (1709)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1709 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -463,6 +502,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -471,6 +511,7 @@ Else {
         Context "Win 10 (1803)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1803 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -478,6 +519,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -486,6 +528,7 @@ Else {
         Context "Win 10 / Server 2019 (1809)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1809 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -493,6 +536,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -501,6 +545,7 @@ Else {
         Context "Win 10 (1903)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1903 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -516,6 +561,7 @@ Else {
         Context "Win 10 (1909)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1909 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -531,6 +577,7 @@ Else {
         Context "Win 10 (2004)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 2004 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -546,6 +593,7 @@ Else {
         Context "Win 10 (20H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 20H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -561,6 +609,7 @@ Else {
         Context "Win 10 (21H1)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -576,6 +625,7 @@ Else {
         Context "Win 10 (21H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -583,6 +633,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'Servicing option' | Should -Contain "â€¢"
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -591,6 +642,7 @@ Else {
         Context "Win 10 (22H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -606,6 +658,7 @@ Else {
         Context "Win 11 (21H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -621,6 +674,7 @@ Else {
         Context "Win 11 (22H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 22H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -636,6 +690,7 @@ Else {
         Context "Win 11 (23H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 23H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -651,6 +706,7 @@ Else {
         Context "Server 2022 (21H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Server2022 -OSVersion 21H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -666,6 +722,7 @@ Else {
         Context "Server 2022 Hotpatch (21H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -682,6 +739,7 @@ Else {
         Context "Server SAC (1709)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName ServerSAC -OSVersion 1709 -latestreleases 1000
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -700,12 +758,14 @@ Else {
         Context "Build only" {
             It "Results" {
                 $Results = Get-CurrentOSBuild
+                Start-Sleep -Milliseconds 1000
                 $Results.Count | Should -Be 1
             }
         }
         Context "Detailed" {
             It "Results" {
                 $Results = Get-CurrentOSBuild -Detailed
+                Start-Sleep -Milliseconds 1000
                 $Results.Build.Count | Should -Be  1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -783,8 +843,8 @@ Else {
 # SIG # Begin signature block
 # MIImcgYJKoZIhvcNAQcCoIImYzCCJl8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUPbLfVyre/2QpMP6qduRhL6dp
-# 97+ggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUD44QU+gLvUOfCo+DJW0et/dT
+# d72ggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -960,31 +1020,31 @@ Else {
 # QS4xJDAiBgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzem
 # d0ILREkKU+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKA
 # ADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYK
-# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUdqyhdhtGHVy5D9rtnT+XOwwrilww
-# DQYJKoZIhvcNAQEBBQAEggGAVlROtoYD9MAHVNZJjD5Q8CPCFgynsjc60DKJELdc
-# r3OSIBPZGO5BPAls830N/zkoDJbMwPrjf7t01amGefrqNQ7aYmARozRvPnuyRA1b
-# RzzgiO/ogDoIbZzWOmk+y+djzmRO0YTFqsmCJ1KBHNmIhlro8BU3jFcH4ghN8sfe
-# 9qlg/E4u1Z+vH4qs8Jg9ZNXdnwiBPjOOkaOXqZTrtXjkOYHaisgcT/t2wD1MiOus
-# wnKN7pVgGQ0o6xWNrAqMw0pz/YhvDXZCUrjddZOCB7M8XUhVJCUW+OQq12F0b6P1
-# n0XhGmKqkiTJ1B1e4DHweHyVfEIYQaiuYsGZMmf6zK0+FYRJl8tgn0YYq6dD6aII
-# Tv4MFVdWtyFJw+QfLCWELVW8lMJZQiW48RgPOrU6d7tqKGUa/ELc3nqdT2g5U5fh
-# DlD7U0fN4bcCKPFO9yxr3wBoEyhoRrQolw8ZJSIcrrNTH54cvm8zZ9jdTR2Ifi1R
-# /Kmf807aIhbNn6sX1bwrm5HYoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
+# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUaDfC6N3aNodGWbP+NkLDKzG7JQ8w
+# DQYJKoZIhvcNAQEBBQAEggGAkTOZLai3/tyfR33LVlp8XZfFALTF715n39PAWBia
+# rsI4Ie7w+4pk5z9/tz7jvxFVV+jQee9TgtlDhhbI5fysad4AQ59WbkLzxxHaDGie
+# N1/03BKpWGuBSdxwkzfGjDZEqwJUs91nn42t8pW42jC1sp8OhIXeDGFL9IYRBNHt
+# vDTgiBvL5cdbCiPKaQqZXlvbiVKCQyxMdWAAHEkzSA2Z7nUwmWdSYsgVPrz/1hEC
+# 4kEUFL6bEMumnqOjTC7MEfvPDlfB8n8bWGKxoYnl3mIUov5fAPgiV1WUo1Cn8wXF
+# hHZFPGG3ncYJyN+b2jrh+VBTnEa8IlGFrcFwAuYaLCq1AidUyQitub1rBSzwHpha
+# Xxdkv+kwDw1BUr8XvkldyhK8qolHP8R93I3rsxIDq+/RVm9bd077uf9dv4+U5fgj
+# AYO4Dm43Q5RVHDHBVt8o8rvApXTe/7n8xjcRe1sctz6vpi/A/u7/z6XFG4MVvCOR
+# lHVHe10Ci+NxsVXP42ybP/QxoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
 # MHcwYzELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYD
 # VQQDEzJEaWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFt
 # cGluZyBDQQIQBUSv85SdCDmmv9s/X+VhFjANBglghkgBZQMEAgEFAKBpMBgGCSqG
-# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDQyNDIyMzgz
-# OFowLwYJKoZIhvcNAQkEMSIEIEIq/4c9TvVx7tSnCWSNVsc1cnQKvvN1hAS1unNn
-# UnG0MA0GCSqGSIb3DQEBAQUABIICACaSq0WXziOZR+q2jcR48KYvon//4P+aLEzr
-# FfGYiyIcFzY8dp/Dfq3NxlrqU/5SXNZu7YG+Gq/A00fxfFpEg3dGf5ju6tbkEzUL
-# 9f71dCEyZMD4mXoRkQFwgQEAmDrN0opZhb9f3QXTugjWczI81DaZmTLGEfslvsUG
-# oswjieYhRcDgzbnFySGW7WMbCmrsSsEpAGOXNZ4NSNbDjlceW+6Et5O1XMUqq2B6
-# 7vGt1Hm1prVyzivZIedNGX7Yx7xbLsecZ1ua0SQvi5tNYWQNGjRlLrszkVwN1kq8
-# av9QfQidTm5ZWgVLHsMhozV8HvhXiTNVccz1oRSJW30yyaUlhg3UGjint+6rxsvO
-# jQCJlV6kDvRaCXHLQ951RgLLcovdoeqrJFwPH1WbaHFdpdtRmzrcl3AXyPOl6TcR
-# 8xoBu1cjkHc4HPM78r87fQPqQfTVsYQcmv/uh/IXBE2PxGdBiRA07pKMZNv+ETaU
-# LlpT5JGmiE82YfgF2lBDyBqgQkLu75kSB8cx+6sKl3kVQx8MtLdTVNu1BOYRuL0v
-# uGPKl4X2osStFNOM87eu1SPBmMYyFCSjjleZnMcEauZ/kS0aVnHEhXuRRN78G+0M
-# vXenFaGms8Io+Lay+tSiwhf1khV5A3p18BE/vJsUcc3hzufaf5YdulXQcpATMj3W
-# /2QOzyzs
+# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDYyNDIzNDQy
+# NFowLwYJKoZIhvcNAQkEMSIEIPXUpAAQGWSDfp9cs+ZThv1/HxUPvBH22u41HhUy
+# VA3SMA0GCSqGSIb3DQEBAQUABIICAA2EejyayVYxdiPlE0exggILTXsN1Y8o4Usx
+# PjlXnvfYadlcG9qR4HOU7E3NbVPNqwZzaoHYVJk5qYkRNIHacTz2bdM60VANLv2u
+# EdIqU0OYcsQO26+RCqUsc/GtgeH5mWSm+Up+3S7uX35UEplqNKcLwZu0T1GJWb62
+# 8nI8P7gWLzkbrU2yUrnVs6RPtkMSNxtn2iGVKeqGbcc8woIQVf03efR7Wjyo9edJ
+# +6gIo0K1IGKNBys/+1sqG0L1euha8gUWQR8RiUBRcVj29zitkEKhxN5OQoI4d07G
+# vhXZ245FSP+GAnExNQuSORXTygwlBy2HJqjQmDuY0hA0328qhkaFiT8WNevahHOU
+# EftBETG8QaaDCK7llhq3hEPJvdIcvzG4TkPlN5EY2rP2iywgm59xYOBT3/euj0ZQ
+# V/Ba77IP57ll+QKV5eA2wRM1TmhBFC1gt6jBS/8BGc6kUb5EPQ/smks/CSISMDU1
+# py12nsVUnIGymlIn2mJZ8qsYgy3tOILflxsu7/zSaPJvXREYJ1XPuvYFihk9Kx4g
+# e/SJ34SQTDvR93e7dp/NWV+l/+T7U0TOyhvTjRLsxgoP5m1dscO9IlPmG8N26xDA
+# TKDKOC5r+QAZZW78+KKBTimXQBEBHc+QYa+hxpICaKfIgSqMHw+lKbzk32OllBxR
+# uYAjThlS
 # SIG # End signature block
