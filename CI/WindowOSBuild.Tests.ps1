@@ -16,7 +16,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -33,7 +33,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -50,7 +50,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -67,7 +67,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -84,7 +84,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -101,7 +101,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -118,7 +118,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -215,7 +215,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -434,7 +434,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -451,7 +451,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -468,7 +468,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -485,7 +485,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -502,7 +502,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -519,7 +519,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -536,7 +536,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -633,7 +633,7 @@ Else {
                 $Results.Preview | Should -Not -BeNullOrEmpty
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Contain "â€¢"
+                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
                 $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
@@ -843,8 +843,8 @@ Else {
 # SIG # Begin signature block
 # MIImcgYJKoZIhvcNAQcCoIImYzCCJl8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUD44QU+gLvUOfCo+DJW0et/dT
-# d72ggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUBaJatFlGK+7XIxZrFH4qJcKs
+# XFSggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -1020,31 +1020,31 @@ Else {
 # QS4xJDAiBgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzem
 # d0ILREkKU+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKA
 # ADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYK
-# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUaDfC6N3aNodGWbP+NkLDKzG7JQ8w
-# DQYJKoZIhvcNAQEBBQAEggGAkTOZLai3/tyfR33LVlp8XZfFALTF715n39PAWBia
-# rsI4Ie7w+4pk5z9/tz7jvxFVV+jQee9TgtlDhhbI5fysad4AQ59WbkLzxxHaDGie
-# N1/03BKpWGuBSdxwkzfGjDZEqwJUs91nn42t8pW42jC1sp8OhIXeDGFL9IYRBNHt
-# vDTgiBvL5cdbCiPKaQqZXlvbiVKCQyxMdWAAHEkzSA2Z7nUwmWdSYsgVPrz/1hEC
-# 4kEUFL6bEMumnqOjTC7MEfvPDlfB8n8bWGKxoYnl3mIUov5fAPgiV1WUo1Cn8wXF
-# hHZFPGG3ncYJyN+b2jrh+VBTnEa8IlGFrcFwAuYaLCq1AidUyQitub1rBSzwHpha
-# Xxdkv+kwDw1BUr8XvkldyhK8qolHP8R93I3rsxIDq+/RVm9bd077uf9dv4+U5fgj
-# AYO4Dm43Q5RVHDHBVt8o8rvApXTe/7n8xjcRe1sctz6vpi/A/u7/z6XFG4MVvCOR
-# lHVHe10Ci+NxsVXP42ybP/QxoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
+# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUAtMWOPJdaXFecTEFMhoJpiyaNEsw
+# DQYJKoZIhvcNAQEBBQAEggGAfgM5JSG/3+ZPT1sr8lmO0QiGXaVHD+LHW1k7daas
+# sUgsOMmP5d1qlhgik92mLn/Xp+m9TaeSOhHMJuDuoxgo69F9l7KT2koutl9Vn7F0
+# OTNePfaIRB1FaiOacMJIKJHAtfmNHe5RwZlto6JRAzYqCoKCOihTBESzbeOBVFnl
+# vnxIWn9LfzRh3NA22g1ixqGV8ZXkLL0AyBQLlKOTBCnKF20QNq2Txalyfn3AqD8Q
+# K2MBEteN+JwCVndkxN81+oXCwwDBbBc7VztDpO5PuY2iE767pO7gsoykx2Ksgwq5
+# GgQlVzqSbQXsnznVNfgWtPXXEEbK0qgji3aUD5TRZo45ThXgO7Kh2yjKZ8r53MIZ
+# s74BTvRmXRaclwgiDRIscmCDypV/+JkptdYdct+3k6Up8txBCW1aOjYJvAE38A0K
+# vHJdL+7ZIgoXZod2OYLI4Z4gFGJVjwWZ17n3CHkrKn7hMl+0hqCryPw3OMkbzecY
+# Os7VcSfIGDppycxFbcOD9zTnoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
 # MHcwYzELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYD
 # VQQDEzJEaWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFt
 # cGluZyBDQQIQBUSv85SdCDmmv9s/X+VhFjANBglghkgBZQMEAgEFAKBpMBgGCSqG
-# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDYyNDIzNDQy
-# NFowLwYJKoZIhvcNAQkEMSIEIPXUpAAQGWSDfp9cs+ZThv1/HxUPvBH22u41HhUy
-# VA3SMA0GCSqGSIb3DQEBAQUABIICAA2EejyayVYxdiPlE0exggILTXsN1Y8o4Usx
-# PjlXnvfYadlcG9qR4HOU7E3NbVPNqwZzaoHYVJk5qYkRNIHacTz2bdM60VANLv2u
-# EdIqU0OYcsQO26+RCqUsc/GtgeH5mWSm+Up+3S7uX35UEplqNKcLwZu0T1GJWb62
-# 8nI8P7gWLzkbrU2yUrnVs6RPtkMSNxtn2iGVKeqGbcc8woIQVf03efR7Wjyo9edJ
-# +6gIo0K1IGKNBys/+1sqG0L1euha8gUWQR8RiUBRcVj29zitkEKhxN5OQoI4d07G
-# vhXZ245FSP+GAnExNQuSORXTygwlBy2HJqjQmDuY0hA0328qhkaFiT8WNevahHOU
-# EftBETG8QaaDCK7llhq3hEPJvdIcvzG4TkPlN5EY2rP2iywgm59xYOBT3/euj0ZQ
-# V/Ba77IP57ll+QKV5eA2wRM1TmhBFC1gt6jBS/8BGc6kUb5EPQ/smks/CSISMDU1
-# py12nsVUnIGymlIn2mJZ8qsYgy3tOILflxsu7/zSaPJvXREYJ1XPuvYFihk9Kx4g
-# e/SJ34SQTDvR93e7dp/NWV+l/+T7U0TOyhvTjRLsxgoP5m1dscO9IlPmG8N26xDA
-# TKDKOC5r+QAZZW78+KKBTimXQBEBHc+QYa+hxpICaKfIgSqMHw+lKbzk32OllBxR
-# uYAjThlS
+# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDYyNTAwMTAx
+# MFowLwYJKoZIhvcNAQkEMSIEIGS+4YQaDOFm8osRfYbMDa7SadH/Y4Euhf7LGlgd
+# s22FMA0GCSqGSIb3DQEBAQUABIICABZnSSYNeyftiu5Onc/sHEG4fmE/HCSHnWSs
+# asMmY4plCjnBes1z9IKWoy8Fs6ZgW0WsxwUrNOP/ut507xCVwULriCmtSuZSyfs/
+# KQYKwm1tRSnVIDKfThNIaw7zjb2smBf3W8YhVRXgXfTdX/EWuBtfiMtQPKKwLF3c
+# Dh5ZEeywCRPJJ/FF1FdxuMNKtAr0ihJ7i9fPB9a3nkmIMGAknaYUfO8HFmimSXOk
+# fFYebQ3fFMYOfj5jLy/t3oXrBVn/n3wZULMWZNRwl8SleCgeVQyS88bM5TaUZtfl
+# kvyLx2Og6YbhSCdKKY3XtidECZy2YCULjkf1pZCwLi/3KEthj+n1mVoLd8+sYvnA
+# YEwNxGMCRhB29Q48O5wVCaPnm/ZXQFYSIm48XwfhLqb1J0Jg1bbHtdH0rSu4C8Kh
+# WYsnRbCWMNhFuCAbKSrGUJoW2+GX9phYqvYPumO4sdc9IbD6p6PfECUOVUhaaYif
+# l5Nj6VlvldUrv2nJz0OnFnzydn7D7Zeomm2+nmkHP5fhpPrAH8s8WAuJ726jLxn2
+# bOInx3ql8ew7wrSEzOH2Gs/DSfvrkcryEcL6t3AFOd0gMj27UBmjbMbrENYcqElN
+# /oy9hScJrBGFEjUOZ8irE0F/3E+dY7xuQe4N7vIHxHftfcDIo2E/0no++2s7dVoy
+# 3aJea2HZ
 # SIG # End signature block
