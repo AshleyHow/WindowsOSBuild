@@ -105,16 +105,21 @@
     # Disable progress bar to speed up Invoke-WebRequest calls
     $ProgressPreference = 'SilentlyContinue'
 
+    # Enforce TLS 1.2
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
     # Define variables for OSName
     If (($OSName) -eq "Win11") {
         $OSBase = "Windows 11"
         $URL = "https://docs.microsoft.com/en-us/windows/release-health/windows11-release-information"
         $TableNumber = 1
+        $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/4ec863cc-2ecd-e187-6cb3-b50c6545db92"
     }
     ElseIf (($OSName) -eq "Win10" -or ($OSName) -eq "Server2016" -or ($OSName) -eq "Server2019" -or ($OSName) -eq "ServerSAC") {
         $OSBase = "Windows 10"
         $URL = "https://docs.microsoft.com/en-us/windows/release-health/release-information"
         $TableNumber = 2
+        $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/6ae59d69-36fc-8e4d-23dd-631d98bf74a9"
     }
     ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
         $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
@@ -156,18 +161,70 @@
         Return $ArrayList
     }
 
+    Function Get-ChromeUserAgent {
+        # Define the URL to fetch the latest Chrome version
+        $url = "https://www.whatismybrowser.com/guides/the-latest-user-agent/chrome"
+
+        # Send a GET request to the URL and parse the HTML
+        $response = Invoke-WebRequest -Uri $url
+        $html = $response.Content
+
+        # Extract the latest Chrome version from the HTML
+        $pattern = 'Chrome/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'
+        $latestVersion = [regex]::Match($html, $pattern).Groups[1].Value
+
+        # Construct the user agent string
+        $userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/$($latestVersion) Safari/537.36"
+        Return $userAgent
+    }
+
     # Obtain data from webpage
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Try {
         If ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
-            $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -ErrorAction Stop
+            $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -UserAgent $(Get-ChromeUserAgent) -ErrorAction Stop
         }
         Else {
-            $Webpage = Invoke-RestMethod -Uri $URL -UseBasicParsing -ErrorAction Stop
+            $Webpage = Invoke-RestMethod -Uri $URL -UseBasicParsing -UserAgent $(Get-ChromeUserAgent) -ErrorAction Stop
+
+            # Fetch the Atom feed content, used to obtain preview and out-of-band data
+            $response = Invoke-WebRequest -Uri $AtomFeedUrl -Method Get -UseBasicParsing -UserAgent $(Get-ChromeUserAgent) -ErrorAction Stop
+
+            # Extract raw content from the response
+            $feedContent = $response.Content
+
+            # Use regular expressions to extract entries
+            $pattern = '<entry>\s*<id>(.*?)<\/id>\s*<title\s+type="text">(.*?)<\/title>\s*<published>(.*?)<\/published>\s*<updated>(.*?)<\/updated>\s*<link\s+rel="alternate"\s+href="(.*?)"\s*\/>\s*<content\s+type="text">(.*?)<\/content>\s*<\/entry>'
+            $AtomMatches = [regex]::Matches($feedContent, $pattern)
+
+            If ($AtomMatches.Count -eq 0) {
+                Throw "Get-LatestOSBuild: No <entry> elements found in the atom feed."
+            }
+            Else {
+                # Initialize a list to store filtered feed entries
+                $feedEntries = New-Object System.Collections.Generic.List[PSObject]
+
+                # Iterate over matched entries
+                ForEach ($AtomMatch in $AtomMatches) {
+                    $title     = $AtomMatch.Groups[2].Value
+                    $link      = $AtomMatch.Groups[5].Value
+
+                    # Filter out entries that do not contain "(OS Build" in the title
+                    If ($title -like '*(OS Build*') {
+                        # Create a hashtable for the entry
+                        $feedEntry = @{
+                            Title     = $title
+                            Link      = $link
+                        }
+
+                        # Add the entry to the list
+                        $feedEntries.Add([PSCustomObject]$feedEntry)
+                    }
+                }
+            }
         }
     }
     Catch {
-        If ($_.Exception.Message -like '*Access*Denied*You*') {
+        If ($_.Exception.Message -like '*403*') {
             Throw "Get-LatestOSBuild: Unable to obtain patch release information. Akamai CDN denial-of-service protection active. Error: $($_.Exception.Message)"
         }
         Else {
@@ -192,7 +249,17 @@
                 }
                 # Support for Hotpatch
                 If ($null -eq $Update.OSBuild) {
-                    $UpdateURLWebpage = Invoke-WebRequest -Uri $Update.InfoURL -UseBasicParsing -ErrorAction Stop
+                    Try {
+                        $UpdateURLWebpage = Invoke-WebRequest -Uri $Update.InfoURL -UseBasicParsing -UserAgent $(Get-ChromeUserAgent) -ErrorAction Stop
+                    }
+                    Catch {
+                        If ($_.Exception.Message -like '*403*') {
+                            Throw "Get-LatestOSBuild: Unable to obtain patch release information. Akamai CDN denial-of-service protection active. Error: $($_.Exception.Message)"
+                        }
+                        Else {
+                            Throw "Get-LatestOSBuild: Unable to obtain patch release information. Please check your internet connectivity. Error: $($_.Exception.Message)"
+                        }
+                    }
                     $HotpatchSourceKBNumber = ($UpdateURLWebpage.Links |
                     Where-Object { $_."href" -match "kb" -and $_."data-bi-type" -match "anchor" -and  $_."class" -match "ocpArticleLink" } |
                     ForEach-Object { $_.outerHTML -match 'KB(\d+)' ; $_ | Add-Member -NotePropertyName "SourceKBNumber" -NotePropertyValue $matches[1] -PassThru -Force }).SourceKBNumber
@@ -365,7 +432,16 @@
                         Continue
                     }
                     If (![string]::IsNullOrEmpty($ResultObject.'Servicing option')) {
-                    $ResultObject['Servicing option'] = $ResultObject.'Servicing option'.Replace(' &bull; ','•')
+                        # Resolve bullet encoding issue - Windows Terminal
+                        If ((Test-Path env:WT_SESSION) -eq "True") {
+                            # Directly replace the incorrect sequence with the correct bullet point
+                            $ResultObject['Servicing option'] = $ResultObject['Servicing option'].Replace([char]0xE2 + [char]0x80 + [char]0xA2, '•')
+                        }
+                        # Resolve bullet encoding issue - PowerShell
+                        Else {
+                            # Directly replace the incorrect sequence with the correct bullet point
+                            $ResultObject['Servicing option'] = $ResultObject.'Servicing option' -replace '\s*â¢\s*', ' • '
+                        }
                     }
                     $ResultObject[$Title] = ("" + $Cells[$Counter].InnerText).Trim()
                     If ((![string]::IsNullOrEmpty($ResultObject.'KB article')) -and ($ResultObject.'KB article' -ne "N/A")) {
@@ -373,31 +449,19 @@
                         $ResultObject["KB URL"] = $KBURL
                         $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $ResultObject.'KB article'
                         If ($KBURL -ne "https://support.microsoft.com/help/") {
-                            If ($PSVersionTable.PSVersion.Major -ge 6) {
-                                Try {
-                                    $RedirectedKBURL = "https://support.microsoft.com" + (Invoke-WebRequest  -Uri $KBURL -UseBasicParsing -MaximumRedirection 0 -ErrorAction Stop).Headers.Location
-                                }
-                                Catch {
-                                    $RedirectedKBURL = $_.Exception.Response.Headers.Location
-                                }
-                            }
-                            Else {
-                                $RedirectedKBURL = "https://support.microsoft.com" + (Invoke-WebRequest  -Uri $KBURL -UseBasicParsing -MaximumRedirection 0 -ErrorAction SilentlyContinue).Headers.Location
-                            }
-                            If ([string]::IsNullOrEmpty($RedirectedKBURL)) {
+                            If ([string]::IsNullOrEmpty($feedEntries)) {
                                 $ResultObject["Preview"] = "Unknown"
+                                $ResultObject["Out-of-band"] = "Unknown"
                             }
-                            ElseIf ($RedirectedKBURL -match 'Preview') {
+
+                            $Item = $feedEntries | Where-Object -Property Title -match $ResultObject."KB article"
+                            If (($Item.Title -match ($ResultObject."KB article")) -and ($Item.Title -match 'Preview')) {
                                 $ResultObject["Preview"] = "True"
                             }
                             Else {
                                 $ResultObject["Preview"] = "False"
                             }
-
-                            If ([string]::IsNullOrEmpty($RedirectedKBURL)) {
-                                $ResultObject["Out-of-band"] = "Unknown"
-                            }
-                            ElseIf ($RedirectedKBURL -match 'Out-of-band') {
+                            If (($Item.Title -match ($ResultObject."KB article")) -and ($Item.Title -match 'Out-of-band')) {
                                 $ResultObject["Out-of-band"] = "True"
                             }
                             Else {
@@ -472,8 +536,8 @@
 # SIG # Begin signature block
 # MIImcgYJKoZIhvcNAQcCoIImYzCCJl8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUPmHqrnuGtMi2ThZKwHcDdiR5
-# g+qggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUv1+iXazBmjgyTBXEw2DrH0n+
+# OZmggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -649,31 +713,31 @@
 # QS4xJDAiBgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzem
 # d0ILREkKU+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKA
 # ADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYK
-# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUwNnwNdgAyRiUfASNKsbTHPOh2GEw
-# DQYJKoZIhvcNAQEBBQAEggGAAQVqABeFfzYKkceYcQ2j4YZAwrjb8ZhtIHXe+3i/
-# DzzBdAQKeR5nuRi7qEODHg/D9ugcxagaytM3cCrZXeBLPUYu6JF23PvOmfuRa/H6
-# ctQkLoJW92kkU/wW4Aob8Bg41uDPlCa3ZPxhVhDETGwLOBX8VtxAhXXCNijNe8Om
-# M87MwAf/5kcfPZwJzFSvJV8BrirpGNUCPkhLYps8PXB5C9iZMf6MrRjaw78m8krn
-# GAF5OZd2u9xdLDRhm+yu3s3FKwPxr48hP8Xy56zA9ZKZNUF4icahrPgSw+362s9M
-# VEs2ldDR7kTPg1KnR0iGOv7HWRkaW4oFiBLzPPySuQpqBYa8FLl4d5iFgg9n4Xsw
-# 2uvxYoUMLnerxmZV+9BYvqRMycK7Eva1vDfRRRqk37AfnZxcgrRmuR2z5q7PpMWG
-# 3yvAvZBQZ5NcYwTMhVwGbMwSc2hikSJkjOCwTFlXHw/H1aVLCTZ6cjhn8RRofbpv
-# su2Gwz1NQbEjw7KCRO0jW9bwoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
+# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUZyMTQbkeM/nxth3/L89NOoqYsjsw
+# DQYJKoZIhvcNAQEBBQAEggGA6CQ2vxEyeM2xVQjXWgIMS6zNZuqfgrEvvkP1TJNy
+# Q9gxzo4RUOSjq6s/ZRWzqDNmdiD2ke7tBz+AUb5UJD2Kj/yOcp/TvHnwpk4x6dK8
+# zII6m6d55lfHv9PTtrz/BL+72l/rDMwJUnwtFJIISyB4P/dFakOL54Ap9RZ908oa
+# y+0Nc+1cMgOQ7GCIzRvV5HhLOLUI/q6kuc4ZsxX/NbB9lzdCGT7D7yrOCY6S25j0
+# D/anRqC4A6oHj9wxJYjfzgBnl1qeUlTwWszklvGTXXFoAsTZsQl9ZJIx9XAKK9TC
+# lpindjaJt5OJJS246Mmme8G4KL5emsUp8wu0iaWbIX3sGzb+RumutQ6PabZ79Jp9
+# APOHGjepVdKVXaKJl6F6gCSMpgmOfwsLRvvBo6ZEbAeCzRr2E1hAuGKHYqnynFRh
+# ERNnSbOo2T0GODuOGC74jsPbsJdxAkgmqKnPosjeCM+AC/AV0DHMPPHC6rLYzLqu
+# jXDjHM5HzJsXIaRhhWdSnd9toYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
 # MHcwYzELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYD
 # VQQDEzJEaWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFt
 # cGluZyBDQQIQBUSv85SdCDmmv9s/X+VhFjANBglghkgBZQMEAgEFAKBpMBgGCSqG
-# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDQyNDIyMDkx
-# NlowLwYJKoZIhvcNAQkEMSIEIFXR9PWegGfcc7fXxHFAWMZDFq07GhKk1xKrWULQ
-# 3XPPMA0GCSqGSIb3DQEBAQUABIICAJGReTxZlGR7xq1iM++7TUR+HIalLmr/D+31
-# R7EsrPiee6dGnsBG8XKCqB0E4FefeauMib3M7xgc8LME5vwdFq0ir/dqLqXbtGHz
-# dmPf5FUqcQ+KHMtRVzT9FqYOxKDvkYbzicI0lhvOIgxNhh8AfF8Rv0A4EfTmwQny
-# mtlHebU7nPGrDaCkcTB+dOeehSsOStXkEdNLNoJHZIGkVdOpbGLXb0c07XMrhViq
-# j6mfCFoVNuQVX2WUa9r9XKPsC2996f6Ry2VonMGS3cwigOaG+iytPJSdD9Qc13V4
-# O+FrANM4Mh28Hfbn/Ak6f6KouaARZYFp9ubdSaPQCGlYib4gv9kbShJZOJI7zS8W
-# VcWSKXH4671gaALJvuJhivihqvGV5fNDOaJQ29RdySaTVgZEYf2ynH4pRENAaDOg
-# y2RzrhZI/8GkEdQRRqvSuL2WL8krALxvtjhlzZHfQ8jl/Nl+6xTK9YLDliXtvG/6
-# RGCkWekejoplIKgr0nXD42gfQs21uwyKRltgBnYR6/+olfOiSiVsM+WdBjRDsSdd
-# pjXn13Llfz53NYjShv1Otvy5mS3iY9U7CVX1hKZ8djO7v15CGMjJdgCnRQk5U2hs
-# qr3Qlx8XxAQVUSnIPCgtQsPA8xbNVzVva0TVSrG6KD0za1xC/8F3S6drbNzai8jq
-# wdIphtOl
+# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDYyNTAwNDgy
+# N1owLwYJKoZIhvcNAQkEMSIEIIBfzf0EaVTbuJsSBWjQ7lieumHBJvGy2Lv84c04
+# /xPDMA0GCSqGSIb3DQEBAQUABIICAFWY1U8hSNi7U4qezY00XgSdqRTBrORc3oxT
+# APou3zf8huHpUwVp7uDWFYvaeqQk+lko8cHikSBvAPQY1eR9XcNyl9mm5ROxQ3tg
+# k35m61f4gS3IfUzMepGW5/zfdbaTDAV81xtI4tEbnKFPsEbJhYewl+sm67NMoA6b
+# UYJtT16dIIHDuz/FuQEYqKbf2kOAEPb5M+dXexIU/bEmkjfEIakh9VnSBcaGsz2I
+# xps7QtxOs80v4xscxnvLoCt5BWQzcOwJZjvgcP5T4Iril7o327oYNnOARIq7eWDs
+# TzywAFfMpcj7D1tW+V5V90mu48dF+EjlRQ74/e19z8N12dBivCd7cDovFWPsh52R
+# 73jiyGDcgO106vTdgTm9mAoRMhPWKujPpu0PANCw3J8Dm45t96TujQfDySCYr/lW
+# LOndDfsm2br9nE68GGqmilBb05MylZRIjmCBjt2eTLGN65xGSXxfI1bQVC5PeM2s
+# O2gyOd/Kil0R2GTlWypId5NUZacuANF/hCZUbHgSQ+sr9mmVrLuDZArAHL8U3/mJ
+# ZSkXuVjATPcF+DKvdBHK7nuV8/In+17kkeuXQxM1KAV4hVRZexTKXTBu9hjweeZg
+# GVU9yIP/BbbyJFuVdBcGneUNiHmQKX1kCfmrQJE9yhYHhNAtOsuxT1muhOe90wuN
+# h0sxDvys
 # SIG # End signature block
