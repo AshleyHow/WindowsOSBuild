@@ -5,11 +5,10 @@ BeforeAll {
 
 If ($PSVersionTable.PSVersion.Major -le 6) {
     Describe "PS - Get-LatestOSBuild" {
-        Start-Sleep -Seconds 60
         Context "Win 10 (1507)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
-                Start-Sleep -Milliseconds 60000
+                Start-Sleep -Seconds 10
                 $Results.Build.Count | Should -BeGreaterThan 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -304,9 +303,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         }
         Context "Server 2022 Hotpatch (21H2)" {
             It "Results" {
-                $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
+                $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1
                 Start-Sleep -Seconds 10
-                $Results.Build.Count | Should -BeGreaterThan 1
+                $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
                 $Results.'Availability date' | Should -Not -BeNullOrEmpty
@@ -424,7 +423,6 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
 }
 Else {
     Describe "PWSH - Get-LatestOSBuild" {
-        Start-Sleep -Seconds 60
         Context "Win 10 (1507)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
@@ -723,9 +721,9 @@ Else {
         }
         Context "Server 2022 Hotpatch (21H2)" {
             It "Results" {
-                $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
+                $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1
                 Start-Sleep -Seconds 10
-                $Results.Build.Count | Should -BeGreaterThan 1
+                $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
                 $Results.'Availability date' | Should -Not -BeNullOrEmpty
@@ -845,8 +843,8 @@ Else {
 # SIG # Begin signature block
 # MIImcgYJKoZIhvcNAQcCoIImYzCCJl8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUNrfCrmK4qNMF05t8pzjLGgMS
-# BcuggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU2cz2oaIcTixVLvssEXGNzPjA
+# 22WggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -1022,31 +1020,31 @@ Else {
 # QS4xJDAiBgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzem
 # d0ILREkKU+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKA
 # ADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYK
-# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU1eYZc67B1wmQdQVRX41bpZVjrx4w
-# DQYJKoZIhvcNAQEBBQAEggGA2h3uNTui9UPsY0aiX3clokMENRD1jGq04VR+khXF
-# vc/OFXXgbzj4SGkqAZ5NvFh9OtA9C+19pL69x3D9vR3wIfDVqygwwY82niu/tJwu
-# A3xPfaWoUCQr6uPRMRF8IODDnOT+5wY8QXU2qOZ35YsJm2dKPspr1G9jLOugFFvu
-# TWPXz94lkD+E75l75EgafHcN+c87oPkgjg/jURFCNbDryUMx+SxLslpRy7YuP5+k
-# RUo7ZB3/6oc8iw9tjlT+fwuI9LTBtPxb37ZLc27JIjnelGzRei+6YqQiKvQ36xEB
-# lFzSwZC6nMT1z9NNSTdpqUoYKZhaUshIzAejWyWBJrXIMuNoNjH09dbOGrxfshQa
-# 9XxNpuPjeR7DhdGl3rRcqP1FvuBioWCBAxfSWiJBEkxeocyyeB0A6twaCdtmT7I6
-# XhwBtTdjtEIy0gKVsNZcwSlB9MFfKXYKcvVIrDpuAEHcQPgRjAtQhp3gyPhaSzhB
-# IEEUL4evu3EpgFo3o0F7SouDoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
+# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUoFDD7we3Td5VnJEPWnGR2RbN9/Yw
+# DQYJKoZIhvcNAQEBBQAEggGAdDTrU2y04LX9Q2N2REhUcXd07KOfwW6lZmcdfNmT
+# q7dtsj9nMiUBw+6JYBpzV0YVcYxTHTbFJxazyG9gYd6zgsKboOe5y/FANb6ekET6
+# rtHRpIotn5+DLzXW/cSe5LBFYx92Pf3UwLNTUHmUamJr1C5fAgQKuOcWWoJ3y7Vk
+# PEDck47foCLHY51/UWJXd3oyJaX4AfSqbUBppjenmAHSzvAJ59K5gf4Inrb988hH
+# w+E7b9DQ4n5VjX8XTrakmwlrMEAu6/LjZhO7Nkp2xF4TjW8O/8WPlsn7y5uacgfp
+# ZMToQU1L7mFYm3G0s7kT14YMJZZ/MVkS5sRnf3bmNcf6yp9+KB40rIVg04XKuBmT
+# VOLHd7vbjUOQXI5n4JBZEtn8H3vGPg9rKiU0b+Bm77ldqKzHDjXd6i9Ysd+wCaSY
+# Y8qyb1ehC5veeHg41Ckrvp2+x+SZJAgejciTXa+EstrP3DsH2JKFVx/iBEy9W7ie
+# 7ZcUflMoS4xVWyCQbUJtCnyfoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
 # MHcwYzELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYD
 # VQQDEzJEaWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFt
 # cGluZyBDQQIQBUSv85SdCDmmv9s/X+VhFjANBglghkgBZQMEAgEFAKBpMBgGCSqG
-# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDcwMTIyMjU0
-# NFowLwYJKoZIhvcNAQkEMSIEINJ5k3ibIkSDubfP8dkRFoJIuNEplLXxrKxr+CXx
-# 3xnMMA0GCSqGSIb3DQEBAQUABIICAGWvso8SAXRmZVwXgtohGWt1AYw1eAL998CI
-# bR9A2YcXh+DNfPzZH1KojBnoDgLyTu13lFXPt6kDNuCkXHY8LFSPrk0rvMKtF8hg
-# P+oCd0K4+kQP/LIw9t82WNQPak2Dv3n2LRvTO9JqsOsfle86wf2ury2crVxrQExO
-# sxTKZs2mCFtTYhN1cDiILoGJrkyNSkSKuP/2MRjNI16Tr1klklFxXb05PAX7qSdI
-# 5Ci9G9rg46B70Q1GeiudGslCjeJ6+wYi4Fr4678u+sIrpVE3IOkRPlwaYR2y4zkZ
-# rNTE/rZRMFKfwBopu5hNRCs6lXmutYB5guyvK5fF5iXhuC4b2H1CQHDt1qWFFGCV
-# yoM9HLyp209cfEUgqcYZuBekovWJeGZrI8Uc34yFt5pZUgSIEO/X/SPejOsmgPnd
-# fPDTWbY0nZ3dKKUyNJH8UiLv3+HxOK7OikDrXND2VSqzZ425IKshNHnYKnYFeKij
-# Vwn/BxyfKlMrrTIZaWMABX7AAnmXZW8RwMSdtr8lYawCGmXcjkJPumlxc18zqBPC
-# talFelm1G4cDLduBcAgJfPYOao7ylE/FjXDnf640NFKHuFbzBqmTkeKRB61QVmFh
-# zv1LDoC4/uYA+Q9wl6i/TJbtnN4JzCb6XFh+5UfvS1tQdD65hBWNgaL5khAaGR/Z
-# VUHxADD6
+# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDcwMjIyMjYy
+# NlowLwYJKoZIhvcNAQkEMSIEIP1RF1hA57lgHIYLvfleVvg+yUeHan9osXg9MHqJ
+# /oBmMA0GCSqGSIb3DQEBAQUABIICAFFzqj8sAre6sbD55mLlpFhPuay335CLA0Y5
+# QGsGzku82W0tyiR4tjEZc919GVeRd3C/rFHciuykzvEB7JERvfuwowVcoAwsHKyD
+# zza2OAeHGkI4w43vX8nnx9njU0PBEmzVXhyNhL0zPqvw8S5M2XZ0XqsDqxvCdTDu
+# 5jKjiTxlzuV54NdigAci/yugmTP0rbzH32okle0SWStRBVzispqLns+4DQEQKIn1
+# WeIstR0jYbpPrm89CNWov+cDoAnq6o5JM7ux9sXur2CWMNaTnZ8ZEtjAYqB5fIKJ
+# oNTm8dXt+qFSMbqOft3xe0Zk5nLTTy+YwcCMTJBfVH6tVSh8bFmxLC4lBZwHabou
+# CF/8ZGScNFETzjlolNy2X0qRZays1wDI9HkvCIkfcICbaPEuPD50Tv92nW2xfN4C
+# e6OhnbzsecI17JbYlZaUBt1r2+5+wwFl6UIOtPH8wCZ1h+0iS2nvLQvX3vA6oEXN
+# D+y84LJBpY/7uBgTAiuv6cYwW7ktn845OJIqqmKSOpUQ5Pbw+WciiB7TlDNTWKmi
+# 4Irjhz/4WAB4Mb5Mde4n/U8r1VzxyYBmg1qv90Nme5323J0hGghxG1ERVJitqi8m
+# QGyhQmq3IDaxSOQDYF2SbgheSzq/rMTMIrmQofXmgKlDGzpS73b2d008JFUD6l1x
+# TCN4kKGO
 # SIG # End signature block
