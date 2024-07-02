@@ -3,6 +3,7 @@ skip_commits:
     - "**/*.md"
     - "**/*.png"
     - "**/*LICENCE"
+    - "CI/WindowOSBuild.Tests.ps1"
 
 install:
 - ps: |
