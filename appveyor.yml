@@ -4,6 +4,7 @@ skip_commits:
     - "**/*.png"
     - "**/*LICENCE"
     - "CI/WindowOSBuild.Tests.ps1"
+    - "**/WindowsOSBuild.psd1"
 
 install:
 - ps: |
