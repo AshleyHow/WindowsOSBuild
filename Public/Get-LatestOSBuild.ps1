@@ -161,33 +161,16 @@
         Return $ArrayList
     }
 
-    Function Get-ChromeUserAgent {
-        # Define the URL to fetch the latest Chrome version
-        $LatestChromeUserAgentURL = "https://www.whatismybrowser.com/guides/the-latest-user-agent/chrome"
-
-        # Send a GET request to the URL and parse the HTML
-        $LatestChromeUserAgentResponse = Invoke-WebRequest -Uri $LatestChromeUserAgentURL -UseBasicParsing -ErrorAction SilentlyContinue
-        $HTMLLatestChromeUserAgent = $LatestChromeUserAgentResponse.Content
-
-        # Extract the latest Chrome version from the HTML
-        $RegexPattern = 'Chrome/([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'
-        $ChromeUserAgentLatestVersion = [regex]::Match($HTMLLatestChromeUserAgent, $RegexPattern).Groups[1].Value
-
-        # Construct the user agent string
-        $UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/$($ChromeUserAgentLatestVersion) Safari/537.36"
-        Return $UserAgent
-    }
-
     # Obtain data from webpage
     Try {
         If ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
-            $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -UserAgent $(Get-ChromeUserAgent) -ErrorAction Stop
+            $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -ErrorAction Stop
         }
         Else {
-            $Webpage = Invoke-RestMethod -Uri $URL -UseBasicParsing -UserAgent $(Get-ChromeUserAgent) -ErrorAction Stop
+            $Webpage = Invoke-RestMethod -Uri $URL -UseBasicParsing -ErrorAction Stop
 
             # Fetch the Atom feed content, used to obtain preview and out-of-band data
-            $response = Invoke-WebRequest -Uri $AtomFeedUrl -Method Get -UseBasicParsing -UserAgent $(Get-ChromeUserAgent) -ErrorAction Stop
+            $response = Invoke-WebRequest -Uri $AtomFeedUrl -Method Get -UseBasicParsing -ErrorAction Stop
 
             # Extract raw content from the response
             $feedContent = $response.Content
@@ -250,7 +233,7 @@
                 # Support for Hotpatch
                 If ($null -eq $Update.OSBuild) {
                     Try {
-                        $UpdateURLWebpage = Invoke-WebRequest -Uri $Update.InfoURL -UseBasicParsing -UserAgent $(Get-ChromeUserAgent) -ErrorAction Stop
+                        $UpdateURLWebpage = Invoke-WebRequest -Uri $Update.InfoURL -UseBasicParsing -ErrorAction Stop
                     }
                     Catch {
                         If ($_.Exception.Message -like '*403*') {
@@ -536,8 +519,8 @@
 # SIG # Begin signature block
 # MIImcgYJKoZIhvcNAQcCoIImYzCCJl8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUCg43FFo1CCU15BwZJslO3SiK
-# JUWggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUpZ6YZcA8LaGkTBvew5MhY0z+
+# N/yggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -713,31 +696,31 @@
 # QS4xJDAiBgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzem
 # d0ILREkKU+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKA
 # ADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYK
-# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUHD8mz85Xm9OT1yQDxGWQmM67RgEw
-# DQYJKoZIhvcNAQEBBQAEggGAihW2iEwCqL+lCZ5uCuDay99QmWBLE/OxxoHrQCg6
-# sUWZVdHLv6MnftE2duzpmjG/LXrRVNR7GBHCrNGihANE3My5MvUv17gHDpjPByWD
-# vzs6KFxAZ+GHiKFb3kcSVsNIJEvq4aF1+X7VnLahGknr4Zx157uTN0k9Nx+gMW1g
-# ebFs4MbeEikho8zUerg1G2cwOlzAb3QKj0uYzzYftRXm1F+5HlXSRJ9wCMxJatx6
-# XD2xB8JzYKC43oK097ENQqYwuSw63LoGYfR72ZCxuDI+JB95g+Vz2bkvINkQzD4o
-# 0U9qIBXFwP9/sqd42v3oFYdIN1CivrhT7OzXPE/U0CLj8XBWMDFoHbzwf2/L/OmC
-# 3REzOf5bFKn+f+vUAmT1E7zs4FW8Fzpz3OAjHa7qG/e2YzxY9tW8PaRpSyabHAt4
-# OR9TrvNjPGTCWJM1gqtTdvpb2JhbGMGza+gcn8h3nDe70cNfFrzUWtPo9tDOXVuT
-# Gb1Y7pIIVFwtw2/q+K5ou2msoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
+# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUrZHZ0KDkcqzZWOlWFOhQQ2vCLfsw
+# DQYJKoZIhvcNAQEBBQAEggGAF6GwQOvx4Mn519z+Z981JqNDucj6V4mFhd+7uogT
+# he17JWmSo9T1DM2vJO5qdoWXKauuIy1GnsMVTOL5G/oBD3lmB7f8KZF/PecFL/C1
+# hZ4OaGt7bNBG4J2IbMY9ZRs0yGHS75Vfv5dr9qKFRRA+es1+KqepoPszari0uUCV
+# rjvqSQL8sXmT8EW1fptYpCCbFEoxURfa0MECoFW6aauias/0QVohzEDBsc4wxL2L
+# 5Wr+jQJdZXWiyMqZmmcuL3jaq35jnrwyyq3PAqanWHFNNVNUaPkXitCj+jZg39kl
+# 4COwJRyTDwd6a0DbwLpN3bZSQ5MuGx9djPo2lPXZlnhraHZH3by34urBifajvaYz
+# dQSfiBwcakJh5KMPJTB51xc+qODRQGjnfsfAjbg2n+ZUNLMHJfROnAKbuYyJoF8A
+# nmFJx1RF7QhAvf2XjO4rkgiYNqLle7QKK01wIinRsgBfMeskkoDTg8gyrNV1dYLK
+# iMsHAKdRsFD41+MEis69aJFfoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
 # MHcwYzELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYD
 # VQQDEzJEaWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFt
 # cGluZyBDQQIQBUSv85SdCDmmv9s/X+VhFjANBglghkgBZQMEAgEFAKBpMBgGCSqG
-# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDcwMjIyMjYy
-# OFowLwYJKoZIhvcNAQkEMSIEIL/tcxJ1XF+YBX3ODtvQQVLv9XmjGeHSz76nLCRh
-# Xl6lMA0GCSqGSIb3DQEBAQUABIICABoe6UexmLMLsbKXlYu99fI0UFT3v7quj679
-# /yjJJMtZHlB/v6CKdL3oRvSElwJLIyFMIm7mit46Xr9F6xLI4+JLO32OlPJG3TAC
-# Ik7/sRYB3PePOhrOo6NtUfm4tbrud6xjiCRm14Fc/JwE2yUrkEPGXh5BKf37hFBs
-# WLCB/kAikPkORBvkB1clJ2ki+Z/GsdycNCivwVXuBzVD3a0BnEnCfiheOLf8rWP7
-# cY9B++G7gvkNswibLKAhUecNzqT8pmYtM7jPjyPt31J/XEPE3Ii78kugrLDVQhZB
-# 7rtgVAextSRHFRKPrYbZ3ulOE1sl6lrr9uoL6N5VhCME7caMSuoyrXWSzPZksi61
-# LbRiiEK1cfxVk3zbQd3TUGGAKWjOdmSjL4SmQKnFm4AWCwWosVgkiny8IGK/je9o
-# osUmzvuHSVG31h9942C5RQR4jRowdxJE2vtsWfaVibufi1a6V081ZkwHOzvVP5bP
-# bOVWsizFqqxClP/EpkHZCrSwjy629MlHvYToZH5NTlCgpCFvlK3Ck9M6i4W7rZTA
-# vToEytEzKqMDmUqMcSwXVXiu/+T5mjS1uowYyjcL9Y8tsYMvUuEbi0LBPpz8+tqz
-# 1n7Rzgaz4T8NHLKPakMsbGAqt4ZHlIDqFgLFfbh527SKTL+uUJmKgo+3MNfwxEXz
-# dKXbLuWS
+# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDcwMzEyMzY1
+# NlowLwYJKoZIhvcNAQkEMSIEIKc/yDKql9yqiJhjhungxb/sOMyLMcoUgjyL1JUF
+# LO7uMA0GCSqGSIb3DQEBAQUABIICACr5lA1OM5dlAFW/QNJYMQODZPBFtT3AX5q4
+# f9Yn1nBz/Cb/NKw69j8weZLT+TCDjSytYTd8qShVUv/99clUCGswOB/lRA5cMZCc
+# cJabYEbqJY7j2HZ5mGJXYeh29TD9mOlsXMNwswBig3bUqk66N4Cv+ZHLYPwotKmQ
+# v2940CA/3A+AFcnB4brt7BgMiUwpFRr2Z6htNdsSyaQWUyR20cz4Qovy9ZJOrbCW
+# pTzjDBWnJYHGG532ayKrD6OhoTvG96gCbdjkpl4vSCc9fTPG2sng6LDE80OnFtqo
+# 9RvaqfHUlRsydrN9z3+xcG0ev5ixIiDp+02URWi8rUkLzeddB7vb2h9tHP8tfayY
+# 2L5mZjv7W2orz4smd5xxp7uRcoBVCjTJdVafDnVT7UNI9TKPOaxAhyvC9ns6vgE8
+# qNo4MJQj60sf0zKEsf3I8SeyPVPS534+hn2PjodZ9Kf6jGVTwXfLE8MW43jm0eIH
+# 4OOfeQVCpgZFaav6e/VV7z7n4B2Lp0QQbdVldIHdLI2DcxrE+jBznJ/eYX4/MBIA
+# qGnAmllqik0eb6CP08uu4HMSXYHnEozpMCkvSsfkCp88MSnqNncIwqjuL6K6Y0NF
+# GPmgrDKlBPikYggHGmpW6FaB+dDE1difSUuj1/OFqcEsKAPlYwrl6rPGT8WBzNAE
+# 3liz4PKd
 # SIG # End signature block
