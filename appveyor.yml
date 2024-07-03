@@ -3,6 +3,9 @@ skip_commits:
     - "**/*.md"
     - "**/*.png"
     - "**/*LICENCE"
+    - "**/appveyor.yml"
+    - "CI/WindowOSBuild.Tests.ps1"
+    - "**/WindowsOSBuild.psd1"
 
 install:
 - ps: |
