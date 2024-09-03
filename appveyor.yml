@@ -19,20 +19,20 @@ build: off
 
 test_script:
 - ps: |
-      Import-Module Pester -Force
-      Import-Module -Name C:\projects\windowsosbuild
+      Import-Module -Name "Pester" -Force
+      Import-Module -Name "C:\projects\windowsosbuild"
       $testResultsFile = ".\TestsResults_PS.xml"
       $ResultsPS = Invoke-Pester -OutputFormat NUnitXml -OutputFile $testResultsFile -Show All -PassThru
       (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path $testResultsFile))
-      If ($ResultsPS.FailedCount -gt 0) { 
+      If ($ResultsPS.FailedCount -gt 0) {
           throw "$($res.FailedCount) tests failed."
       }
 - pwsh: |
-      Import-Module Pester -Force
-      Import-Module -Name C:\projects\windowsosbuild
+      Import-Module -Name "Pester" -Force
+      Import-Module -Name "C:\projects\windowsosbuild"
       $testResultsFile = ".\TestsResults_PWSH.xml"
       $ResultsPWSH = Invoke-Pester -OutputFormat NUnitXml -OutputFile $testResultsFile -Show All -PassThru
       (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path $testResultsFile))
-      If ($ResultsPWSH.FailedCount -gt 0) { 
+      If ($ResultsPWSH.FailedCount -gt 0) {
           throw "$($res.FailedCount) tests failed."
       }
