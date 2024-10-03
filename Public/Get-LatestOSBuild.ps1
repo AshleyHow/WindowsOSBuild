@@ -122,7 +122,8 @@
         $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/6ae59d69-36fc-8e4d-23dd-631d98bf74a9"
     }
     ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
-        $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
+        # Disabled automatic detection of hotfix as it is not a reliable method of guaranteeing devices are applying hotpatch updates, non-hotpatch updates can still be applied.
+        # $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
         if ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
             $URL = "https://support.microsoft.com/en-gb/topic/release-notes-for-hotpatch-in-azure-automanage-for-windows-server-2022-4e234525-5bd5-4171-9886-b475dabe0ce8"
             $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/2d67e9fb-2bd2-6742-08ee-628da707657f"
@@ -505,8 +506,8 @@
 # SIG # Begin signature block
 # MIImcgYJKoZIhvcNAQcCoIImYzCCJl8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUKZJipNqf5FaaoR1PFNsc4BDD
-# EeCggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUPsSGyx6hqv0zPP39IhhpKonn
+# F9eggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -682,31 +683,31 @@
 # QS4xJDAiBgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzem
 # d0ILREkKU+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKA
 # ADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYK
-# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUjo8hQk2u9TX4+r/iN5CWseYukMkw
-# DQYJKoZIhvcNAQEBBQAEggGAreJFFoOxnxJis3RuR7RFpM2vZcg+U75h52wfXrg2
-# 4R2ul0s/A5myjdkuYuVkTMXWTsZGOpB08JRvHJ1b5U7L2GYpGMser9nfi51SlHOr
-# tfGiYwi9SFi0XxA5E+v//kTYsOrXYxK5anF1cPdLoQ9/oE1W9a6bmFmcygFjBkoy
-# sWHt3w6oDrFAR7myjQDNLwtvLsZ/Wm+vO1G1RYR/l6AHl3CZ5K984g7R7WLoZR2k
-# JVPHLg44GmQCi1KVFkqF0Qn8Gjey5GQUZSTrfV5ho4gDqN5Hb4g2lupYUtzGrl8h
-# gVGt9EKg47s5pT5dML3rZ0YFG+QZeaqRbCmAf2bcEBAeBC/MYkQ8yhtcJbsXqKND
-# gy+F8yw0Ozu06I2vnV0P/jDl6FkxOh8Z0dFLewqjwffnFkLcogSQXXHL0or6HsIT
-# IEJxilkeWYRNIoyuYnesbvX2qaoiu8oTlLaloEcIBw8VOYaeCiHAEUSkcvsc+ltr
-# Lf4zOpolFKSRCcMf5Z3GAO/boYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
+# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUV6EhlwY7IuRi00JFYWw8boC4lfMw
+# DQYJKoZIhvcNAQEBBQAEggGAUDojVe8417DE75ffP2KS8wUFFsAsCdZoTV1g3QL7
+# rvAXVUv8oRHUwL7kcJJ5l3WOwedgTDquC7epSFDJcL9Yo66TDYEHHkVTd3c39pL/
+# NSb/35Ra6G7JLxnGFGLOk1XiUH6/ydia8ccHb+AiCBrl9XkVBKP6F3Yo9TLog1Tq
+# 23bqvWWBtygl6n5zunnxolo5l2LrRlsBjSh+nAbAoBPjYR44fOV15RJzXOjO43rU
+# Hd7LtdLMK0w9++6KYjMVsI+0cPW9nKxOER+AJU9zrvGwyYO1hivf/0k/1fMT5L9B
+# CdzA4JSbnz5eyb3Yx5s+ryeCVBWQu/zAC9m6nZ5NgikQRTZbkbzVauY5G5o6ydAX
+# pHZm/kJU2D+wxZ/MubA4zukTbjHKCt7zK7luGniZaVfrVXxGzszttwcb89UEYNoz
+# Gu8k21L4X/fqLpbZjzbe/Vs/vF+1ihkdHy7TNDQ9W0cLmEzeQ4bOxsQVW85Ug0Xv
+# x8zmyglN9MoTmA7OcrDkh4w7oYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
 # MHcwYzELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYD
 # VQQDEzJEaWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFt
 # cGluZyBDQQIQBUSv85SdCDmmv9s/X+VhFjANBglghkgBZQMEAgEFAKBpMBgGCSqG
-# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDkwMzIwMTMx
-# NVowLwYJKoZIhvcNAQkEMSIEIMVwi+CacpBwxahWgahiwPhNKKue5Ya40OlexRJK
-# t+/pMA0GCSqGSIb3DQEBAQUABIICAEqef1ezeQ7zArLNI8ZyjgRn87anVfbFaSbx
-# BZqnSdl59dVmsWVLx46oFHY8SI2NDOL52MYo3mfI70kR3KQ1ip1aTi1GoX6YtNv9
-# IhAp/9fSfSppySAcBEqI2XPg914Ar4a6yZMTcR/XDRmBmA+wwwygN3JVyHNz/uKl
-# 7iXm3cXq4I8nWaZWp1+a7DpmyTwAr6AgnGKZEDHtM/JPs9OD3e75Yp+7gu4H+3No
-# eGiEa73brp79aUJzt4OsfsO1X8+35hX8LLqFBjer3fLNinXDJjh3snHZOiYjHVFU
-# QpASuAlHwgoYvY0kWdpcBeiV7dHZvKm0P4eqSBahkkHhKPZHYQFQDC7oy+K6JiKf
-# pl91J0xzIunW6mqnvKmQMU6KU2du9Klnj3RAGuYl6S1gP3nqfcm0v4svaIU7z1fj
-# CsixMcvisYrpNSFLeQiwjA6OuqYn+Vd9kvk7RYES+1vbsjAymwGvzUQw5dHhYzmY
-# zQGnnmHLXv/Hy6TgiGYVhNiNZi+S1odayJ7FlA8jLzastHozZFqHwiKS+i1enXy0
-# zX5d1M7AKlJW+v9vbyWZLx+TNwJ0NzLvoBIoBF2MHdMWWTsz7BbhJFugBmo0JP/m
-# mW39TQhJViXqZC9wCFnfZ+oZXKUxcld9waApO5x7D+l9xA79h+VSJArWb4mfJYd1
-# pyXoHZeP
+# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MTAwMzIwMTEx
+# MFowLwYJKoZIhvcNAQkEMSIEIE3AMKXWS7mobPVoM8cG3vHn+EZgyyzPowrhDqEJ
+# eZt2MA0GCSqGSIb3DQEBAQUABIICABBun/8Hc1G0LMsQSRkN8JusTRSfelxhVSSG
+# MlSude9bNj11xXOlI4kZ7/UQrUK3yrMVPS/yeL5zpXkEM1yHKdrphFHBPaxx+2wa
+# cZtvCpOB5zVrUdPxewxl42Uu50H4c6vgSnK+i0onvQZggk/IQ/JPjDF37tm9Km7L
+# 43TtMNWd4mP+yG94e7Vu8gxgBs6bflWkP8414FkOEZPkJ4MI3ur89ba6hNs8jgSc
+# ymxTTm/C2/UCV8z90oy5qSS/2WEbu1a1F2mBqqAqUBomUPudtpRXOHXNUdSCJzWM
+# 00pT6u7DKFkyrOheCokmivcijJklfROD/Eo3Tvn0CVmyi/yeTrDnGHTu77AHsGMl
+# VNGiJgN0h8KYqk6NqebMw8dgSk3Lndzf46NfyoKLLaBE4WK+LI0ctICvF79W+1il
+# NxrgVC0lp69avd2k6zzZ3H1LOPICpcgYNAUwyAXp2kgu3tiLJu+e+EPzb/Y4jR7P
+# dzW+Rgkce1SWltsy1F1RJzEhSJQ1s8zxxjnQGCGcBZkB03vhlrL4OEXeTfT456qF
+# OCvVbtdm0qOpg8nTj1S5p9sUYcXTkFx8qofiVqhOh1UYaG8Egsq2GDvzqTCPJn8A
+# vOZSJ/nHQIWaOD4yJ0W8wB58lBaG0xz4JPUkB7IPy7qKTVvlglKnin46BSuYeDmi
+# DKNl5apq
 # SIG # End signature block
