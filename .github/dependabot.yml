@@ -7,10 +7,10 @@ version: 2
 updates:
     # Enable version updates for NuGet
     - package-ecosystem: "nuget"
-      directory: "/"
+      directory: "/lib"
       schedule:
           interval: "daily"
-      target-branch: "main"
+      target-branch: "dev"
       open-pull-requests-limit: 10
       labels:
           - "dependencies"
