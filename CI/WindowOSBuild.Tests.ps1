@@ -1,33 +1,34 @@
-# Function to check if a string contains a valid date in YYYY-MM-DD format
-function Find-ValidDate {
-    param (
-        [string]$InputString
-    )
 
-    # Trim whitespace from the input string
-    $InputString = $InputString.Trim()
-
-    # Try to parse the date
-    try {
-        [datetime]::ParseExact($InputString, "yyyy-MM-dd", $null) | Out-Null
-        return $true
-    } catch {
-        return $false
-    }
-}
-
-function Find-TrueOrFalse {
-    param (
-        [object]$Value
-    )
-
-    # Return true if the value is either $true or $false
-    return $Value -eq $true -or $Value -eq $false
-}
 
 BeforeAll {
     $Path =  (Get-Item $PsScriptRoot).parent.FullName + "\WindowsOSBuild.psm1"
     . Import-Module -Name $Path -Verbose
+
+    # Function to check if a string contains a valid date in YYYY-MM-DD format
+    Function Find-ValidDate {
+        Param (
+            [string]$InputString
+        )
+        # Trim whitespace from the input string
+        $InputString = $InputString.Trim()
+
+        # Try to parse the date
+        Try {
+            [datetime]::ParseExact($InputString, "yyyy-MM-dd", $null) | Out-Null
+            Return $true
+        }
+        Catch {
+            Return $false
+        }
+    }
+
+    Function Find-TrueOrFalse {
+        Param (
+            [object]$Value
+        )
+        # Return true if the value is either $true or $false
+        Return $Value -eq $true -or $Value -eq $false
+    }
 }
 
 If ($PSVersionTable.PSVersion.Major -le 6) {
@@ -904,8 +905,8 @@ Else {
 # SIG # Begin signature block
 # MIImcgYJKoZIhvcNAQcCoIImYzCCJl8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUdsfdGbZL2pR7HrR1+/9R10eI
-# LFuggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUU1j78O3gDTLJGdllIKvb9EQu
+# /mmggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -1081,31 +1082,31 @@ Else {
 # QS4xJDAiBgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzem
 # d0ILREkKU+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKA
 # ADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYK
-# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUEIfsPv4QuuhFxHxtdI+NqKi9WgEw
-# DQYJKoZIhvcNAQEBBQAEggGAkWOOh45Z+oP99vOyLGSytMN1XV+FPf8mmNNMrPgp
-# LiGrpEbD2CLKvOiDQTEzgavBkxAMtHb8fi7QvmX81S82H9tG36/Z2Ox81jwVLQAK
-# a/jGeuAub+r1ISnzs6WteEJVrY7WdXciKdbzR1+6pkELDqU/EI33QPB5IOI3puIe
-# boMzslGOBNzeLJojOmMfPNgg8RaGyH+97KgMPlohRXkmZJbIniFgXYKkuDVvhuV1
-# i493k5UKzaWpKtWNqGvR3xur1sbDSs+CwLNAOmeHfLHPpRqfvUp3sLhQm1Q61Pgx
-# BrBD03bUyfM0FZ/9mY+3qMAzDRqvEQZt8muG3OGzD2kAJNt6Np1Iy8qw0JrE1iAm
-# 6W2VYiDPO6dBdZFX5gEFvbdqUxYkGvErsneGgdTEc1cgK34HqN6k4WDX9nVFIk80
-# 9KHMtYC0DAjdPSCBoRfl/qbd6WjqnVIL13cnQivaYm1HjR2Gfgizap5FDWGiJPhU
-# bAECkIWn2VupS5e3euwnyHgEoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
+# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUFfusAfy2skUAFVth3LDbs5eXvOUw
+# DQYJKoZIhvcNAQEBBQAEggGAbPCSTGxPSLX0ONnG9+IkHuXrUbsK4qASMjwdZ3RB
+# NwjlvakFySTrpFmIVnziIu2opITVyfXP1lmzJZnu+n9VJpp1s4I5CR2tZ9OF9gU4
+# LXfDAmChlfXSoWV00XC0FbYDJB2N/AHN7g60TYzf0IelKVpP6EzcovDhoP1Aeygn
+# f7JTQ/1yrpsQ0406aF9cZ2QUT6R/H0A0OOwkjMxVf53mvUENubfN97wXtylkueo5
+# MweQVM/t7aV1cEwalc2DkmCWzHj6ois4u3JNvHGsMSuAqFDsiOsGfNbtJ96IdTAL
+# MO4EcJcFkIjQPL7Yi+it8gIxDtpUcjGrOnhBHUNb893uY3xlxPSrFJuKFduuP75x
+# Y5QWdsNqjbsuMcg3RECLw0Vymgu0HCv34IPUHq8+G7gbQErFNwdHeXwY3eK19mso
+# b2sPwLCeXTttJ02ZBIW/kvlR1ilUZGkSEpH4hldcKKEqFdgEsHIbP0GQnD9zg/nY
+# sorQieDoYGuFyDIbSSZp2JS5oYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
 # MHcwYzELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYD
 # VQQDEzJEaWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFt
 # cGluZyBDQQIQBUSv85SdCDmmv9s/X+VhFjANBglghkgBZQMEAgEFAKBpMBgGCSqG
-# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MTAwMzIyMDcz
-# MVowLwYJKoZIhvcNAQkEMSIEIMRa8xk4DksFuf+/ew6IdokTYbnGI/YJ1he8QCg5
-# Wq+UMA0GCSqGSIb3DQEBAQUABIICAHjJvi8am2+4xEqRo6mtqZ9WwUAOvMEeJqJF
-# oBfdh7DI80+2FRnJPXufsqVcr3Xj8YkAGim5sUxrKK+AQjFUyj9Y4b50CHZH5u62
-# fz/WndEPtJ+VznnKiCs0mhuJYXbdgf8irrttPkfoyVQPoScCLx9ZCjIFFRm0xJhi
-# 7g7pEbKySnaFH5wykDAsQqoiHLxBSCwJ8SAGSbVr0s5bSJAcbV/QIaeh+LavFo7o
-# 7hD3wlJ8ES3J49Q96bTrX4RZ5/4JFMY8GwJ4T4pyMZ9KdmbUh7siaSOl853tXO4c
-# QCcdyMB27ZmCqHrrfMKP7vyA97PgPkW8mgz+pFaYnSEuvGBUV60P1z5/tISUsVzw
-# FQySIacSzm40rs8VtcyQt0/asPjh46jOXEXqWSh4s6Mb/9Ljnr2IuL4KhGAQilKU
-# rl1VnUZmRS0+4dH9GeBwTLUCh01KWqPUx6QmYdQXOYxnoqLIPCAzyZubE9cAaEx0
-# LsYQO1q4kpM1fgCyR8ONdZTmGAjjrVUQz7Mn7+VkvnRlwwdH/76BhjJruORr8kku
-# 4DCp4XIbvOFPwOJuEuLCfUzv20H9K37SV7kVL9HZSdCE1HsLBFZg8hVGce14LRbh
-# IaNCdvayMwfIzm9dw24+K2djkzB7Dr/UaOEX5O6UH6IIBypb/PwSp5EJvLt9hv9O
-# ZtHKI2kE
+# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MTAwMzIzMTQ0
+# NlowLwYJKoZIhvcNAQkEMSIEIIW57z54RSs51LDEIpOvfnDTrkJ1JlyiMVgIZbo1
+# fdWBMA0GCSqGSIb3DQEBAQUABIICACjDdVB6KPx8FcySwr0chA31ZK0o3XLyyHJi
+# c7TTZVpNZALN2yiAzmw+bOtbpyDkG/fXTk7X3uBQiXltn3hFgviGEoWIyX8+tqjy
+# KDZDUuLYXLdnmh5GpMC2/OQpf3RYoSe0sIjVMy7dFdUD7S6tgZQMgO0rfWFLfu4I
+# YoRTB4odhFu6eKS2Ev+ylHt76nlcsPGOAjGd1yU8SGUR/AWtvuc89jTY/8QwvdZW
+# yxdvDUSLYJ8mIXUSA5uGVcLRgZeSuY3nP0njUZkcJxt5VW/e5SpZmvf3XS9a2EPg
+# KfcpZbCHdSYNkw56g/4FY92XHVz0tBJXokNRL+X7tpiiprTb8qB8qLW9B9TTMTKG
+# HVlKQYsQK3ANht9DC53blNEZGgZ1wZ9EEYCwy8AyImEsKgp7HZUT5QDhWPb91qr9
+# F+1FSD0D8s1UiF+ZjeXueqmWQtbVOjSo9L1IUePeILTvH2klBUpClYAQuise8whC
+# hOhnccZVvr4zObOlFa/M3VMVOAKTMG1XXOcFKtuOfpkqD/9UDtmEAsiocURoR4hZ
+# HAavymvLQv9M9o20orfPl9lls+Ugq3fI6a50+dGadLO93euweLsEMXnJptUHEDbS
+# C8w01Z/apx5oodr6qrdhbMI/Z9GORyYO3JPsLo+G3Zs+ou0gtrqY8hOje8quLs/K
+# xRX4iFoq
 # SIG # End signature block
