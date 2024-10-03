@@ -44,27 +44,28 @@ Gets windows patch release information (Build, KB Number, Release Date etc) for 
 ### Parameters
 
   - OSName
-    
-This parameter is optional. OS name you want to check. Default value is Win10. Supported accepted values: 
-    
-| OS Name                                             | Version                                                                                       |
-| :---------------------------------------------------| :-------------------------------------------------------------------------------------------- |
-| Windows Client OS Names                             | Win10, Win11.                                                                                 |
-| Windows Server OS Names                             | Server2016, Server2019, Server2022, Server2022Hotpatch, Server Semi-annual = ServerSAC.       |
+
+This parameter is optional. OS name you want to check. Default value is Win10. Supported accepted values:
+
+| OS Name                                             | Version                                                                                         |
+| :---------------------------------------------------| :---------------------------------------------------------------------------------------------- |
+| Windows Client OS Names                             | Win10, Win11.                                                                                   |
+| Windows Server OS Names                             | Server2016, Server2019, Server2022, Server2022Hotpatch, Server Semi-annual = ServerSAC.         |
 
   - OSVersion
 
 This parameter is mandatory. OS version number you want to check. Supported accepted values:
 
-| Windows Client OS                                   | Version                                                                                       |
-| :-------------------------------------------------- | :-------------------------------------------------------------------------------------------- |
-| CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2, 22H2, 23H2.     |
-| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.                                           |
+| Windows Client OS                                   | Version                                                                                         |
+| :-------------------------------------------------- | :---------------------------------------------------------------------------------------------- |
+| CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2, 22H2, 23H2, 24H2. |
+| Win 10 LTSB/LTSC (Long-Term Servicing Build/Channel)| 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.                                             |
+| Win 11 LTSC (Long-Term Servicing Channel)           | 2024 = 24H2.                                                                                    |
 
-| Windows Server OS                                   | Version                                                                                       |
-| :-------------------------------------------------- | :-------------------------------------------------------------------------------------------- |
-| SAC (Semi-Annual Channel)                           | 1709, 1803, 1809, 1903, 1909, 2004, 20H2.                                                     |
-| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2.                                                        |
+| Windows Server OS                                   | Version                                                                                         |
+| :-------------------------------------------------- | :---------------------------------------------------------------------------------------------- |
+| SAC (Semi-Annual Channel)                           | 1709, 1803, 1809, 1903, 1909, 2004, 20H2.                                                       |
+| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2.                                                          |
 
   - LatestReleases
 
@@ -89,17 +90,17 @@ This parameter is optional. Returns preview release/s only.
   - OutOfBandOnly
 
 This parameter is optional. Returns out-of-band/s only.
-    
+
 ## Get-CurrentOSBuild Function
 
 Gets the currently installed OS Build release information. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022 Azure Edition.
 
 Installed OS Build number or detailed information (Version, Build, Availability date, Hotpatch, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL).
 
-### Parameters    
+### Parameters
 
-   - Detailed 
-   
+   - Detailed
+
 This parameter is optional. Returns detailed information about the installed OS Build.
 
 ## Usage
@@ -148,7 +149,7 @@ Show only the latest available preview OS build for Windows 10 Version 22H2 in l
 ```powershell
 Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -PreviewOnly -BuildOnly
 ```
-Show only the latest available out-of-band OS build for for Windows 10 Version 22H2 in list format. 
+Show only the latest available out-of-band OS build for for Windows 10 Version 22H2 in list format.
 ```powershell
 Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -OutOfBandOnly -BuildOnly
 ```
@@ -166,7 +167,7 @@ Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 | ConvertTo-Json | Out-File .\Ge
 ### Get-CurrentOSBuild
 
 ```powershell
-PS C:\Users\Ashley> Get-CurrentOSBuild          
+PS C:\Users\Ashley> Get-CurrentOSBuild
 
 19045.3324
 ```

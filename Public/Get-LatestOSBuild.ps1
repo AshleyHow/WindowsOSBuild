@@ -15,8 +15,9 @@
             This parameter is mandatory. OS version number you want to check. Accepted values:
 
             Windows Client OS Versions:
-            CB/CBB/SAC (Semi-Annual Channel)                     - 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H2, 22H2, 23H2.
-            LTSB/LTSC (Long-Term Servicing Build/Channel)        - 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.
+            CB/CBB/SAC (Semi-Annual Channel)                     - 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H2, 22H2, 23H2, 24H2.
+            Win 10 LTSB/LTSC (Long-Term Servicing Build/Channel) - 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.
+            Win 11 LTSC (Long-Term Servicing Channel)            - 2024 = 24H2.
 
             Window Server OS Versions:
             SAC (Semi-Annual Channel)                            - 1709, 1803, 1809, 1903, 1909, 2004, 20H2.
@@ -122,7 +123,8 @@
         $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/6ae59d69-36fc-8e4d-23dd-631d98bf74a9"
     }
     ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
-        $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
+        # Disabled automatic detection of hotfix as it is not a reliable method of guaranteeing devices are applying hotpatch updates, non-hotpatch updates can still be applied.
+        # $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
         if ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
             $URL = "https://support.microsoft.com/en-gb/topic/release-notes-for-hotpatch-in-azure-automanage-for-windows-server-2022-4e234525-5bd5-4171-9886-b475dabe0ce8"
             $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/2d67e9fb-2bd2-6742-08ee-628da707657f"
@@ -344,7 +346,7 @@
                 [PSCustomObject]@{
                     'Base' = $OSBase
                     'Version' = $Version
-                    'TableNumber'=  $ReleaseVersions.IndexOf($Version) + 1
+                    'TableNumber'=  $ReleaseVersions.IndexOf($Version) + 2
                 }
             }
             # Windows 10 Base OS
@@ -505,8 +507,8 @@
 # SIG # Begin signature block
 # MIImcgYJKoZIhvcNAQcCoIImYzCCJl8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUKZJipNqf5FaaoR1PFNsc4BDD
-# EeCggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU1/fqrOEf4aAJaafKOWgc0Ldv
+# cYOggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -682,31 +684,31 @@
 # QS4xJDAiBgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzem
 # d0ILREkKU+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKA
 # ADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYK
-# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUjo8hQk2u9TX4+r/iN5CWseYukMkw
-# DQYJKoZIhvcNAQEBBQAEggGAreJFFoOxnxJis3RuR7RFpM2vZcg+U75h52wfXrg2
-# 4R2ul0s/A5myjdkuYuVkTMXWTsZGOpB08JRvHJ1b5U7L2GYpGMser9nfi51SlHOr
-# tfGiYwi9SFi0XxA5E+v//kTYsOrXYxK5anF1cPdLoQ9/oE1W9a6bmFmcygFjBkoy
-# sWHt3w6oDrFAR7myjQDNLwtvLsZ/Wm+vO1G1RYR/l6AHl3CZ5K984g7R7WLoZR2k
-# JVPHLg44GmQCi1KVFkqF0Qn8Gjey5GQUZSTrfV5ho4gDqN5Hb4g2lupYUtzGrl8h
-# gVGt9EKg47s5pT5dML3rZ0YFG+QZeaqRbCmAf2bcEBAeBC/MYkQ8yhtcJbsXqKND
-# gy+F8yw0Ozu06I2vnV0P/jDl6FkxOh8Z0dFLewqjwffnFkLcogSQXXHL0or6HsIT
-# IEJxilkeWYRNIoyuYnesbvX2qaoiu8oTlLaloEcIBw8VOYaeCiHAEUSkcvsc+ltr
-# Lf4zOpolFKSRCcMf5Z3GAO/boYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
+# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUHbX81i+MNW1DXvWSXirxPz7+u2Aw
+# DQYJKoZIhvcNAQEBBQAEggGAhyHCPu4HS3G4uSocfKAADQQDLvSt6lCBXUCB9VQs
+# 5JDJSoVLzHpcABI7w6qQDKkd6l61UuD2VoTGYAktvyMyT5JxGbTe5c5YACg5QIFw
+# Cd1c3Uj6Cb8M7fX8w0Dqaiw9/mknTuazjZdbSRuP+e1OySN3bCSnRg6jEHC93+Te
+# 8rIeTh5uVI74nMneTRfghgEMxuOKBcAE7twkLbatFH+BB3AvTqa9QSg2WRgobXuh
+# nZUHiSFYCYHJMdFo6Is3CTOs/hiMp5K0gE4BUsFgZtkxj5zyZBoy4jxG7brEwwAj
+# K7RQywO4+XoDpG7eoe27imJnm4RLvqE7D0KrppVS0IkwNiCmaQtNaxvYuFTzuHsB
+# bAIXm4zfZoFrZw4MwPEMch+2aGL4RUGgGI9nlZyP8z5T24UbIRTahWqwpqp5Kl7G
+# PowUJL6a5+/Wy3FD41xc5AgRPOMkcaqgjQqdjr7ayutCcQ15aiSIYc6YI5h4uvnh
+# iOqIm85yJe8qDmCvlijP6AiNoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
 # MHcwYzELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYD
 # VQQDEzJEaWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFt
 # cGluZyBDQQIQBUSv85SdCDmmv9s/X+VhFjANBglghkgBZQMEAgEFAKBpMBgGCSqG
-# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDkwMzIwMTMx
-# NVowLwYJKoZIhvcNAQkEMSIEIMVwi+CacpBwxahWgahiwPhNKKue5Ya40OlexRJK
-# t+/pMA0GCSqGSIb3DQEBAQUABIICAEqef1ezeQ7zArLNI8ZyjgRn87anVfbFaSbx
-# BZqnSdl59dVmsWVLx46oFHY8SI2NDOL52MYo3mfI70kR3KQ1ip1aTi1GoX6YtNv9
-# IhAp/9fSfSppySAcBEqI2XPg914Ar4a6yZMTcR/XDRmBmA+wwwygN3JVyHNz/uKl
-# 7iXm3cXq4I8nWaZWp1+a7DpmyTwAr6AgnGKZEDHtM/JPs9OD3e75Yp+7gu4H+3No
-# eGiEa73brp79aUJzt4OsfsO1X8+35hX8LLqFBjer3fLNinXDJjh3snHZOiYjHVFU
-# QpASuAlHwgoYvY0kWdpcBeiV7dHZvKm0P4eqSBahkkHhKPZHYQFQDC7oy+K6JiKf
-# pl91J0xzIunW6mqnvKmQMU6KU2du9Klnj3RAGuYl6S1gP3nqfcm0v4svaIU7z1fj
-# CsixMcvisYrpNSFLeQiwjA6OuqYn+Vd9kvk7RYES+1vbsjAymwGvzUQw5dHhYzmY
-# zQGnnmHLXv/Hy6TgiGYVhNiNZi+S1odayJ7FlA8jLzastHozZFqHwiKS+i1enXy0
-# zX5d1M7AKlJW+v9vbyWZLx+TNwJ0NzLvoBIoBF2MHdMWWTsz7BbhJFugBmo0JP/m
-# mW39TQhJViXqZC9wCFnfZ+oZXKUxcld9waApO5x7D+l9xA79h+VSJArWb4mfJYd1
-# pyXoHZeP
+# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MTAwMzIyMDEx
+# OVowLwYJKoZIhvcNAQkEMSIEIIOIM2y23Ml5wlnqkv2FjglfWtKoEpVb9oj0PiYe
+# hjrrMA0GCSqGSIb3DQEBAQUABIICAFPOcVDFhZh0sxJtengPXYSZPCZRC3DHeTa8
+# LTd3udIrWqgPQ2cyYQneRcNfTf0k9XU7cuO/vnyWPxDoXAkhK6CxOjYE0ewvXNuw
+# qHQzCA56eGs60Pne/gqDTEp5TH2aIO9fQLAAHGy3WYgi0t8XCuh76aK92J2nOBut
+# wnjnQSycHQP+2AcJ9+IFDWUUaHNlXqaMRtgipetLx4tyki55tMO4q04GmZbhTsa0
+# x1Ij5gZhz/qgYXvDLaOW1Fh9k7jqVyIw9oAY/qZJm1/X9BqplZ22hmVCHPP8/19w
+# lQf5LSDsqLMr/IbNYJeb40Ak9AotXxonfik1A41pZNsjmj8gmKag9/CaFZfsU9P8
+# zE9+1j4SQZ00oeoaa164OJ6bTk27CX2n4FgH8LkzGQqlJcXK8Mjb4VqIT+G12Pe4
+# kcZVPfOLR4Os4zwdf4OHJyrQSmkUpUrIjKfRYbCQSHshF/iK0hsCw3P56elG6U5V
+# zP8A61xa3Ik6YSLMB0VRjMLaVylY+73USP3kU4IHJAJyyaEFM7yIoM/KbFYAJERp
+# XCJ4oFaY0i71BtKcaAe8ODSr5koixNnLn8HQv9Y5iuPLEvaiAXtJVxJzr9NezjMb
+# nDXoCCoIgRiNQQCoOvuGIM4QOzK1Wwl+lqojk5sOtLo76HUlcq5XV8m3S/Fr+Hep
+# 7whADteo
 # SIG # End signature block

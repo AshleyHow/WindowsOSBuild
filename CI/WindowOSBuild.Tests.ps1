@@ -1,6 +1,34 @@
+
+
 BeforeAll {
     $Path =  (Get-Item $PsScriptRoot).parent.FullName + "\WindowsOSBuild.psm1"
     . Import-Module -Name $Path -Verbose
+
+    # Function to check if a string contains a valid date in YYYY-MM-DD format
+    Function Find-ValidDate {
+        Param (
+            [string]$InputString
+        )
+        # Trim whitespace from the input string
+        $InputString = $InputString.Trim()
+
+        # Try to parse the date
+        Try {
+            [datetime]::ParseExact($InputString, "yyyy-MM-dd", $null) | Out-Null
+            Return $true
+        }
+        Catch {
+            Return $false
+        }
+    }
+
+    Function Find-TrueOrFalse {
+        Param (
+            [object]$Value
+        )
+        # Return true if the value is either $true or $false
+        Return $Value -eq $true -or $Value -eq $false
+    }
 }
 
 If ($PSVersionTable.PSVersion.Major -le 6) {
@@ -9,12 +37,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 1507 (RTM) (OS build 10240)'
+                $Results.Build | Should -Match '^10240\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
@@ -26,12 +54,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1511 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 1511 (OS build 10586)'
+                $Results.Build | Should -Match '^10586\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
@@ -43,12 +71,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1607 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 1607 (OS build 14393)'
+                $Results.Build | Should -Match '^14393\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
@@ -60,12 +88,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1703 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 1703 (OS build 15063)'
+                $Results.Build | Should -Match '^15063\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
@@ -77,12 +105,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1709 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 1709 (OS build 16299)'
+                $Results.Build | Should -Match '^16299\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
@@ -94,12 +122,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1803 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 1803 (OS build 17134)'
+                $Results.Build | Should -Match '^17134\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
@@ -111,12 +139,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1809 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 1809 (OS build 17763)'
+                $Results.Build | Should -Match '^17763\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
@@ -128,12 +156,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1903 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 1903 (OS build 18362)'
+                $Results.Build | Should -Match '^18362\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -144,12 +172,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1909 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 1909 (OS build 18363)'
+                $Results.Build | Should -Match '^18363\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -160,12 +188,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 2004 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 2004 (OS build 19041)'
+                $Results.Build | Should -Match '^19041\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -176,12 +204,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 20H2 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 20H2 (OS build 19042)'
+                $Results.Build | Should -Match '^19042\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -192,12 +220,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 21H1 (OS build 19043)'
+                $Results.Build | Should -Match '^19043\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -208,12 +236,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 21H2 (OS build 19044)'
+                $Results.Build | Should -Match '^19044\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
@@ -225,12 +253,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 22H2 (OS build 19045)'
+                $Results.Build | Should -Match '^19045\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -241,12 +269,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 21H2 (OS build 22000)'
+                $Results.Build | Should -Match '^22000\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -257,12 +285,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 22H2 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 22H2 (OS build 22621)'
+                $Results.Build | Should -Match '^22621\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -273,12 +301,28 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 23H2 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 23H2 (OS build 22631)'
+                $Results.Build | Should -Match '^22631\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Not -BeNullOrEmpty
+                $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            }
+        }
+        Context "Win 11 (24H2)" {
+            It "Results" {
+                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 24H2 -latestreleases 1000
+                Start-Sleep -Seconds 0
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
+                $Results.Build | Should -Match '^26100\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -289,12 +333,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Server2022 -OSVersion 21H2 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
+                $Results.Build | Should -Match '^20348\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -306,8 +350,8 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
                 Start-Sleep -Seconds 0
                 $Results.Build.Count | Should -BeGreaterThan 0
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
+                $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
+                $Results.Build | Should -Match '^20348\.'
                 $Results.'Availability date' | Should -Not -BeNullOrEmpty
                 $Results.Hotpatch | Should -Not -BeNullOrEmpty
                 $Results.Preview | Should -Not -BeNullOrEmpty
@@ -322,12 +366,12 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName ServerSAC -OSVersion 1709 -latestreleases 1000
                 Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 1709 (OS build 16299)'
+                $Results.Build | Should -Match '^16299\.'
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -350,9 +394,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.Build.Count | Should -Be 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -423,333 +467,351 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
 }
 Else {
     Describe "PWSH - Get-LatestOSBuild" {
-        Context "Win 10 (1507)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+        Describe "PS - Get-LatestOSBuild" {
+            Context "Win 10 (1507)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 1507 (RTM) (OS build 10240)'
+                    $Results.Build | Should -Match '^10240\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 (1511)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1511 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 (1511)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1511 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 1511 (OS build 10586)'
+                    $Results.Build | Should -Match '^10586\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 / Server 2016 (1607)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1607 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 / Server 2016 (1607)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1607 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 1607 (OS build 14393)'
+                    $Results.Build | Should -Match '^14393\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 (1703)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1703 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 (1703)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1703 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 1703 (OS build 15063)'
+                    $Results.Build | Should -Match '^15063\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 (1709)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1709 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 (1709)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1709 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 1709 (OS build 16299)'
+                    $Results.Build | Should -Match '^16299\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 (1803)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1803 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 (1803)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1803 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 1803 (OS build 17134)'
+                    $Results.Build | Should -Match '^17134\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 / Server 2019 (1809)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1809 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 / Server 2019 (1809)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1809 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 1809 (OS build 17763)'
+                    $Results.Build | Should -Match '^17763\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 (1903)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1903 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 (1903)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1903 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 1903 (OS build 18362)'
+                    $Results.Build | Should -Match '^18362\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 (1909)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1909 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 (1909)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1909 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 1909 (OS build 18363)'
+                    $Results.Build | Should -Match '^18363\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 (2004)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 2004 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 (2004)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 2004 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 2004 (OS build 19041)'
+                    $Results.Build | Should -Match '^19041\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 (20H2)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 20H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 (20H2)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 20H2 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 20H2 (OS build 19042)'
+                    $Results.Build | Should -Match '^19042\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 (21H1)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 (21H1)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 21H1 (OS build 19043)'
+                    $Results.Build | Should -Match '^19043\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 (21H2)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 (21H2)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 21H2 (OS build 19044)'
+                    $Results.Build | Should -Match '^19044\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 10 (22H2)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 10 (22H2)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 22H2 (OS build 19045)'
+                    $Results.Build | Should -Match '^19045\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 11 (21H2)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 11 (21H2)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 21H2 (OS build 22000)'
+                    $Results.Build | Should -Match '^22000\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 11 (22H2)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 22H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 11 (22H2)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 22H2 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 22H2 (OS build 22621)'
+                    $Results.Build | Should -Match '^22621\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Win 11 (23H2)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 23H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 11 (23H2)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 23H2 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 23H2 (OS build 22631)'
+                    $Results.Build | Should -Match '^22631\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Server 2022 (21H2)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Server2022 -OSVersion 21H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Win 11 (24H2)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 24H2 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
+                    $Results.Build | Should -Match '^26100\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Server 2022 Hotpatch (21H2)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 0
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Hotpatch | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Server 2022 (21H2)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Server2022 -OSVersion 21H2 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
+                    $Results.Build | Should -Match '^20348\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
-        }
-        Context "Server SAC (1709)" {
-            It "Results" {
-                $Results = Get-LatestOSBuild -OSName ServerSAC -OSVersion 1709 -latestreleases 1000
-                Start-Sleep -Seconds 0
-                $Results.Build.Count | Should -BeGreaterThan 1
-                $Results.Version | Should -Not -BeNullOrEmpty
-                $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'KB article' | Should -Not -BeNullOrEmpty
-                $Results.'KB URL' | Should -Not -BeNullOrEmpty
-                $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+            Context "Server 2022 Hotpatch (21H2)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
+                    $Results.Build | Should -Match '^20348\.'
+                    $Results.'Availability date' | Should -Not -BeNullOrEmpty
+                    $Results.Hotpatch | Should -Not -BeNullOrEmpty
+                    $Results.Preview | Should -Not -BeNullOrEmpty
+                    $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
+            }
+            Context "Server SAC (1709)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName ServerSAC -OSVersion 1709 -latestreleases 1000
+                    Start-Sleep -Seconds 0
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 1709 (OS build 16299)'
+                    $Results.Build | Should -Match '^16299\.'
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Not -BeNullOrEmpty
+                    $Results.'KB URL' | Should -Not -BeNullOrEmpty
+                    $Results.'Catalog URL' | Should -Not -BeNullOrEmpty
+                }
             }
         }
     }
@@ -769,9 +831,9 @@ Else {
                 $Results.Build.Count | Should -Be  1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
-                $Results.'Availability date' | Should -Not -BeNullOrEmpty
-                $Results.Preview | Should -Not -BeNullOrEmpty
-                $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Not -BeNullOrEmpty
                 $Results.'KB URL' | Should -Not -BeNullOrEmpty
@@ -843,8 +905,8 @@ Else {
 # SIG # Begin signature block
 # MIImcgYJKoZIhvcNAQcCoIImYzCCJl8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUpxBl7mYJMJaIsIcIMKzO8fgb
-# RQiggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUU1j78O3gDTLJGdllIKvb9EQu
+# /mmggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -1020,31 +1082,31 @@ Else {
 # QS4xJDAiBgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzem
 # d0ILREkKU+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKA
 # ADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYK
-# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUTpYr5fyAagsrQD+pCd1q9H+uKxIw
-# DQYJKoZIhvcNAQEBBQAEggGAx1HyrFYZd8ERGjRse5pv0s1WPLDISj2w8MvIYPMw
-# O96s6pUfduE1gD/Hok5nNTOFIn+WzDhVp95Mj8jPMfipDMm4PFTe5zXh0EdvZCS/
-# Zl6z3opnbLW4wScXZLGD9V7O5nolc8OiAWI2je0/SwYBQPvs/qCtgZqDqsGb8+wO
-# JtWIAZJUGZnFhI2gRMVO1kxRhWx9OooThnRx+i1afG4tafTJiYQpwqPZtn/3SUn1
-# YpVpSJdSC+XYFL3jxl21oqN5+OmiVtOJRWNOAOqPd2sn0FdYKxmCupPm8ztia7IB
-# Z5IZmDuJuHDzBd1RwKFeNXnfMFAP2PxlHJ8Q2FRkL55Wt+R7SDjTsI6kpvrHxNDf
-# pQMpXNyDHKDNNMNVTdgM3Tc/LF/CqSkVdP9ZfFZvG82mKFMjbgEYYlvUZJEKslFg
-# 770heSNXWw7+cPaqjEvl453vgmLPglax1iRlhnQ+jp32Q5shxNQK+94m+EhnzJnH
-# jYdTtsNrNeAexxcQ+NGF8yOKoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
+# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUFfusAfy2skUAFVth3LDbs5eXvOUw
+# DQYJKoZIhvcNAQEBBQAEggGAbPCSTGxPSLX0ONnG9+IkHuXrUbsK4qASMjwdZ3RB
+# NwjlvakFySTrpFmIVnziIu2opITVyfXP1lmzJZnu+n9VJpp1s4I5CR2tZ9OF9gU4
+# LXfDAmChlfXSoWV00XC0FbYDJB2N/AHN7g60TYzf0IelKVpP6EzcovDhoP1Aeygn
+# f7JTQ/1yrpsQ0406aF9cZ2QUT6R/H0A0OOwkjMxVf53mvUENubfN97wXtylkueo5
+# MweQVM/t7aV1cEwalc2DkmCWzHj6ois4u3JNvHGsMSuAqFDsiOsGfNbtJ96IdTAL
+# MO4EcJcFkIjQPL7Yi+it8gIxDtpUcjGrOnhBHUNb893uY3xlxPSrFJuKFduuP75x
+# Y5QWdsNqjbsuMcg3RECLw0Vymgu0HCv34IPUHq8+G7gbQErFNwdHeXwY3eK19mso
+# b2sPwLCeXTttJ02ZBIW/kvlR1ilUZGkSEpH4hldcKKEqFdgEsHIbP0GQnD9zg/nY
+# sorQieDoYGuFyDIbSSZp2JS5oYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
 # MHcwYzELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYD
 # VQQDEzJEaWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFt
 # cGluZyBDQQIQBUSv85SdCDmmv9s/X+VhFjANBglghkgBZQMEAgEFAKBpMBgGCSqG
-# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDkwMzIzMDMz
-# NVowLwYJKoZIhvcNAQkEMSIEIPC5LG57MD0/j2lKvDDQtK/Dv9HDwh9YjG/3A8In
-# pyoYMA0GCSqGSIb3DQEBAQUABIICAGE8u9ifHTIm21yzkLKvNWRyEL6hpUHQju9q
-# bTapdPr1Np0c8As9zeXtHWUS/jsmB0t5NTEY4s3IrsjSP9OF/iIymxjHKmNl+Rng
-# 6g8ERn7NMfxn6ffr82riyQM0r9yx7cr0pH8UleODQfTmvFDW7j5cOFsNhI3lQfO5
-# T59c+c6hnn+gQrdX7IEcRfJK4gTuhEqFZIzLzHtH9+7+VByj/IZC9INYjC8tAIas
-# 8ESXpBnBbS4WMMEsR9kMEAiDzNAxLToPgeZ3dFDEtKxhUeswegSGkc6y41YEJAkd
-# FuUHXhSkZCAFXH1vgd90rxICW6XfXpRfNPAXDdFdTofbhOKhjObWRm5ZnKGzFdlg
-# 5wx8sbBOayDFaBzWT8uNp/QoyCt6jtzkdzBjV9Qin5oSSgIskCj+glX+MkzhcR3s
-# Oikd4fCkADcU4ILrpfggEJcfSgPQVjJPjUCqI9Y8ipe41HF1UB4qyR3AyQj2+1SJ
-# IX0HCh9cm7cKkuQ2rjKKkwAylnoOJO40An1g9gnpxWpdNTkERk03i02yTcGeAPAU
-# VcW+igZq9XGqXY7xYy6KL7eM0VCVg6b2mVsJ2NZFJCkNmj9L+92B2VA5YaDgGoeF
-# qGpjzLzvY4GWy1sJnIkjUS56oi1of/GefkGRTvUXE9jHqo0AjLtKWbXdYvtC7Erc
-# xQtETVgX
+# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MTAwMzIzMTQ0
+# NlowLwYJKoZIhvcNAQkEMSIEIIW57z54RSs51LDEIpOvfnDTrkJ1JlyiMVgIZbo1
+# fdWBMA0GCSqGSIb3DQEBAQUABIICACjDdVB6KPx8FcySwr0chA31ZK0o3XLyyHJi
+# c7TTZVpNZALN2yiAzmw+bOtbpyDkG/fXTk7X3uBQiXltn3hFgviGEoWIyX8+tqjy
+# KDZDUuLYXLdnmh5GpMC2/OQpf3RYoSe0sIjVMy7dFdUD7S6tgZQMgO0rfWFLfu4I
+# YoRTB4odhFu6eKS2Ev+ylHt76nlcsPGOAjGd1yU8SGUR/AWtvuc89jTY/8QwvdZW
+# yxdvDUSLYJ8mIXUSA5uGVcLRgZeSuY3nP0njUZkcJxt5VW/e5SpZmvf3XS9a2EPg
+# KfcpZbCHdSYNkw56g/4FY92XHVz0tBJXokNRL+X7tpiiprTb8qB8qLW9B9TTMTKG
+# HVlKQYsQK3ANht9DC53blNEZGgZ1wZ9EEYCwy8AyImEsKgp7HZUT5QDhWPb91qr9
+# F+1FSD0D8s1UiF+ZjeXueqmWQtbVOjSo9L1IUePeILTvH2klBUpClYAQuise8whC
+# hOhnccZVvr4zObOlFa/M3VMVOAKTMG1XXOcFKtuOfpkqD/9UDtmEAsiocURoR4hZ
+# HAavymvLQv9M9o20orfPl9lls+Ugq3fI6a50+dGadLO93euweLsEMXnJptUHEDbS
+# C8w01Z/apx5oodr6qrdhbMI/Z9GORyYO3JPsLo+G3Zs+ou0gtrqY8hOje8quLs/K
+# xRX4iFoq
 # SIG # End signature block

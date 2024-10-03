@@ -62,11 +62,9 @@
             $DetectedOS = "Server2019"
         }
         ElseIf ($GetOSCaption -match "Server 2022") {
-            $DetectedOS = "Server2022"
-        }
-        ElseIf ($GetOSCaption -match "Server 2022") {
             If (Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue) {
                 $DetectedOS = "Server2022Hotpatch"
+                $FallBackOS = "Server2022"
             }
             Else {
                 $DetectedOS = "Server2022"
@@ -79,7 +77,19 @@
             Throw "Get-CurrentOSBuild: Unable to detect operating system. OS Caption: $GetOSCaption, Detected OS: $DetectedOS"
         }
 
-        Get-LatestOSBuild -OSName $DetectedOS -OSversion $(Get-Build) -LatestReleases 1000 | Where-Object -Property Build -eq $CurrentOSBuild
+        # Hotpatch OS
+        If ($FallBackOS) {
+            $Results = Get-LatestOSBuild -OSName $DetectedOS -OSversion $(Get-Build) -LatestReleases 1000 | Where-Object -Property Build -eq $CurrentOSBuild
+            # Handle Hotpatch capable OS thats is not using hotpatch updates
+            If (!$Results) {
+                $Results = Get-LatestOSBuild -OSName $FallBackOS -OSversion $(Get-Build) -LatestReleases 1000 | Where-Object -Property Build -eq $CurrentOSBuild
+            }
+            $Results
+        }
+        # All other OS
+        Else {
+            Get-LatestOSBuild -OSName $DetectedOS -OSversion $(Get-Build) -LatestReleases 1000 | Where-Object -Property Build -eq $CurrentOSBuild
+        }
     }
     Else {
         Return $CurrentOSBuild
@@ -88,8 +98,8 @@
 # SIG # Begin signature block
 # MIImcgYJKoZIhvcNAQcCoIImYzCCJl8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUL3iciI51XcmRPJIZ9MSVSMzn
-# CdaggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUqFZ/tiexSOrpT9eGkrxo1ILV
+# SfCggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -265,31 +275,31 @@
 # QS4xJDAiBgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzem
 # d0ILREkKU+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKA
 # ADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYK
-# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQU8UBk+WvjmJlT57gh324kU12Dhh0w
-# DQYJKoZIhvcNAQEBBQAEggGAunQJ4SwCcn4rVmufhaC2O2j14rK7dqmzM9rFzs4V
-# sHKDymuy4vPV41RsdjfrWUtnd1cMPE7s5opsiSvWWtXXiyr4jEMqktP8HnSSmjq3
-# edYkPG+CbGVxKEO0mxXw2nisEe3O5WLmCfINXjD2goPJyt8wQfeHvEUkxJqnkDCN
-# b7M/jYDW92IIv3jYkJjqrGZaHE/KMgNzX9neILwOIXtZocSPRB8dP0LgfLaDWhx5
-# nXrq+oBmZThJ8cVGZWQhcJEoM8ILYp3KsMLClZIufS3iJz0TLtcp5FZ9sJ+qjWqD
-# d8tLbrBLRWvsclS2V7vdhznARy0FgIpqDGxIniASBg9ejrICX0FcGdX75dr1Qv/J
-# nrQ1wBJ39SM0yfY1gZ+Cpv3cGJbV1CwznE6gHIgmsKzkFWNum6ktZDItWvlT0aCh
-# GBhwIJtCQEhT9kbrJQx1helXl7qRZox5k1chQIjGXjmWifsZVXSkVDx+5U4JGsq/
-# t55CCP0jI9NQ/1aDUgR3GNgzoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
+# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUbgGpItu7KbETuZvaxv17OIGh9w4w
+# DQYJKoZIhvcNAQEBBQAEggGAYPl5vOCCOPd1wGM/Eh7FPWalf5s2W0jxe0n2zfN0
+# NT9qG5vVv5A5eW44t661T1ehO8GcWwYw1QruvtW2GfpvIdeWLN9AolL9qEkz4cvJ
+# NB7XPDpsFrbfg0Z7u7ufJNODUQPAU34rAQLaFkb2kzRoU9V6Ef7EzUrui10bCt3T
+# qkIY85LTmSOZ2nfVKMntWgII233gxLSkDrziOjw1By4uqCluc3K8Z/NPkll4QA9C
+# SJDbcHUfi8uWEBs/Xdu1XABfxhXy+S8GuRZ0fWSVOZ1G5vQzOiYNvRKTlfpcAclc
+# Pm/AkL9HX40WFaqqUp7wgHBMTWQ2cA6qbP/3EIUv7I6oDLowy5SFd9Q9k9ZPs72q
+# 6IsikIWn/MSJexmL3N+bG3X+T62SiN2bq5Mr8B2D3cUPQVC4nG96ktmSCqP3J5Vs
+# 2S6bbA+eioHS0xCQrygihWrbi9uZ79PSPWlyVXMkGKfFm1fjBkM9jMlXRrLvWzrq
+# XglQWMhxdmn30XEO9D+DEzy6oYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
 # MHcwYzELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYD
 # VQQDEzJEaWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFt
 # cGluZyBDQQIQBUSv85SdCDmmv9s/X+VhFjANBglghkgBZQMEAgEFAKBpMBgGCSqG
-# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDQyNDIyMDkx
-# NVowLwYJKoZIhvcNAQkEMSIEII1jOrHJQXnc+OJAuEk3L/8nh/aFfD+lIeFWWX+I
-# i8vFMA0GCSqGSIb3DQEBAQUABIICAB79niBX6CYqfcHyfu/l+fgMSWY4WRbQLWoz
-# qMMaMNp7j8NNjbY5bISMGT3MmGbyxLMv61ctQtFClOJqq1VPjqoRgkfgvezUPTjY
-# YA7oMrSBwtkTaRgpWet7MXQhaOC+d4hvJqsMXjxjpetfkNSUBOBRKYVTR5IjI4xC
-# tDagjqZdfll+UBqDXG9fmsa7pwCMFTdr5I2QQn6uJDsPvr/r7jYwOpMUjlVo7pQH
-# J9RSTzIcEjORF4TUqRUaOXYfUg1XkMIIhxM8mJxxazOEJkd3/svwAxTNldOhVZcR
-# wNiYkKWFiN23pidx/Vt2pPtacYivywsmsiLL6Yh7PMrFqQn4ehOxiOMu7CN/VNME
-# DGImOSQzWkfLyki/7WQ8lnbQnhPSkGxv+3LzLyN0+cEjgj8bs50f7KHfPw2qXT0Z
-# ndm10dKd+dT1g0mMB79428ax0WO4gYyMDeXHvwxm++ybfGpRT1jCLEn9C3/H7Uld
-# UjlbSHQVQwXL99gk8+CO46qFHBZfePNW7YCxNmbgiSvSUAkoM/j963XG5g0/81cW
-# NOM+rWMIMn4hz5GgayQsJFCLkYYC+chbhWeIqbgmu88D/gXsSKqfudZmhCzpXx69
-# AOMGnHbS0LGChCyvtqirXA2t//QBm6CYNP8xm021ce534hk7fHCYCzjE2mSMvSJf
-# C1+0Opqi
+# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDkyNDIwMDY1
+# N1owLwYJKoZIhvcNAQkEMSIEIILCRUzdHliZ9ftht7XMuJ0sUiiTELFK771b0bQC
+# IrjoMA0GCSqGSIb3DQEBAQUABIICAC8BT4BehE6efJ0l7pTjG4wIMuhqun4qxIU3
+# e3Z2RHITINy87BclN2vVehUeACGfN3Ym5hLVBYdeNcE7oNl9OmcbxvTeUJDfpH3E
+# MMsl9mrjqzs++YTGCz8+PlCi5sKk9s5OvoGpI6i4zXtbpahCLN91eWBjr8nQx3ko
+# THrXnlOY+7zikm7QkFjCkWPjRnT4xDMX9ZL99A2OFul0M+s3WngASxMANVrJwaWB
+# MOKtaynd2nUM3beQDmguWnSe/IIeFPWao8eB/lvkC81vO8m7A5siv+RXu+WEhCS1
+# +lggmdqY9HSgSDbWGsHhe98hS1MP3Fqj+LfCsMpg2N4UYJYeaV4QkvGL3iXPScIY
+# wmZxi52Ak+ispTzdYAhxpUpC2+JfVhHyBBCiLZC9oqBjjMFQTo4vN1fZBYkXimP6
+# e2D2b/XV42t4raMoNmMew5jLxtXsmz4pOGgqVtTSUqtpK8LeFVV3U47AFUaiej8I
+# 8wJVbj91GX+lEitJRhpnW3u8cKlD9gBok7xg/RcBbP++3Qm2dYDP14lelFtNn0gp
+# e3y6akctEzTm2ne9P/KotPf+tDXKGGgHijtVylKhk8wOiT2GVEtbNyOoCXuvzYJi
+# xV8SusVncE61N7/YBqr2ta99nrPD0Xw0Iu28VK5/H2z2vMRJ7wkZEo+JxfiEdul8
+# XHic8hTH
 # SIG # End signature block
