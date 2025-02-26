@@ -9,7 +9,7 @@
         .PARAMETER OSName
             This parameter is optional. OS name you want to check. Default value is Win10. Accepted values:
 
-            Windows Client OS Names                              - Win10, Win11.
+            Windows Client OS Names                              - Win10, Win11, Win11HotPatch.
             Windows Server OS Names                              - Server2016, Server2019, Server2022, Server2022Hotpatch, Server Semi-annual = ServerSAC.
         .PARAMETER OSVersion
             This parameter is mandatory. OS version number you want to check. Accepted values:

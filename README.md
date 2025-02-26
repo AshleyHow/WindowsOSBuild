@@ -49,7 +49,7 @@ This parameter is optional. OS name you want to check. Default value is Win10. S
 
 | OS Name                                             | Version                                                                                         |
 | :---------------------------------------------------| :---------------------------------------------------------------------------------------------- |
-| Windows Client OS Names                             | Win10, Win11.                                                                                   |
+| Windows Client OS Names                             | Win10, Win11, Win11HotPatch.                                                                    |
 | Windows Server OS Names                             | Server2016, Server2019, Server2022, Server2022Hotpatch, Server Semi-annual = ServerSAC.         |
 
   - OSVersion
