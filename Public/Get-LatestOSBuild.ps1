@@ -240,7 +240,54 @@
                 $VersionDataRaw = $Webpage.Links | Where-Object { $_.outerHTML -match "supLeftNavLink" -and ($_.outerHTML -match "KB" -or $_.outerHTML -match "Hotpatch baseline") -and $_.outerHTML -notmatch "25398.|17784.|20348.344|20348.410|KB5010614|KB5004312|April 13, 2021 Hotpatch baseline" } | Sort-Object -Property href -Unique
             }
             else {
-                $VersionDataRaw = $Webpage.Links | Where-Object { $_.outerHTML -match "supLeftNavLink" -and ($_.outerHTML -match "KB" -or $_.outerHTML -match "Hotpatch baseline") -and $_.outerHTML -match "26100" } | Sort-Object -Property href -Unique
+                try {
+                    # Define marker text (ensure these exactly match part of the outerHTML text)
+                    $startMarker = 'Public Preview - Release notes for hotpatch on Windows 11, version 24H2 Enterprise clients'
+                    $endMarker   = 'Public Preview - Release notes for hotpatch in Azure Automanage for Windows Server 2022'
+                
+                    # Ensure the links are stored in an array variable.
+                    $links = @($Webpage.Links | Where-Object { $_.outerHTML -match "supLeftNavLink" })
+                
+                    # Get the first object that matches the start and end markers
+                    $startObj = ($links | Where-Object { $_.outerHTML -like "*$startMarker*" })[0]
+                    if (-not $startObj) {
+                        throw "Start marker not found. Verify the marker text exactly matches part of the outerHTML."
+                    }
+                    
+                    $endObj = ($links | Where-Object { $_.outerHTML -like "*$endMarker*" })[0]
+                    if (-not $endObj) {
+                        throw "End marker not found. Verify the marker text exactly matches part of the outerHTML."
+                    }
+                
+                    # Find the index positions within the $links array
+                    $startIndex = $links.IndexOf($startObj)
+                    $endIndex   = $links.IndexOf($endObj)
+                
+                    if ($startIndex -lt 0) {
+                        throw "Start index not found in the links array."
+                    }
+                    if ($endIndex -lt 0) {
+                        throw "End index not found in the links array."
+                    }
+                
+                    # Only slice if both indices are valid
+                    if ($startIndex -ge 0 -and $endIndex -ge 0) {
+                        $result = $links[$startIndex..$endIndex]
+                    }
+                    else {
+                        throw "Could not extract results because one or both markers were not found in the array."
+                    }
+                
+                    # Filter the results further and sort uniquely
+                    $VersionDataRaw = $result | Where-Object { 
+                        $_.outerHTML -match "supLeftNavLink" -and 
+                        ($_.outerHTML -match "KB" -or $_.outerHTML -match "Hotpatch baseline") -and 
+                        $_.outerHTML -match "26100"
+                    } | Sort-Object -Property href -Unique
+                }
+                catch {
+                    throw $_
+                }             
             }
             $UniqueList =  (Convert-ParsedArray -Array $VersionDataRaw) | Sort-Object OSBuild -Descending
             ForEach ($Update in $UniqueList) {
