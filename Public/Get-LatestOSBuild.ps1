@@ -84,7 +84,7 @@
         [String]$LatestReleases = 1,
 
         [Parameter(Mandatory = $false)]
-        [ValidateSet('Win10','Win11','Server2016','Server2019','Server2022','Server2022Hotpatch','ServerSAC')]
+        [ValidateSet('Win10','Win11','Win11HotPatch','Server2016','Server2019','Server2022','Server2022Hotpatch','ServerSAC')]
         [String]$OSName = "Win10",
 
         [Parameter(Mandatory = $false)]
@@ -121,6 +121,13 @@
         $URL = "https://docs.microsoft.com/en-us/windows/release-health/release-information"
         $TableNumber = 2
         $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/6ae59d69-36fc-8e4d-23dd-631d98bf74a9"
+    }
+    elseif ($OSName -eq "Win11HotPatch") {
+        # --- NEW: Windows 11 Hotpatch public preview branch ---
+        #$OSBase = "Windows 11 Hotpatch"
+        $OSVersion = "24H2"  # Force OSVersion for Hotpatch preview
+        $URL = "https://support.microsoft.com/en-us/topic/release-notes-for-hotpatch-public-preview-on-windows-11-version-24h2-enterprise-clients-c117ee02-fd35-4612-8ea9-949c5d0ba6d1"
+        $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/4ec863cc-2ecd-e187-6cb3-b50c6545db92"
     }
     ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
         # Disabled automatic detection of hotfix as it is not a reliable method of guaranteeing devices are applying hotpatch updates, non-hotpatch updates can still be applied.
@@ -171,7 +178,7 @@
         }
         # Supports Server 2022 Hotpatch
         Else {
-            If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+            If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch") -or ($OSName -eq "Win11HotPatch")) {
                 $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -ErrorAction Stop
             }
             Else {
@@ -225,11 +232,16 @@
         }
     }
 
-    # Server 2022
-    If ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
+    # Server 2022 and Server 2022 Hotpatch and Windows 11 Hotpatch
+    If ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Win11HotPatch") {
         $Table = @()
         $Table =  @(
-            $VersionDataRaw = $Webpage.Links | Where-Object { $_.outerHTML -match "supLeftNavLink" -and ($_.outerHTML -match "KB" -or $_.outerHTML -match "Hotpatch baseline") -and $_.outerHTML -notmatch "25398.|17784.|20348.344|20348.410|KB5010614|KB5004312|April 13, 2021 Hotpatch baseline" } | Sort-Object -Property href -Unique
+            if ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
+                $VersionDataRaw = $Webpage.Links | Where-Object { $_.outerHTML -match "supLeftNavLink" -and ($_.outerHTML -match "KB" -or $_.outerHTML -match "Hotpatch baseline") -and $_.outerHTML -notmatch "25398.|17784.|20348.344|20348.410|KB5010614|KB5004312|April 13, 2021 Hotpatch baseline" } | Sort-Object -Property href -Unique
+            }
+            else {
+                $VersionDataRaw = $Webpage.Links | Where-Object { $_.outerHTML -match "supLeftNavLink" -and ($_.outerHTML -match "KB" -or $_.outerHTML -match "Hotpatch baseline") -and $_.outerHTML -match "26100" } | Sort-Object -Property href -Unique
+            }
             $UniqueList =  (Convert-ParsedArray -Array $VersionDataRaw) | Sort-Object OSBuild -Descending
             ForEach ($Update in $UniqueList) {
                 $ResultObject = [Ordered] @{}
@@ -258,7 +270,7 @@
                 }
                 $FormatDate =  Get-Date($ConvertToDate) -Format 'yyyy-MM-dd'
                 $ResultObject["Availability date"] = $FormatDate
-                If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+                If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch") -or ($OSName -eq "Win11HotPatch")) {
                     If ($Update.Update -match 'Hotpatch baseline') {
                         $ResultObject["Hotpatch"] = "False"
                     }
@@ -279,28 +291,28 @@
                     $ResultObject["Out-of-band"] = "False"
                 }
                 $ResultObject["Servicing option"] = "LTSC"
-                If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
+                If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch") -or ($OSName -eq "Win11HotPatch") -and ($ResultObject.Hotpatch -eq "False")) {
                     $ResultObject["KB source article"] = [regex]::Match($SourceOSBuild, 'KB\d{7}').Value
                     $ResultObject["KB article"] = $Update.KB + " / " + $ResultObject.'KB source article'
                 }
                 Else {
                     $ResultObject["KB article"] = $Update.KB
                 }
-                If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
+                If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch") -or ($OSName -eq "Win11HotPatch") -and ($ResultObject.Hotpatch -eq "False")) {
                     $ResultObject["KB URL"] = $Update.InfoURL
                     $ResultObject["KB source URL"] = "https://support.microsoft.com/en-gb/help/" + $ResultObject.'KB source article'
                 }
                 Else {
                     $ResultObject["KB URL"] = $Update.InfoURL
                 }
-                If (($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) -and ($ResultObject.Hotpatch -eq "True")) {
+                If (($HotpatchOS -or ($OSName -eq "Server2022Hotpatch") -or ($OSName -eq "Win11HotPatch")) -and ($ResultObject.Hotpatch -eq "True")) {
                     $ResultObject["Catalog URL"] =  "N/A"
                 }
                 Else {
                     $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $ResultObject.'KB source article'
                 }
                 # Cast hash table to a PSCustomObject
-                If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+                If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch") -or ($OSName -eq "Win11HotPatch")) {
                     [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date', 'Hotpatch', 'Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
                 }
                 Else {
@@ -308,22 +320,20 @@
                 }
             }
         )
-
-        # Include build information for Server 2022 RTM not included in Windows Update History
         $Server2022RTM = [PsCustomObject]@{
-                        'Version' = "Version 21H2 (OS build 20348)"
-                        'Build' = "20348.169"
-                        'Availability date' = "2021-08-18"
-                        'Preview' = "False"
-                        'Out-of-band' = "False"
-                        'Servicing option' = "LTSC"
-                        'KB article' = "N/A"
-                        'KB URL' = "N/A"
-                        'Catalog URL' = "N/A"
+            'Version' = "Version 21H2 (OS build 20348)"
+            'Build' = "20348.169"
+            'Availability date' = "2021-08-18"
+            'Preview' = "False"
+            'Out-of-band' = "False"
+            'Servicing option' = "LTSC"
+            'KB article' = "N/A"
+            'KB URL' = "N/A"
+            'Catalog URL' = "N/A"
         }
 
         # Add / Sort Arrays
-        If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+        If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch") -or ($OSName -eq "Win11HotPatch")) {
             $Table = $Table | Sort-Object -Property 'Availability date' -Descending
         }
         Else {
