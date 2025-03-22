@@ -140,7 +140,7 @@
         # $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
         if ($OSName -eq "Server2025Hotpatch") {
             $URL = "https://support.microsoft.com/en-us/topic/release-notes-for-hotpatch-on-windows-server-2025-datacenter-azure-edition-c548437e-8c7a-4e27-99f4-e8746f97f8fa"
-            $AtomFeedUrl = $null
+            $AtomFeedUrl = "N/A"
             $CategoryName = "Release notes for Hotpatch on Windows Server 2025 Datacenter Azure Edition"
         }
         Else {
@@ -263,7 +263,7 @@
             }
 
             # Fetch the Atom feed content, used to obtain preview and out-of-band data
-            If ($AtomFeedUrl) {
+            If ($AtomFeedUrl -ne "N/A") {
             $response = Invoke-WebRequest -Uri $AtomFeedUrl -Method Get -UseBasicParsing -ErrorAction Stop
             }
 
@@ -523,7 +523,7 @@
                     }
                     $ResultObject[$Title] = ("" + $Cells[$Counter].InnerText).Trim()
                     If ((![string]::IsNullOrEmpty($ResultObject.'KB article')) -and ($ResultObject.'KB article' -ne "N/A")) {
-                        $KBURL = "https://support.microsoft.com/help/en-us" + ($ResultObject."KB article").Trim("KB")
+                        $KBURL = "https://support.microsoft.com/help/en-us/" + ($ResultObject."KB article").Trim("KB")
                         $ResultObject["KB URL"] = $KBURL
                         $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $ResultObject.'KB article'
                         If ($KBURL -ne " https://support.microsoft.com/en-us/help/") {
@@ -614,8 +614,8 @@
 # SIG # Begin signature block
 # MIImbAYJKoZIhvcNAQcCoIImXTCCJlkCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU065tDfoJ84ZNRIGhWB7dL/MB
-# XaKggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUD28sBrauhUTfwHrwgJRiLdRp
+# kOyggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -791,30 +791,30 @@
 # BgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzemd0ILREkK
 # U+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkq
 # hkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGC
-# NwIBFTAjBgkqhkiG9w0BCQQxFgQUtRVYpc4L6kPdUCWIoGWxMd0O6jEwDQYJKoZI
-# hvcNAQEBBQAEggGAFBrGOO14GC/63L0U49U0LRKR1SWkLrJKtL32CWWDkfXqy944
-# QBAQkkzIFSZpgnSzYWags1zSjMwBmnrfyLpfo6z0rbWQOuJYHw4knT/AU9UY91Sb
-# avnlU/i/JJvlUWMyiu2HPzPhOcwBiL52uTW4SCzWNjCSSjClH1MjsXuU8fM80gId
-# VGkV0dkJC+UfOgk6QMD+t3KGUgG+XIziclStH/KuVOEQC8g3H9fEZIrumorMA3yV
-# E031WEXl8Zgx1p6wpzY6o5pJcVyBSuyDNYBcKvtdNtChr8vlX+L8oOzNBWKdbosD
-# 8AjwwbA5JMVW/g4Lz2FXHgf1kzPFRFz/MpUMJn5wLTmqJCsjZ1tfP4Y/xpyw+6Ht
-# 7LUwqAuQA3om9RC2iVKE5iRHIJMOV+Gg/xV45USWQBbJRVOlCRzLuEHWD37WvSFN
-# zMKy4zhol9rKTIPV23OWekBL0ZAlAu4BAan5MvGScSxYW0sh7FHrYF7bVr2sntZp
-# 773LHo7SvLR3AhtHoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
+# NwIBFTAjBgkqhkiG9w0BCQQxFgQUKfr+K4wjZcZFu2ypb8ZUbznzhqcwDQYJKoZI
+# hvcNAQEBBQAEggGAj8f07R/KkqxvBpI26Sj8a1u8Oo/uyg1+9DW0K1HSYSXSY2rx
+# dlPharj9qz6IzBCRCP5eguKcTYEP1268Iwo1NN3XKZLYd13RPGWLbRJR2YAWCcGC
+# SFHhoA9MVypF/jmwG0h5OTntyLHYDXSu3WkaklZ5s7xUAyx+n5ArYPYFnFI3zdE8
+# ADNplvAFwlZOCZyhsi0mRQnzA/yNZOmhRsDciRoDq94gRA05vlkwUW3vi1atxlNu
+# zLF01KXDDlZ8XMSaKSQF8RXWwqdSy70jn6dV+a9d2kN3fLvqKLrJVU2eN36oF0Zd
+# Jzx6PKVbR7PSu5P4OI1s39yu0fusqD9pGp8CtcZHCSwUvjpF4qoSGN/eRt83K9QE
+# AKjBmy2rN5cgK+M4V2bLJhurWmVTqquPAggIfgvc2GER8y/GeMKzwU9+0CFUFZH/
+# iqZE6+FDKzVx1ScDMsnvGkTlkrhUxKwMWxyLIjhFBfzn+fmo40FqepRb7Ztu+Fhh
+# PdM+4zTsQOIwRST+oYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
 # MAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYDVQQDEzJE
 # aWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFtcGluZyBD
 # QQIQC65mvFq6f5WHxvnpBOMzBDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJ
-# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjExMDkwM1owLwYJ
-# KoZIhvcNAQkEMSIEIF/g+XNTLtM6cmemXHmuVyRIqS/RMcWgdXLDiB8eOoUjMA0G
-# CSqGSIb3DQEBAQUABIICAJF5pGdH8GOnR+irfEfbxuQH5hgQy//4ZtPH8rKuphRw
-# 8ol1uOPKm60e+mZE+Yu2xISz5gac5On14wZCgIuj8VDRLhGwJwn1MslQuf5d304h
-# PgyBIzqBiSCPdrR61QhQEy2P4Z2+NrLXBUdgGgXxL790edTuhRB5FSsBv7gr9Ud2
-# M9sfznCsps+uVMwZjJXpzrpnkNQrl5r+JivJvXihl2sE7i4JUiML6sxTbGQLSTl2
-# Q5zADBKrOcLryN01iiRNmxbULEn/giB31kq5WVRc4BXgpBp0s2m+V7ci5+7Z+fYx
-# KupECPt1M6Yzf6yRSvTN5BvYFdO/gy+NlSo+W7m/JYHR0hH3J0npejfVehrCbx6n
-# PsNM+ng7JgCfrZg11BILjZCy6eFVCsW+Wcve54PyFT4GLGOUU+EyBYv9yxf7ZiGm
-# WyzBj40P3K3RVCruiTHBzbiNnWr+lGVD83geTKxZ/Um02fmOpPETMRIOuepWBCBU
-# v5z5xcU6mZnTh6l8u/oACdODN/CBZTkHIMoV5jZJ0GFcS9xLkgbeb6a4AaHYI7q8
-# FnO8yScJcSSf3FMNTKprd5uCIgGEZbfuX3sm7NzlqFpwPllD2XQ/TCieUxpnEg/o
-# UWTZdORaCg6EFWH8Y5Wpc1hoJjB443dV4bvS4thhXfWL2YxaUDuR0Xkc+XmXSS7K
+# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjExMTkyNFowLwYJ
+# KoZIhvcNAQkEMSIEIE03J7FBTBjUQ6ebb/YOZfmazRanY55g0439QtKjLIJ/MA0G
+# CSqGSIb3DQEBAQUABIICAKPtTB3LtYIme4A3oii9yu04Rt+GnV8n+57x23q5/wmH
+# eiaI/TFIQSpZ+pn1PKosA3m8s41tifUiOR6ej+0C2uj8e8NJgtiV3tNKkljZ1dB5
+# B68qC2Jkw9GQskcEp+UXcQekWB6rw8pawQceDETlajLPmBvxvnYtfGZI0kJz6HsR
+# hAOom+DLBt23S09Pj8fYeYW/HqCPgyWa7fO2+LPO1F3Yg5FYI88Cb5rGBuGLJKG7
+# 9Db6k4HKb1c/uN0BKrqH0bsz2IdzXFRKbbcGYT+acb+UVdDKGXDcOavbgMjWbfdS
+# FNJLUC7Lelsv5S9U5AiU0cfiGk+e7AAhTiOqtVLNOEgdVUPgbPI7k1tHz2Ha55gq
+# SP5Lp1uRa7h3urVzYMwylL8bbxujqlzos5DiT1b8svLMP36y2FgJ48uAbGnSuObN
+# BlCjwyya6mj8udiFBFT9orZxk8d5C9JyJNSwiXqWQyaTKZBt9S3lM+zV7qaFc+DJ
+# s/FNvYJMGyD20boCZ7DSIP9QVCgLC+FFWCIUO/Qlropml8qbdbZg92QoCukR36v7
+# CEdrQFeUHsj0Eap7UcYfHj3zk1KfIbYdWge8/y2cZZTEzuDqjbmUv0fiMch13Fpp
+# Xzq9YfSz1EhanLMSueNs8FoNl3ixsRDqEdFNPgaOo95hhK0sI3hQ61qfB+VTVpWv
 # SIG # End signature block
