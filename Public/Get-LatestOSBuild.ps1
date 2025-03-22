@@ -183,7 +183,7 @@
             [Void]$ArrayList.Add([PSCustomObject]@{
                 Update = $item.Title.Replace('&#x2014;', ' — ').Trim()
                 KB       = "KB" + $item.link.Split('/')[-1]
-                InfoURL  = "https://support.microsoft.com" + $item.Link
+                InfoURL  = " https://support.microsoft.com/en-us/" + $item.Link
                 OSBuild  = $OSBuild  # Add OSBuild here in the hashtable
             })
         }
@@ -379,10 +379,10 @@
                 }
                 If (($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
                     $ResultObject["KB URL"] = $Update.InfoURL
-                    $ResultObject["KB source URL"] = "https://support.microsoft.com/help/" + $ResultObject.'KB source article'
+                    $ResultObject["KB source URL"] = "https://support.microsoft.com/help/en-us/" + $ResultObject.'KB source article'
                 }
                 Else {
-                    $ResultObject["KB URL"] = $Update.InfoURL
+                    $ResultObject["KB URL"] = "$Update.InfoURL"
                 }
                 If (($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "True")) {
                     $ResultObject["Catalog URL"] =  "N/A"
@@ -523,10 +523,10 @@
                     }
                     $ResultObject[$Title] = ("" + $Cells[$Counter].InnerText).Trim()
                     If ((![string]::IsNullOrEmpty($ResultObject.'KB article')) -and ($ResultObject.'KB article' -ne "N/A")) {
-                        $KBURL = "https://support.microsoft.com/help/" + ($ResultObject."KB article").Trim("KB")
+                        $KBURL = "https://support.microsoft.com/help/en-us" + ($ResultObject."KB article").Trim("KB")
                         $ResultObject["KB URL"] = $KBURL
                         $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $ResultObject.'KB article'
-                        If ($KBURL -ne "https://support.microsoft.com/help/") {
+                        If ($KBURL -ne " https://support.microsoft.com/en-us/help/") {
                             If ([string]::IsNullOrEmpty($feedEntries)) {
                                 $ResultObject["Preview"] = "Unknown"
                                 $ResultObject["Out-of-band"] = "Unknown"
@@ -614,8 +614,8 @@
 # SIG # Begin signature block
 # MIImbAYJKoZIhvcNAQcCoIImXTCCJlkCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUZ2bSyaZH09/mOPeY29pP3Mo1
-# YVaggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUmmZNvLLyMI2PV/Xth9TIYvli
+# 4tuggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -791,30 +791,30 @@
 # BgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzemd0ILREkK
 # U+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkq
 # hkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGC
-# NwIBFTAjBgkqhkiG9w0BCQQxFgQU/4MrwfOryBzt92YRrePy5szyAjIwDQYJKoZI
-# hvcNAQEBBQAEggGAfh73xr7EKwzx4U0VgrwozcuwC7F0AcLkVw+HUIWwn1OZ1iJq
-# RTDW20IHH98i5crwlOsKhCOhokGQAJ+BUNKmJgFzO5TW5BGPBJdgQk70vRwlPAqf
-# VYSPwhbgs9+SdF4aCesVdCiecPhdc+NcWwS8RUyzaZTUDBuGL0+yV5X+vJ5Ehxac
-# om2kBxuPMAQWCmfULlfAIwsc+em3m1H7tSwPztCXV0h2B8U1GucDqaUQLjStOesD
-# H0RDFhcgK/fOu7j70/KQA7aRW6dxIIJOZSwwEDSnTeroWumMcY8uYeF8MIDV2mkM
-# b1QUjcU7tsMFd8kwXY9wz/5rOIiZfnOToPgdTc82lf/knv+8gmeFUMoVN18yJI5n
-# inc1s4Wzy7zFAe59vOqvOKha/Z3m0T681CXqiyDa/ocDJcXv/cgqcXlS5+Hi2agh
-# /ougWwm5Ho5+J8ydKQrw/jLE2eRAMgcZBRU4hd0OlB2cOm4Fv7+5AMAmEkcU/lLk
-# Ks6Wo2stx3mRJ2O2oYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
+# NwIBFTAjBgkqhkiG9w0BCQQxFgQU9E7qzcvLCkB6Qhcy+stjAtPYy24wDQYJKoZI
+# hvcNAQEBBQAEggGAmCWTxVQpIEIFsRQBldrAYkI7GNenMzB49RG31n8yi3eaVYIr
+# 1HVX+1fYDsV8FuBCOTGPF8b5mpGTD/y4QRWnp71yQ/sabZ9R6ZtPEewpVWORTXVE
+# RwJmRYvJS7JqtRfkd5x9gw8v6zgM4tVMzZgRuMxDPO6SrhSGaatr8G7BYh6js/nn
+# WAA/wQtb7M8X2RxjUvhyZK44EZ5ugsoaLL5Y+4GyK3469Y6JBW1YHoKofRaxYdMt
+# /FZKUApdRP0ulVctdBuCx6A+tIasSOFgf7q6LDyh1voWu1StRvu6jAx9FH2I9URu
+# FRslqBJMyK5Mb74GZ546ESAApjuIzILAwwoDnQ7324iZvA8xbF8rPnWPMdTLk/Eo
+# JgnaSKckgJ+L0tzCrPloZQ14wJs5mNH00//fzv0RE3X3UxH9Cz53lyeQNm0cR3/t
+# j4rMVPdwWdcToja/UZgJknEaFHgF2QB16CAKSbGpRuMOrs+hXsMQLNCGr4LKF/bv
+# EQxrFa8CbMv2C/W6oYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
 # MAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYDVQQDEzJE
 # aWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFtcGluZyBD
 # QQIQC65mvFq6f5WHxvnpBOMzBDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJ
-# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjEwMzIzOFowLwYJ
-# KoZIhvcNAQkEMSIEICr/y2IosXfTUw6vuWk1sLKIboRAeFstztCLRR2okFsQMA0G
-# CSqGSIb3DQEBAQUABIICAHDJUDEkO9mS0Wthz/kZLgY3Y+j9g5MPmdg67GErHroE
-# ix5MO+R2+d9tkeB5QJQIWrj6p5GuObORXWL9ViJJ7mHkKcMmi7eXXVTF0pruV5oj
-# 9N4q4dx0+Tx2MP8fz9S4SFZTYz6K5Jcr2efDYOfwFwflktQ7JRiNbpkw47IKC0LZ
-# zkbVi0TRc8q+F4bqs6HvisaY3SHOJJEntIHsH28h1CpK0kdIlPssmeHzb/MIPgDa
-# WJPnKvUxA0H6H2zwgPCWfh0Qb1RJ0vXk+6rj7X8BDNCHuNhsPTiujD7963v7I+gg
-# cbNdwzGqydBRuY8kwOcBdoHiZjpeNV+f9gjrOInvYcFHvtMwnDjIp3rMEfecKG/S
-# H2pT9ojLUEKuer4hp1K99iiCWTG0nDf6PooQ3bhpR6qmFh7iGItnnyPdTZoyIo2G
-# xbVs6Taf6w7cMLwWmEIaOVzKzqyUmwV6t2t5QKSTGJuVS62e6p1W6dvwYlLSO9yn
-# M/FfUV6aCPC57eQqqE4aBad3/e8uUDeUsNsV0Y66ji3/bjvCVH2pp57V203bVElm
-# JgtYR9r9B48VICRJ9AadD+1sLpFE9Q7BYjdER3eYkXM3MNncWfnxft2NCbulgFA1
-# li0tmde1adwf6J3Rc/rxQMApw/FZGfctBv5vReJbf4ucAjKOKxMcho0LenvArfr9
+# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjEwNTA0M1owLwYJ
+# KoZIhvcNAQkEMSIEIOVJyzNd9rT9U+ZH7+ojoAxohf0ZTdDV+0xzfzUQsXCnMA0G
+# CSqGSIb3DQEBAQUABIICAFE508kJKYJKn+Xny0BozgJ0Iw4RbplnDf7AC/B53A/j
+# NPyz8gS4o+liBNE/rrqUIPNgoVPMhK84iI73JO3qLq9Mf2cc8tIFwWkXu6zkIIYV
+# cPHgAmGWrwzX265xAJYtFxzsM2Cth8wK6BlYkoqAF/+S1cmRaL+zAHUgcRrQLUHW
+# wwYzWXjh2ULXfDJOG+tF3YxzbiW03gWLPkVQc+nzx5kUokB2rL8v0RbbwgW5XbX2
+# GEQs9JygwyYqjG4L0R1SkOb7GsT2rxqFs4nyhd2xFXoV9PyiBJJJBN0757Qgz6PX
+# 0Et6/qPS/kFYqNy0C57Vdtj6tnYMPzIJB24lDOC1YgcM64I771l8Bmx+HsX83bDU
+# jqWelN8QY0HyqLCS6fhHQIwnGoay3CHvxalE3OkJo1LSbah8lSnxT2MV6b5S4tEA
+# iMPgS6LPXGmKOFayZSd6z7KShNHgfLfyyAVJjwaPhM3yH1wkXRLFNf4ppW18u5Iy
+# CbuocBOKuRMg4PpQZJ+hfMaSU9YDjOznK9SpIAcyKD9/gWX2800sD8xHmsUyit+D
+# +NShqJRb0waqBr63CKPvosJkvXjNPhx8QfsO5zZDQ4EWXP25qsv4UhC3uGTIFwnr
+# i+Ou/oUWRO4PiVDOfSzy1bRbel7ha6jX+4CCYpiIFP3/wIf2VtuvtrKTJL9ZWu+L
 # SIG # End signature block
