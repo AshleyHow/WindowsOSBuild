@@ -4,7 +4,7 @@
             Gets Windows patch release information (Version, Build, Availability date, Hotpatch, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions.
             Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022 Azure Edition.
         .DESCRIPTION
-            Patch information retrieved from Microsoft Release Health / Update History (Server 2022 | Server 2022 Hotpatch) pages and outputted in a usable format.
+            Patch information retrieved from Microsoft Release Health / Update History (Server 2022 and above) pages and outputted in a usable format.
             These sources are updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
         .PARAMETER OSName
             This parameter is optional. OS name you want to check. Default value is Win10. Accepted values:
@@ -84,7 +84,7 @@
         [String]$LatestReleases = 1,
 
         [Parameter(Mandatory = $false)]
-        [ValidateSet('Win10','Win11','Server2016','Server2019','Server2022','Server2022Hotpatch','ServerSAC')]
+        [ValidateSet('Win10','Win11','Server2016','Server2019','Server2022','Server2022Hotpatch','Server2025','Server2025Hotpatch','ServerSAC')]
         [String]$OSName = "Win10",
 
         [Parameter(Mandatory = $false)]
@@ -125,12 +125,27 @@
     ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
         # Disabled automatic detection of hotfix as it is not a reliable method of guaranteeing devices are applying hotpatch updates, non-hotpatch updates can still be applied.
         # $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
-        if ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+        if ($OSName -eq "Server2022Hotpatch") {
             $URL = "https://support.microsoft.com/en-gb/topic/release-notes-for-hotpatch-in-azure-automanage-for-windows-server-2022-4e234525-5bd5-4171-9886-b475dabe0ce8"
             $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/2d67e9fb-2bd2-6742-08ee-628da707657f"
+            $CategoryName = "Release notes for Hotpatch in Azure Automanage for Windows Server 2022"
         }
         Else {
             $URL = "https://support.microsoft.com/en-us/help/5005454"
+            $CategoryName = "Windows Server 2022"
+        }
+    }
+    ElseIf ($OSName -eq "Server2025" -or $OSName -eq "Server2025Hotpatch") {
+        # Disabled automatic detection of hotfix as it is not a reliable method of guaranteeing devices are applying hotpatch updates, non-hotpatch updates can still be applied.
+        # $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
+        if ($OSName -eq "Server2025Hotpatch") {
+            $URL = "https://support.microsoft.com/en-gb/topic/release-notes-for-hotpatch-on-windows-server-2025-datacenter-azure-edition-c548437e-8c7a-4e27-99f4-e8746f97f8fa"
+            #$AtomFeedUrl = "$null"
+            $CategoryName = "Release notes for Hotpatch on Windows Server 2025 Datacenter Azure Edition"
+        }
+        Else {
+            $URL = "https://support.microsoft.com/en-us/topic/windows-server-2025-update-history-10f58da7-e57b-4a9d-9c16-9f1dcd72d7d7"
+            $CategoryName = "Windows Server 2025"
         }
     }
     Else {
@@ -147,6 +162,9 @@
     ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
         $OSVersion = "21H2"
     }
+    ElseIf ($OSName -eq "Server2025" -or $OSName -eq "Server2025Hotpatch") {
+        $OSVersion = "24H2"
+    }
 
     # Function used for to convert raw array from support URL to a parsed array (currently used only for Server 2022)
     Function Convert-ParsedArray {
@@ -154,24 +172,89 @@
 
         $ArrayList = New-Object System.Collections.ArrayList
         ForEach ($item in $Array) {
+            $Match = [regex]::Match($item.Title, "Build (\d+\.\d+)")
+            If ($Match.Success) {
+                $OSBuild = [System.Version]::new($Match.Groups[1].Value)
+            }
+            Else {
+                $OSBuild = $null
+            }
+
             [Void]$ArrayList.Add([PSCustomObject]@{
-                Update = $item.outerHTML.Split('>')[1].Replace('</a','').Replace('&#x2014;',' - ')
-                KB = "KB" + $item.href.Split('/')[-1]
-                InfoURL = "https://support.microsoft.com" + $item.href
-                OSBuild = [regex]::Match($item.outerHTML,"Build (.*)\)").Groups[1].Value -as [System.Version]
+                Update = $item.Title.Replace('&#x2014;', ' — ').Trim()
+                KB       = "KB" + $item.link.Split('/')[-1]
+                InfoURL  = "https://support.microsoft.com" + $item.Link
+                OSBuild  = $OSBuild  # Add OSBuild here in the hashtable
             })
         }
         Return $ArrayList
     }
 
+    # Function used to get update release notes of specified OS as an array
+    Function Get-ReleaseNotes {
+        param (
+            [string]$webpage,
+            [string]$CategoryName
+        )
+
+        # Create an HtmlDocument object
+        $htmlDocument = New-Object HtmlAgilityPack.HtmlDocument
+        $htmlDocument.LoadHtml($webpage)
+
+        # Check if HTML loaded correctly
+        if ($htmlDocument.DocumentNode.InnerHtml -eq "") {
+            return
+        }
+
+        # Find all categories with 'supLeftNavCategoryTitle' class
+        $categoryTitles = $htmlDocument.DocumentNode.SelectNodes('//div[contains(@class, "supLeftNavCategoryTitle")]')
+
+        if (!$categoryTitles) {
+            return
+        }
+
+        # Initialize a list to store categorized links
+        $categorizedLinks = @()
+
+        # Loop through each category and extract article links
+        foreach ($category in $categoryTitles) {
+            $osName = $category.SelectSingleNode('.//a').InnerText
+
+            # If CategoryName parameter is provided, only process matching categories
+            if ($CategoryName -and $osName -ne $CategoryName) {
+                continue
+            }
+
+            $articlesList = $category.ParentNode.SelectNodes('.//ul[contains(@class, "supLeftNavArticles")]')
+
+            if ($articlesList) {
+                foreach ($articleList in $articlesList) {
+                    foreach ($article in $articleList.SelectNodes('.//li')) {
+                        $articleLinkNode = $article.SelectSingleNode('.//a')
+                        if ($articleLinkNode) {
+                            $categorizedLinks += [PSCustomObject]@{
+                                Category = $osName
+                                Link     = $articleLinkNode.GetAttributeValue('href', '')
+                                Title    = $articleLinkNode.InnerText.Trim()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        # Return the categorized links as output
+        return $categorizedLinks | Where-Object { $_.Title -ne $CategoryName }
+    }
+
     # Obtain data from webpage
     Try {
-        If ($OSName -eq "Server2022") {
+        If ($OSName -eq "Server2022" -or $OSName -eq "Server2025") {
             $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -ErrorAction Stop
         }
         # Supports Server 2022 Hotpatch
         Else {
-            If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+            If ($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
                 $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -ErrorAction Stop
             }
             Else {
@@ -180,7 +263,9 @@
             }
 
             # Fetch the Atom feed content, used to obtain preview and out-of-band data
+            If ($AtomFeed) {
             $response = Invoke-WebRequest -Uri $AtomFeedUrl -Method Get -UseBasicParsing -ErrorAction Stop
+            }
 
             # Extract raw content from the response
             $feedContent = $response.Content
@@ -225,25 +310,31 @@
         }
     }
 
-    # Server 2022
-    If ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
+    # Server 2022 and 2025
+    If ($OSName -eq "Server2022" -or $OSName -eq "Server2025" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
         $Table = @()
         $Table =  @(
-            $VersionDataRaw = $Webpage.Links | Where-Object { $_.outerHTML -match "supLeftNavLink" -and ($_.outerHTML -match "KB" -or $_.outerHTML -match "Hotpatch baseline") -and $_.outerHTML -notmatch "25398.|17784.|20348.344|20348.410|KB5010614|KB5004312|April 13, 2021 Hotpatch baseline" } | Sort-Object -Property href -Unique
+            $VersionDataRaw = $null
+            $VersionDataRaw = Get-ReleaseNotes -Webpage $webpage -CategoryName $CategoryName | Sort-Object -Property Title -Unique
             $UniqueList =  (Convert-ParsedArray -Array $VersionDataRaw) | Sort-Object OSBuild -Descending
             ForEach ($Update in $UniqueList) {
                 $ResultObject = [Ordered] @{}
                 # Support for Hotpatch
                 If ($null -eq $Update.OSBuild.Major) {
-                    $ResultObject["Version"] = "Version $OSVersion (OS build 20348)"
+                    If ($OSName -eq "Server2022Hotpatch") {
+                        $ResultObject["Version"] = "Version $OSVersion (OS build 20348)"
+                    }
+                    If ($OSName -eq "Server2025Hotpatch") {
+                        $ResultObject["Version"] = "Version $OSVersion (OS build 26100)"
+                    }
                 }
                 Else {
                     $ResultObject["Version"] = "Version $OSVersion (OS build $($Update.OSBuild.Major))"
                 }
                 # Support for Hotpatch - As we are performing matching based on date, this accounts for erroronus spaces in the date.
                 If ($null -eq $Update.OSBuild) {
-                    $updateDate = ($Update.Update -split ',')[0..1] -join ',' -replace '\s+', ' '
-                    $SourceOSBuild = $feedEntries.Title -replace '\s+', ' ' -like "*$updateDate*"
+                    $updateDate = ($Update.Update -replace '^([A-Za-z]+\s\d{1,2},\s\d{4}).*', '$1').Trim()
+                    $SourceOSBuild = $feedEntries.Title -like "*$updateDate*"
                     $ResultObject["Build"] = [String]$SourceOSBuild -replace '.*OS Build (\d+\.\d+).*', '$1'
                 }
                 Else {
@@ -258,8 +349,8 @@
                 }
                 $FormatDate =  Get-Date($ConvertToDate) -Format 'yyyy-MM-dd'
                 $ResultObject["Availability date"] = $FormatDate
-                If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
-                    If ($Update.Update -match 'Hotpatch baseline') {
+                If ($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
+                    If ($Update.Update -match 'Baseline') {
                         $ResultObject["Hotpatch"] = "False"
                     }
                     Else {
@@ -279,28 +370,28 @@
                     $ResultObject["Out-of-band"] = "False"
                 }
                 $ResultObject["Servicing option"] = "LTSC"
-                If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
+                If (($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
                     $ResultObject["KB source article"] = [regex]::Match($SourceOSBuild, 'KB\d{7}').Value
                     $ResultObject["KB article"] = $Update.KB + " / " + $ResultObject.'KB source article'
                 }
                 Else {
                     $ResultObject["KB article"] = $Update.KB
                 }
-                If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
+                If (($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
                     $ResultObject["KB URL"] = $Update.InfoURL
                     $ResultObject["KB source URL"] = "https://support.microsoft.com/en-gb/help/" + $ResultObject.'KB source article'
                 }
                 Else {
                     $ResultObject["KB URL"] = $Update.InfoURL
                 }
-                If (($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) -and ($ResultObject.Hotpatch -eq "True")) {
+                If (($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "True")) {
                     $ResultObject["Catalog URL"] =  "N/A"
                 }
                 Else {
-                    $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $ResultObject.'KB source article'
+                    $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $ResultObject.'KB article'
                 }
                 # Cast hash table to a PSCustomObject
-                If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+                If ($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
                     [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date', 'Hotpatch', 'Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
                 }
                 Else {
@@ -322,12 +413,28 @@
                         'Catalog URL' = "N/A"
         }
 
+        # Include build information for Server 2022 RTM not included in Windows Update History
+        $Server2025RTM = [PsCustomObject]@{
+                        'Version' = "Version 24H2 (OS build 26100)"
+                        'Build' = "26100.1742"
+                        'Availability date' = "2024-09-10"
+                        'Preview' = "False"
+                        'Out-of-band' = "False"
+                        'Servicing option' = "LTSC"
+                        'KB article' = "N/A"
+                        'KB URL' = "N/A"
+                        'Catalog URL' = "N/A"
+        }
+
         # Add / Sort Arrays
-        If ($HotpatchOS -or ($OSName -eq "Server2022Hotpatch")) {
+        If ($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
             $Table = $Table | Sort-Object -Property 'Availability date' -Descending
         }
-        Else {
+        ElseIf ($OSName -eq "Server2022") {
             $Table = $Table + $Server2022RTM | Sort-Object -Property 'Availability date' -Descending
+        }
+        ElseIf ($OSName -eq "Server2025") {
+            $Table = $Table + $Server2025RTM | Sort-Object -Property 'Availability date' -Descending
         }
 
     }
@@ -505,10 +612,10 @@
     }
 }
 # SIG # Begin signature block
-# MIImcgYJKoZIhvcNAQcCoIImYzCCJl8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
+# MIImbAYJKoZIhvcNAQcCoIImXTCCJlkCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU1/fqrOEf4aAJaafKOWgc0Ldv
-# cYOggiAtMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUuftlDHFCLprQ57xhmFn+AU0f
+# hTyggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -643,72 +750,71 @@
 # kOh1/w1tVxTpV2Na3PR7nxYVlPu1JPoRZCbH86gc96UTvuWiOruWmyOEMLOGGniR
 # +x+zPF/2DaGgK2W1eEJfo2qyrBNPvF7wuAyQfiFXLwvWHamoYtPZo0LHuH8X3n9C
 # +xN4YaNjt2ywzOr+tKyEVAotnyU9vyEVOaIYMk3IeBrmFnn0gbKeTTyYeEEUz/Qw
-# t4HOUBCrW602NCmvO1nm+/80nLy5r0AZvCQxaQ4wggbCMIIEqqADAgECAhAFRK/z
-# lJ0IOaa/2z9f5WEWMA0GCSqGSIb3DQEBCwUAMGMxCzAJBgNVBAYTAlVTMRcwFQYD
+# t4HOUBCrW602NCmvO1nm+/80nLy5r0AZvCQxaQ4wgga8MIIEpKADAgECAhALrma8
+# Wrp/lYfG+ekE4zMEMA0GCSqGSIb3DQEBCwUAMGMxCzAJBgNVBAYTAlVTMRcwFQYD
 # VQQKEw5EaWdpQ2VydCwgSW5jLjE7MDkGA1UEAxMyRGlnaUNlcnQgVHJ1c3RlZCBH
-# NCBSU0E0MDk2IFNIQTI1NiBUaW1lU3RhbXBpbmcgQ0EwHhcNMjMwNzE0MDAwMDAw
-# WhcNMzQxMDEzMjM1OTU5WjBIMQswCQYDVQQGEwJVUzEXMBUGA1UEChMORGlnaUNl
-# cnQsIEluYy4xIDAeBgNVBAMTF0RpZ2lDZXJ0IFRpbWVzdGFtcCAyMDIzMIICIjAN
-# BgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAo1NFhx2DjlusPlSzI+DPn9fl0udd
-# oQ4J3C9Io5d6OyqcZ9xiFVjBqZMRp82qsmrdECmKHmJjadNYnDVxvzqX65RQjxwg
-# 6seaOy+WZuNp52n+W8PWKyAcwZeUtKVQgfLPywemMGjKg0La/H8JJJSkghraarrY
-# O8pd3hkYhftF6g1hbJ3+cV7EBpo88MUueQ8bZlLjyNY+X9pD04T10Mf2SC1eRXWW
-# df7dEKEbg8G45lKVtUfXeCk5a+B4WZfjRCtK1ZXO7wgX6oJkTf8j48qG7rSkIWRw
-# 69XloNpjsy7pBe6q9iT1HbybHLK3X9/w7nZ9MZllR1WdSiQvrCuXvp/k/XtzPjLu
-# UjT71Lvr1KAsNJvj3m5kGQc3AZEPHLVRzapMZoOIaGK7vEEbeBlt5NkP4FhB+9ix
-# LOFRr7StFQYU6mIIE9NpHnxkTZ0P387RXoyqq1AVybPKvNfEO2hEo6U7Qv1zfe7d
-# Cv95NBB+plwKWEwAPoVpdceDZNZ1zY8SdlalJPrXxGshuugfNJgvOuprAbD3+yqG
-# 7HtSOKmYCaFxsmxxrz64b5bV4RAT/mFHCoz+8LbH1cfebCTwv0KCyqBxPZySkwS0
-# aXAnDU+3tTbRyV8IpHCj7ArxES5k4MsiK8rxKBMhSVF+BmbTO77665E42FEHypS3
-# 4lCh8zrTioPLQHsCAwEAAaOCAYswggGHMA4GA1UdDwEB/wQEAwIHgDAMBgNVHRMB
-# Af8EAjAAMBYGA1UdJQEB/wQMMAoGCCsGAQUFBwMIMCAGA1UdIAQZMBcwCAYGZ4EM
-# AQQCMAsGCWCGSAGG/WwHATAfBgNVHSMEGDAWgBS6FtltTYUvcyl2mi91jGogj57I
-# bzAdBgNVHQ4EFgQUpbbvE+fvzdBkodVWqWUxo97V40kwWgYDVR0fBFMwUTBPoE2g
-# S4ZJaHR0cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0VHJ1c3RlZEc0UlNB
-# NDA5NlNIQTI1NlRpbWVTdGFtcGluZ0NBLmNybDCBkAYIKwYBBQUHAQEEgYMwgYAw
-# JAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBYBggrBgEFBQcw
-# AoZMaHR0cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0VHJ1c3RlZEc0
-# UlNBNDA5NlNIQTI1NlRpbWVTdGFtcGluZ0NBLmNydDANBgkqhkiG9w0BAQsFAAOC
-# AgEAgRrW3qCptZgXvHCNT4o8aJzYJf/LLOTN6l0ikuyMIgKpuM+AqNnn48XtJoKK
-# cS8Y3U623mzX4WCcK+3tPUiOuGu6fF29wmE3aEl3o+uQqhLXJ4Xzjh6S2sJAOJ9d
-# yKAuJXglnSoFeoQpmLZXeY/bJlYrsPOnvTcM2Jh2T1a5UsK2nTipgedtQVyMadG5
-# K8TGe8+c+njikxp2oml101DkRBK+IA2eqUTQ+OVJdwhaIcW0z5iVGlS6ubzBaRm6
-# zxbygzc0brBBJt3eWpdPM43UjXd9dUWhpVgmagNF3tlQtVCMr1a9TMXhRsUo063n
-# QwBw3syYnhmJA+rUkTfvTVLzyWAhxFZH7doRS4wyw4jmWOK22z75X7BC1o/jF5HR
-# qsBV44a/rCcsQdCaM0qoNtS5cpZ+l3k4SF/Kwtw9Mt911jZnWon49qfH5U81PAC9
-# vpwqbHkB3NpE5jreODsHXjlY9HxzMVWggBHLFAx+rrz+pOt5Zapo1iLKO+uagjVX
-# KBbLafIymrLS2Dq4sUaGa7oX/cR3bBVsrquvczroSUa31X/MtjjA2Owc9bahuEMs
-# 305MfR5ocMB3CtQC4Fxguyj/OOVSWtasFyIjTvTs0xf7UGv/B3cfcZdEQcm4RtNs
-# MnxYL2dHZeUbc7aZ+WssBkbvQR7w8F/g29mtkIBEr4AQQYoxggWvMIIFqwIBATBq
-# MFYxCzAJBgNVBAYTAlBMMSEwHwYDVQQKExhBc3NlY28gRGF0YSBTeXN0ZW1zIFMu
-# QS4xJDAiBgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzem
-# d0ILREkKU+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKA
-# ADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYK
-# KwYBBAGCNwIBFTAjBgkqhkiG9w0BCQQxFgQUHbX81i+MNW1DXvWSXirxPz7+u2Aw
-# DQYJKoZIhvcNAQEBBQAEggGAhyHCPu4HS3G4uSocfKAADQQDLvSt6lCBXUCB9VQs
-# 5JDJSoVLzHpcABI7w6qQDKkd6l61UuD2VoTGYAktvyMyT5JxGbTe5c5YACg5QIFw
-# Cd1c3Uj6Cb8M7fX8w0Dqaiw9/mknTuazjZdbSRuP+e1OySN3bCSnRg6jEHC93+Te
-# 8rIeTh5uVI74nMneTRfghgEMxuOKBcAE7twkLbatFH+BB3AvTqa9QSg2WRgobXuh
-# nZUHiSFYCYHJMdFo6Is3CTOs/hiMp5K0gE4BUsFgZtkxj5zyZBoy4jxG7brEwwAj
-# K7RQywO4+XoDpG7eoe27imJnm4RLvqE7D0KrppVS0IkwNiCmaQtNaxvYuFTzuHsB
-# bAIXm4zfZoFrZw4MwPEMch+2aGL4RUGgGI9nlZyP8z5T24UbIRTahWqwpqp5Kl7G
-# PowUJL6a5+/Wy3FD41xc5AgRPOMkcaqgjQqdjr7ayutCcQ15aiSIYc6YI5h4uvnh
-# iOqIm85yJe8qDmCvlijP6AiNoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEB
-# MHcwYzELMAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYD
-# VQQDEzJEaWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFt
-# cGluZyBDQQIQBUSv85SdCDmmv9s/X+VhFjANBglghkgBZQMEAgEFAKBpMBgGCSqG
-# SIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MTAwMzIyMDEx
-# OVowLwYJKoZIhvcNAQkEMSIEIIOIM2y23Ml5wlnqkv2FjglfWtKoEpVb9oj0PiYe
-# hjrrMA0GCSqGSIb3DQEBAQUABIICAFPOcVDFhZh0sxJtengPXYSZPCZRC3DHeTa8
-# LTd3udIrWqgPQ2cyYQneRcNfTf0k9XU7cuO/vnyWPxDoXAkhK6CxOjYE0ewvXNuw
-# qHQzCA56eGs60Pne/gqDTEp5TH2aIO9fQLAAHGy3WYgi0t8XCuh76aK92J2nOBut
-# wnjnQSycHQP+2AcJ9+IFDWUUaHNlXqaMRtgipetLx4tyki55tMO4q04GmZbhTsa0
-# x1Ij5gZhz/qgYXvDLaOW1Fh9k7jqVyIw9oAY/qZJm1/X9BqplZ22hmVCHPP8/19w
-# lQf5LSDsqLMr/IbNYJeb40Ak9AotXxonfik1A41pZNsjmj8gmKag9/CaFZfsU9P8
-# zE9+1j4SQZ00oeoaa164OJ6bTk27CX2n4FgH8LkzGQqlJcXK8Mjb4VqIT+G12Pe4
-# kcZVPfOLR4Os4zwdf4OHJyrQSmkUpUrIjKfRYbCQSHshF/iK0hsCw3P56elG6U5V
-# zP8A61xa3Ik6YSLMB0VRjMLaVylY+73USP3kU4IHJAJyyaEFM7yIoM/KbFYAJERp
-# XCJ4oFaY0i71BtKcaAe8ODSr5koixNnLn8HQv9Y5iuPLEvaiAXtJVxJzr9NezjMb
-# nDXoCCoIgRiNQQCoOvuGIM4QOzK1Wwl+lqojk5sOtLo76HUlcq5XV8m3S/Fr+Hep
-# 7whADteo
+# NCBSU0E0MDk2IFNIQTI1NiBUaW1lU3RhbXBpbmcgQ0EwHhcNMjQwOTI2MDAwMDAw
+# WhcNMzUxMTI1MjM1OTU5WjBCMQswCQYDVQQGEwJVUzERMA8GA1UEChMIRGlnaUNl
+# cnQxIDAeBgNVBAMTF0RpZ2lDZXJ0IFRpbWVzdGFtcCAyMDI0MIICIjANBgkqhkiG
+# 9w0BAQEFAAOCAg8AMIICCgKCAgEAvmpzn/aVIauWMLpbbeZZo7Xo/ZEfGMSIO2qZ
+# 46XB/QowIEMSvgjEdEZ3v4vrrTHleW1JWGErrjOL0J4L0HqVR1czSzvUQ5xF7z4I
+# Qmn7dHY7yijvoQ7ujm0u6yXF2v1CrzZopykD07/9fpAT4BxpT9vJoJqAsP8YuhRv
+# flJ9YeHjes4fduksTHulntq9WelRWY++TFPxzZrbILRYynyEy7rS1lHQKFpXvo2G
+# ePfsMRhNf1F41nyEg5h7iOXv+vjX0K8RhUisfqw3TTLHj1uhS66YX2LZPxS4oaf3
+# 3rp9HlfqSBePejlYeEdU740GKQM7SaVSH3TbBL8R6HwX9QVpGnXPlKdE4fBIn5BB
+# FnV+KwPxRNUNK6lYk2y1WSKour4hJN0SMkoaNV8hyyADiX1xuTxKaXN12HgR+8Wu
+# lU2d6zhzXomJ2PleI9V2yfmfXSPGYanGgxzqI+ShoOGLomMd3mJt92nm7Mheng/T
+# BeSA2z4I78JpwGpTRHiT7yHqBiV2ngUIyCtd0pZ8zg3S7bk4QC4RrcnKJ3FbjyPA
+# GogmoiZ33c1HG93Vp6lJ415ERcC7bFQMRbxqrMVANiav1k425zYyFMyLNyE1QulQ
+# SgDpW9rtvVcIH7WvG9sqYup9j8z9J1XqbBZPJ5XLln8mS8wWmdDLnBHXgYly/p1D
+# hoQo5fkCAwEAAaOCAYswggGHMA4GA1UdDwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAA
+# MBYGA1UdJQEB/wQMMAoGCCsGAQUFBwMIMCAGA1UdIAQZMBcwCAYGZ4EMAQQCMAsG
+# CWCGSAGG/WwHATAfBgNVHSMEGDAWgBS6FtltTYUvcyl2mi91jGogj57IbzAdBgNV
+# HQ4EFgQUn1csA3cOKBWQZqVjXu5Pkh92oFswWgYDVR0fBFMwUTBPoE2gS4ZJaHR0
+# cDovL2NybDMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0VHJ1c3RlZEc0UlNBNDA5NlNI
+# QTI1NlRpbWVTdGFtcGluZ0NBLmNybDCBkAYIKwYBBQUHAQEEgYMwgYAwJAYIKwYB
+# BQUHMAGGGGh0dHA6Ly9vY3NwLmRpZ2ljZXJ0LmNvbTBYBggrBgEFBQcwAoZMaHR0
+# cDovL2NhY2VydHMuZGlnaWNlcnQuY29tL0RpZ2lDZXJ0VHJ1c3RlZEc0UlNBNDA5
+# NlNIQTI1NlRpbWVTdGFtcGluZ0NBLmNydDANBgkqhkiG9w0BAQsFAAOCAgEAPa0e
+# H3aZW+M4hBJH2UOR9hHbm04IHdEoT8/T3HuBSyZeq3jSi5GXeWP7xCKhVireKCnC
+# s+8GZl2uVYFvQe+pPTScVJeCZSsMo1JCoZN2mMew/L4tpqVNbSpWO9QGFwfMEy60
+# HofN6V51sMLMXNTLfhVqs+e8haupWiArSozyAmGH/6oMQAh078qRh6wvJNU6gnh5
+# OruCP1QUAvVSu4kqVOcJVozZR5RRb/zPd++PGE3qF1P3xWvYViUJLsxtvge/mzA7
+# 5oBfFZSbdakHJe2BVDGIGVNVjOp8sNt70+kEoMF+T6tptMUNlehSR7vM+C13v9+9
+# ZOUKzfRUAYSyyEmYtsnpltD/GWX8eM70ls1V6QG/ZOB6b6Yum1HvIiulqJ1Elesj
+# 5TMHq8CWT/xrW7twipXTJ5/i5pkU5E16RSBAdOp12aw8IQhhA/vEbFkEiF2abhuF
+# ixUDobZaA0VhqAsMHOmaT3XThZDNi5U2zHKhUs5uHHdG6BoQau75KiNbh0c+hatS
+# F+02kULkftARjsyEpHKsF7u5zKRbt5oK5YGwFvgc4pEVUNytmB3BpIiowOIIuDgP
+# 5M9WArHYSAR16gc0dP2XdkMEP5eBsX7bf/MGN4K3HP50v/01ZHo/Z5lGLvNwQ7XH
+# Bx1yomzLP8lx4Q1zZKDyHcp4VQJLu2kWTsKsOqQxggWvMIIFqwIBATBqMFYxCzAJ
+# BgNVBAYTAlBMMSEwHwYDVQQKExhBc3NlY28gRGF0YSBTeXN0ZW1zIFMuQS4xJDAi
+# BgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzemd0ILREkK
+# U+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkq
+# hkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGC
+# NwIBFTAjBgkqhkiG9w0BCQQxFgQUnMep5gA+nU4Yzf8xX8PiVrt87k0wDQYJKoZI
+# hvcNAQEBBQAEggGAU71kkF+Za+at/6wJ+Q5/hMtgmcvmHqh6u13v7BOSypSq7j1r
+# IolEVseT48JWyZvyeX6wnY2egvD2FtSCxrj8lurzZXgnGVUGKW4+iGzaoxkkIj1l
+# 51RwVWuT7pmc1DNUJ38IPXk41HSwIQOuKnsuGR7hVWXkhJvueCLLkw/W1q4QwFzK
+# 0EBukZudHbwhF4HFspytXTBZCyLTGoETqpOFG0fzNDS9vwpo3ukGS5OnFpGzC12e
+# MrYuY777cd6xktAO02ZgEZxTk6vNb4iFwIVo0dwdXC1v1V+5Vt7HoFA6R3JzrlEa
+# woIyVJlkbnyzL7hkuv4ABv27dk/dj2NZXqJC3YmyJFmIGXmSHeHZdHizaLjYvvhD
+# EqHKYIR/hikmzWDN4xrJ/qoepOdHNGDwHUaT2+BP4CaUowwcXWn1EJ8ee12ElE2J
+# tpLDXf//Ip86iyKVwYgnkWz5KNFqSFq++igkkziedZMqySZNhBxLRo+898RHqeRJ
+# t4cDGfIoy3GUMJGjoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
+# MAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYDVQQDEzJE
+# aWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFtcGluZyBD
+# QQIQC65mvFq6f5WHxvnpBOMzBDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJ
+# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjA5NTMzM1owLwYJ
+# KoZIhvcNAQkEMSIEIHwyrIlokLCkAZ9tpBjon3m1COW6ybifTAJhGUBkc3iEMA0G
+# CSqGSIb3DQEBAQUABIICAKqIJYdQTKEK6Pn2kzKJMKOtNIVTVtPVcrMvpZSpdjKj
+# BkLO1IGnT8RsaGWkYNmRbZki0q+/ryPlXmZeFGOXIqtc0F9HzBZwqunAO7o7f5Jc
+# 8ufWq1ks21VLjhqC4vDk37Lk9RiRM+Zm7hTU7mgayQFINyiB2dVUsTFeMBiNAZ/N
+# r/49hc8HUWA8w76cVDQf5tak+BCpm6dhtZ/4Tt9ZLnuz0I2Kw61IQFXh3hwo8i4X
+# yXpvWxLJzLl7WbmlsXQDg/GYumMgKk4H0Y/uCkLUROzUlBL402N07G9+gSLTrl6X
+# oxQJH2780X+InkvYHpkO5GmVQX4tuuljbbDRIdchP3TYE99T0idxaQOuOpGm0l/B
+# iuMA9j/IGWMWVfP9df4aFOD0SIpdG8sWNnLVQU/IWqxKPhHaopMgsE/jS58v6Sg8
+# vxmIPLwRrxVCZUnfedbHP+sL9KOerkSBh6NxIB8PWAtTdEHkj66Vohy347F2rIRk
+# qWR4ynfd8b985X1oG19Asu9+sq8e8Nm+KWNWplNiT+peIB/rrLq66t1+e1DcQvvy
+# JGRWL0WN9Die5atTfqUz3FSAltSj0dk8X+WT3UcVtRmwJQcv7Uw0Xbq80fRq/FsD
+# whrwSqA2swvDrKRVVnxajNqxz7VRROZ8fMrKJvqo+pANwWJ795Mu0SkcJkrW1zI+
 # SIG # End signature block

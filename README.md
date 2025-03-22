@@ -7,9 +7,9 @@
 
 ![alt text](https://github.com/AshleyHow/WindowsOSBuild/blob/main/WindowsOSBuild.png)
 
-Gets Windows patch release information (Version, Build, Availability date, Hotpatch, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022 Azure Edition.
+Gets Windows patch release information (Version, Build, Availability date, Hotpatch, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022 and above.
 
-Patch information retrieved from [Microsoft Release Health](https://docs.microsoft.com/en-gb/windows/release-health/release-information) / [Update History (Server 2022](https://support.microsoft.com/en-us/help/5005454) | [Server 2022 Hotpatch)](https://support.microsoft.com/en-gb/topic/release-notes-for-hotpatch-in-azure-automanage-for-windows-server-2022-4e234525-5bd5-4171-9886-b475dabe0ce8) and relevant Atom feed pages (Preview, Out-of-Band and Hotpatch info) outputted in a usable format. These sources are updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
+Patch information retrieved from Microsoft Release Health / Update History and relevant Atom feed pages (Preview, Out-of-Band and Hotpatch info) outputted in a usable format. These sources are updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
 
 The project is now fully signed using a code singing certificate. If you have found this project useful please [:heart:Sponsor](https://github.com/sponsors/AshleyHow) to help fund future code signing certificates.
 
@@ -39,7 +39,7 @@ Update-Module -Name WindowsOSBuild -Force
 
 ## Get-LatestOSBuild Function
 
-Gets windows patch release information (Build, KB Number, Release Date etc) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022 Azure Edition.
+Gets windows patch release information (Build, KB Number, Release Date etc) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022 and above.
 
 ### Parameters
 
@@ -47,25 +47,25 @@ Gets windows patch release information (Build, KB Number, Release Date etc) for 
 
 This parameter is optional. OS name you want to check. Default value is Win10. Supported accepted values:
 
-| OS Name                                             | Version                                                                                         |
-| :---------------------------------------------------| :---------------------------------------------------------------------------------------------- |
-| Windows Client OS Names                             | Win10, Win11.                                                                                   |
-| Windows Server OS Names                             | Server2016, Server2019, Server2022, Server2022Hotpatch, Server Semi-annual = ServerSAC.         |
+| OS Name                                             | Version                                                                                                                 |
+| :---------------------------------------------------| :-----------------------------------------------------------------------------------------------------------------------|
+| Windows Client OS Names                             | Win10, Win11.                                                                                                           |
+| Windows Server OS Names                             | Server2016, Server2019, Server2022, Server2022Hotpatch, Server2025, Server2025Hotpatch, Server Semi-annual = ServerSAC. |
 
   - OSVersion
 
 This parameter is mandatory. OS version number you want to check. Supported accepted values:
 
-| Windows Client OS                                   | Version                                                                                         |
-| :-------------------------------------------------- | :---------------------------------------------------------------------------------------------- |
-| CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2, 22H2, 23H2, 24H2. |
-| Win 10 LTSB/LTSC (Long-Term Servicing Build/Channel)| 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.                                             |
-| Win 11 LTSC (Long-Term Servicing Channel)           | 2024 = 24H2.                                                                                    |
+| Windows Client OS                                   | Version                                                                                                                 |
+| :-------------------------------------------------- | :-----------------------------------------------------------------------------------------------------------------------|
+| CB/CBB/SAC (Semi-Annual Channel)                    | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2, 22H2, 23H2, 24H2.                         |
+| Win 10 LTSB/LTSC (Long-Term Servicing Build/Channel)| 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.                                                                     |
+| Win 11 LTSC (Long-Term Servicing Channel)           | 2024 = 24H2.                                                                                                            |
 
-| Windows Server OS                                   | Version                                                                                         |
-| :-------------------------------------------------- | :---------------------------------------------------------------------------------------------- |
-| SAC (Semi-Annual Channel)                           | 1709, 1803, 1809, 1903, 1909, 2004, 20H2.                                                       |
-| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2.                                                          |
+| Windows Server OS                                   | Version                                                                                                                 |
+| :-------------------------------------------------- | :-----------------------------------------------------------------------------------------------------------------------|
+| SAC (Semi-Annual Channel)                           | 1709, 1803, 1809, 1903, 1909, 2004, 20H2.                                                                               |
+| LTSB/LTSC (Long-Term Servicing Build/Channel)       | 2016 = 1607, 2019 = 1809, 2022 = 21H2, 2025 = 24H2.                                                                     |
 
   - LatestReleases
 
