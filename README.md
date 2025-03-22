@@ -39,7 +39,7 @@ Update-Module -Name WindowsOSBuild -Force
 
 ## Get-LatestOSBuild Function
 
-Gets windows patch release information (Build, KB Number, Release Date etc) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022.
+Gets windows patch release information (Build, KB Number, Release Date etc) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows 11 and Windows Server 2022.
 
 ### Parameters
 
@@ -49,7 +49,7 @@ This parameter is optional. OS name you want to check. Default value is Win10. S
 
 | OS Name                                             | Version                                                                                                                 |
 | :---------------------------------------------------| :-----------------------------------------------------------------------------------------------------------------------|
-| Windows Client OS Names                             | Win10, Win11.                                                                                                           |
+| Windows Client OS Names                             | Win10, Win11, Win11Hotpatch.                                                                                            |
 | Windows Server OS Names                             | Server2016, Server2019, Server2022, Server2022Hotpatch, Server2025, Server Semi-annual = ServerSAC.                     |
 
   - OSVersion

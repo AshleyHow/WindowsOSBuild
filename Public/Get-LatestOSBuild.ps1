@@ -2,14 +2,14 @@
     <#
         .SYNOPSIS
             Gets Windows patch release information (Version, Build, Availability date, Hotpatch, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions.
-            Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022.
+            Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows 11 and Windows Server 2022.
         .DESCRIPTION
-            Patch information retrieved from Microsoft Release Health / Update History (Server 2022 and above) pages and outputted in a usable format.
+            Patch information retrieved from Microsoft Release Health / Update History pages and outputted in a usable format.
             These sources are updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
         .PARAMETER OSName
             This parameter is optional. OS name you want to check. Default value is Win10. Accepted values:
 
-            Windows Client OS Names                              - Win10, Win11.
+            Windows Client OS Names                              - Win10, Win11, Win11Hotpatch.
             Windows Server OS Names                              - Server2016, Server2019, Server2022, Server2022Hotpatch, Server2025, Server Semi-annual = ServerSAC.
         .PARAMETER OSVersion
             This parameter is mandatory. OS version number you want to check. Accepted values:
@@ -84,7 +84,7 @@
         [String]$LatestReleases = 1,
 
         [Parameter(Mandatory = $false)]
-        [ValidateSet('Win10','Win11','Server2016','Server2019','Server2022','Server2022Hotpatch','Server2025','Server2025Hotpatch','ServerSAC')]
+        [ValidateSet('Win10','Win11','Win11Hotpatch','Server2016','Server2019','Server2022','Server2022Hotpatch','Server2025','Server2025Hotpatch','ServerSAC')]
         [String]$OSName = "Win10",
 
         [Parameter(Mandatory = $false)]
@@ -121,6 +121,11 @@
         $URL = "https://docs.microsoft.com/en-us/windows/release-health/release-information"
         $TableNumber = 2
         $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/6ae59d69-36fc-8e4d-23dd-631d98bf74a9"
+    }
+    ElseIf ($OSName -eq "Win11HotPatch") {
+        $URL = "https://support.microsoft.com/en-us/topic/release-notes-for-hotpatch-public-preview-on-windows-11-version-24h2-enterprise-clients-c117ee02-fd35-4612-8ea9-949c5d0ba6d1"
+        $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/4ec863cc-2ecd-e187-6cb3-b50c6545db92"
+        $CategoryName = "Public Preview - Release notes for hotpatch on Windows 11, version 24H2 Enterprise clients"
     }
     ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
         # Disabled automatic detection of hotfix as it is not a reliable method of guaranteeing devices are applying hotpatch updates, non-hotpatch updates can still be applied.
@@ -163,7 +168,7 @@
     ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
         $OSVersion = "21H2"
     }
-    ElseIf ($OSName -eq "Server2025" -or $OSName -eq "Server2025Hotpatch") {
+    ElseIf ($OSName -eq "Server2025" -or $OSName -eq "Server2025Hotpatch" -or $OSName -eq "Win11HotPatch") {
         $OSVersion = "24H2"
     }
 
@@ -255,7 +260,7 @@
         }
         # Supports Server 2022 Hotpatch
         Else {
-            If ($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
+            If ($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
                 $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -ErrorAction Stop
             }
             Else {
@@ -311,8 +316,8 @@
         }
     }
 
-    # Server 2022 and 2025
-    If ($OSName -eq "Server2022" -or $OSName -eq "Server2025" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
+    # Server 2022 and 2025, Server 2022 Hotpatch, Server 2025 Hotpatch, Windows 11 Hotpatch.
+    If ($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022" -or $OSName -eq "Server2025" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
         $Table = @()
         $Table =  @(
             $VersionDataRaw = $null
@@ -322,6 +327,9 @@
                 $ResultObject = [Ordered] @{}
                 # Support for Hotpatch
                 If ($null -eq $Update.OSBuild.Major) {
+                    If ($OSName -eq "Win11Hotpatch") {
+                        $ResultObject["Version"] = "Version $OSVersion (OS build 26100)"
+                    }
                     If ($OSName -eq "Server2022Hotpatch") {
                         $ResultObject["Version"] = "Version $OSVersion (OS build 20348)"
                     }
@@ -350,7 +358,7 @@
                 }
                 $FormatDate =  Get-Date($ConvertToDate) -Format 'yyyy-MM-dd'
                 $ResultObject["Availability date"] = $FormatDate
-                If ($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
+                If ($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
                     If ($Update.Update -match 'Baseline') {
                         $ResultObject["Hotpatch"] = "False"
                     }
@@ -371,28 +379,28 @@
                     $ResultObject["Out-of-band"] = "False"
                 }
                 $ResultObject["Servicing option"] = "LTSC"
-                If (($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
+                If (($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
                     $ResultObject["KB source article"] = [regex]::Match($SourceOSBuild, 'KB\d{7}').Value
                     $ResultObject["KB article"] = $Update.KB + " / " + $ResultObject.'KB source article'
                 }
                 Else {
                     $ResultObject["KB article"] = $Update.KB
                 }
-                If (($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
+                If (($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
                     $ResultObject["KB URL"] = $Update.InfoURL
                     $ResultObject["KB source URL"] = "https://support.microsoft.com/en-us/help" + $ResultObject.'KB source article'
                 }
                 Else {
                     $ResultObject["KB URL"] = $Update.InfoURL
                 }
-                If (($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "True")) {
+                If (($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "True")) {
                     $ResultObject["Catalog URL"] =  "N/A"
                 }
                 Else {
-                    $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $ResultObject.'KB article'
+                    $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $ResultObject.'KB source article'
                 }
                 # Cast hash table to a PSCustomObject
-                If ($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
+                If ($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
                     [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date', 'Hotpatch', 'Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
                 }
                 Else {
@@ -428,7 +436,7 @@
         }
 
         # Add / Sort Arrays
-        If ($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
+        If ($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
             $Table = $Table | Sort-Object -Property 'Availability date' -Descending
         }
         ElseIf ($OSName -eq "Server2022") {
@@ -615,8 +623,8 @@
 # SIG # Begin signature block
 # MIImbAYJKoZIhvcNAQcCoIImXTCCJlkCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUquymtt34Qkl0Ya55Y2oFjdqD
-# EZ2ggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU87gBOBUqcJHXUJmT7iSKci6t
+# WD+ggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -792,30 +800,30 @@
 # BgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzemd0ILREkK
 # U+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkq
 # hkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGC
-# NwIBFTAjBgkqhkiG9w0BCQQxFgQUf4Q9yaRSdrnhQ+GM3NxsHtyAnfYwDQYJKoZI
-# hvcNAQEBBQAEggGAufgoRrh3iklsCvinVz5eYOSTt+HQtFGVhxxgJs9biFtuVF5i
-# SBYgKgZw35SUO6Ijr5htFDp7m97d4Adv8wkFX5IvOsLYh9Tlvag2nQVl2xECHS5c
-# lEYLRdZ95YooOEi3CnYfIWqfQ33dFxLd9AJ0j7NSIZKPz/ISTSaCrDurysgP4oCW
-# uxkaP3CgxC5sQWp9kKdsjhq3tVHvb7SlgYP2xQFlcFxdl25yuf+EsfitmstAfzjA
-# Q2m8I2gYSoAE/Um8v3iq2YCR4f/Bqq0exi3bF1rpluQtdpWr8H30LNOIKJJbYfjd
-# ck/BYxmqwJpNOWkX2SEFhBEspqAhJ+oJukttcUb32f75A4OLJajF8lCHlWPArFoK
-# 3w7Z3ViF6cICXtkkK+3NuGQSzgircZX560Zq0JvbjmTmtAKEnQcKPKlakJmPVxJo
-# CtwO5PbOLTWFQR1oI6pTPnLsbkifUf1pfVpw3beNoYRTqxz2SIKFcbDHpuJdVcE4
-# n7pK6ROvD4GabgB6oYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
+# NwIBFTAjBgkqhkiG9w0BCQQxFgQUbmWvs4PogAuS1NJt34l0MXz3cNswDQYJKoZI
+# hvcNAQEBBQAEggGASrVBbKlPuJ7T8S5Flh9VQ9l+uOK72jsJTFdVfLNq85cV8lkn
+# UcPUNukGbzgIXnU1k1D4WzOg+8N62W87oz5h7UZwsWutEmT/t/q3KuJGloTKURAB
+# MVC80oJ89siEjEdUUtushpTMu/NfKEMUmHWFZwnlIm6OW1ErO4bGFA0DEgI6xeoq
+# eN1qiHbs3Vgcyx55nK0xuHaOL19X9fjk8UGEqrsWfNbSceXwYSCINrJ/FeRdCAhR
+# xrUI0b4MNb20lyWq6wK6hXTvkMKo7ynQXam+uHhpkZ/shb5MCP0KlVHcF+tT/mnI
+# 5r/VsA6YRaSbyB2dJvnZnq55gT/CL292nEDtUmErsq86Z51i8iz+bVW/rBCpEcOD
+# 97b5E6R4rsGG1noccMUyJFUDwgele9XBLq8iYvL4Nm8d2+BDQIvOTSZkCDJUIkGa
+# L6teg6Z9wNQafMw1/onbx/4EVZJPpVgQHDmf9InQ04yPmndMcY9AN31jpTVp5o2t
+# mLWRrjwARBsTsUmYoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
 # MAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYDVQQDEzJE
 # aWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFtcGluZyBD
 # QQIQC65mvFq6f5WHxvnpBOMzBDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJ
-# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjEzMzQwOFowLwYJ
-# KoZIhvcNAQkEMSIEIOPk9A/qH3ACmW9BtuJrwalrm0dRhoBparXinc2hQslaMA0G
-# CSqGSIb3DQEBAQUABIICALOvkIc4Cf9qy3lKjXgQMAy2mtTv3packGxu9ExHbNCT
-# co0ojks17IpeMjp89n3MHMMX5UNezhDyAJ/tIKmV2dKxHABUPXZAF3loH0CKbKar
-# 0ruhAQoKy8qWjACbQlQVal2jJvn9NFPjhPisnPV2SN9aaTCvNYe4k/3m+3Z3XH4/
-# 8pPofVze7QwjDwVXH1HW+CL4AxPoWd+hepNudNiSpqmD2r9E+JPSpzCjf5d84KdJ
-# IHOQsKxZ04vq6rE7KZlOShZaeHp8zfI6VaRmMbW/84o8hWZn7HNXMlv2aoSCX2KO
-# Ox0LoVGDhuY2u3UN8ejiUo2kurLpXOjIqV/tT6B07BLByse7yYQ3t3DdZfCnd7Nl
-# hoU1OyNF20QBflu4uzJSZL10LuGK92ls0r7nK2Ei/xAMOKMxRxKQWdxsTuu/h6bO
-# pCgJcCxGs7rXPzkRGlCEXW3IA3GAm5/DqRUtBfiTmkVu1JJJzrrT2rHwbH08YOWF
-# YFRWpwEMpInnby8BNNdJmSuLs/D57RhyfHB28naAhjLhtkm+/wV6hEqmA+p7CR0g
-# h2soaqUdkndDWlXYnsVllwhyL5y/udFywD3AVpkPTfV+5V6A8OFv47Vo1e4tIDRK
-# FnalLREC8e9n+w5VM+ZbkaRVtiX6Dca7uMhvgarw3SWNOdZ5oRapYBy4SUGet+JU
+# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjE0MjgxNFowLwYJ
+# KoZIhvcNAQkEMSIEILT0xJ/w+6k1Qp+9/2wxqwjHlqSFveEt4IC8bh0UNZvhMA0G
+# CSqGSIb3DQEBAQUABIICACaVDEt5avdcKc6FPwLLuhwlUBADaijLrO5dBlHYtktn
+# +wLSTfxWuEqNsu0e7MzubFmJcaK+DpISB3qbavGTcCZgxB7WeUVmY4z8bRag7rVV
+# xy0CEOW2Kz60DCBX9DUntGLI6TZ+HCidAU4/kfh5RTbiEGLYBgWaSDGZOWIywOLY
+# Cnri6AJu+EyQpTNUSp2DqT04h2kBjj9iwaOTfaapM8cmZ8Ge/EDrSZHIV0KrA5WH
+# UzL9ls6pyaDqLgb9KGTFrSF7BZa8fUS48dzNiRek5nNEIhbsGUWt3G9uuLnDGC2A
+# 8AO66m3rDr5J2Vjn4CNoUu/oB79ikIpXzN8w95HI3OcWHGhYiylbn8pTVx6CkOX2
+# qU05Qi1icZ4oRp3L2FbzFliqv2/TIdmPo3+EvnNMAWof22wTkOnb4LYuE4JnXjT7
+# QmqarZocY+E7uYm3wt+AjVlbm/9vhqu1xiPdvhgYGHMWT7IAXGE8vW4832bS7kEv
+# Jq8ZSE59uBoAEQqjzNJb3+K+G/uwKgOgf9U9tvPqxFRwC4CyHYb8VKwkYK9HS0Ff
+# khKQ6jM19KqJdeIyIyBnBUU85RqRiXacLP/hTUQguGrN2RebVjUJrdlarEhnwd6n
+# NQfKdCac2YmxPQwMttCU+8xb3QLxemu7oJhA8YDejmK4fsB8jri/Zg4emTj4XTgc
 # SIG # End signature block
