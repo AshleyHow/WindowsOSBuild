@@ -125,7 +125,7 @@
     ElseIf ($OSName -eq "Win11HotPatch") {
         $URL = "https://support.microsoft.com/en-us/topic/release-notes-for-hotpatch-public-preview-on-windows-11-version-24h2-enterprise-clients-c117ee02-fd35-4612-8ea9-949c5d0ba6d1"
         $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/4ec863cc-2ecd-e187-6cb3-b50c6545db92"
-        $CategoryName = "Public Preview - Release notes for hotpatch on Windows 11, version 24H2 Enterprise clients"
+        $CategoryName = "Windows 11, version 24H2 Enterprise clients"
     }
     ElseIf ($OSName -eq "Server2022" -or $OSName -eq "Server2022Hotpatch") {
         # Disabled automatic detection of hotfix as it is not a reliable method of guaranteeing devices are applying hotpatch updates, non-hotpatch updates can still be applied.
@@ -227,7 +227,7 @@
             $osName = $category.SelectSingleNode('.//a').InnerText
 
             # If CategoryName parameter is provided, only process matching categories
-            if ($CategoryName -and $osName -ne $CategoryName) {
+            if ($CategoryName -and $osName -notlike "*$CategoryName*") {
                 continue
             }
 
@@ -250,7 +250,7 @@
         }
 
         # Return the categorized links as output
-        return $categorizedLinks | Where-Object { $_.Title -ne $CategoryName }
+        return $categorizedLinks | Where-Object { $_.Title -notlike "*$CategoryName*" }
     }
 
     # Obtain data from webpage
@@ -623,8 +623,8 @@
 # SIG # Begin signature block
 # MIImbAYJKoZIhvcNAQcCoIImXTCCJlkCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUV5pnPK/SKfcuFgF9cbWzUQSt
-# O+6ggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUpGnqNmRqh4HJCifn6d37CgOl
+# 9a6ggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -800,30 +800,30 @@
 # BgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzemd0ILREkK
 # U+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkq
 # hkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGC
-# NwIBFTAjBgkqhkiG9w0BCQQxFgQUMb8q/xe0VFm6/GJ7zxOraKHA7z8wDQYJKoZI
-# hvcNAQEBBQAEggGAYeb+54c9nxlUZ2y37g0pGxDFJnzjT9p9RjudqWHrL4CsFkN5
-# /zmmiFBhzQ0OHgqaW5BwNvdZA1l44e9ziAb7ADVpv9O0UVlrJrA+49ngaLtYCpr/
-# cBCTV/V05xMWOkVuyaAO0TvRnJ4OWJ/mAdBXU5mVFJY9YvPM3VN0EU/bjeMARn0y
-# nrepsFeWVQdajCfYVhJ7yAHkj9nq52WUnuFBZjWN0jtGGzrB6YPPxvj49Fy1XNHu
-# yRtwczzm7+ku5e2vLOFpyBMs0sU3PMW2HZA9gJeveCPK5Ah8g2NDymXTk7saOPyE
-# pR00I+ajf/1zmbq+oiCLUdr/3FuHxbwVhV76qCFC/qBVeyrK/oL2eRdKFjrcOwAl
-# Qao2wDwkGfBCnzPxEBx0fcLfQaxIk1hoZma9JFpIQp1ichyYkSIkWwoPh05z6XSD
-# CcDNsqJTm06DPfKHfGLrY0BAdRGunfYyp9nZE1ja6CEBD5s6lOG/vbyFK9FZkdy7
-# 7zd3L/0T9Im9KXMhoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
+# NwIBFTAjBgkqhkiG9w0BCQQxFgQU7xAtUUh2O0osswOit4GCPcNjlkkwDQYJKoZI
+# hvcNAQEBBQAEggGAz38zCeIjYTLk+rgwK8a0E1qg3rcX3cubSKoHvtP2MSXi24iv
+# 1b1YY3AfdSoD0+066PWe+yMtqC79pNdaRlFPlitvhzIQfNtnoDJL79Q2bCJuOVzf
+# KI8j+KN4FzU4qokDAb8sgu6nB+8k9Iz0AHPeZfS8hV17ufp0vWO6Gigfz0qTMpye
+# O4sqBcUfTBeT9obLDDsXnF0Cj8Kt3c15rLGQbbo8cR1G+6Cf3La7Bxjg9COqPY40
+# RVMbIroDQeOUDk2OqM+XEUieK8iYwDDxuXiTEsk8ZT4n9xtd4Hnucm7t9M2grAah
+# 3L7CX0ON3f00lKlRbVu95NOPa6AUcFgof2hTxZ9rfaAUwKYcWJvIPNcF0Y4sYZTK
+# KlS8f4LfIKoEn9FUnC330OFMbPuAqNwxFnAdAtF8IY3XzWp/GuGg21+vIPM8wbsE
+# 7/i08p2QTVES/GYb6Z3sfKFRnLq32OOwqdbH382Z7eDiNKqj3f+hWzf17/Yfp+dV
+# L59ma5a3K+gk2lAEoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
 # MAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYDVQQDEzJE
 # aWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFtcGluZyBD
 # QQIQC65mvFq6f5WHxvnpBOMzBDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJ
-# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjE0NDMyMVowLwYJ
-# KoZIhvcNAQkEMSIEIO16hXTKMOhwqM8FpaVEPC3cXIvbkMxrlGUR+1VUY8j7MA0G
-# CSqGSIb3DQEBAQUABIICAG7p11IWQsW/umavKiKX+c16HSgZsakTaRJ5EhHGQFxM
-# Bvbsb70s7UEhFAOZXwRdk2mbIe04EWBCp0r2A58f3jxG+OJtBrlS91AY8VB2OEAS
-# xoDtXtuquYlw25yiwmuCeSt/V2jZkaPbynsttNkr/5lg/o7Z63CrsaYcYOMZDujJ
-# px1q8T9FrgU4AJgXHuiaRY/O+8XjsQNgvxs6+4MHGwmmI0g6XiJMVocmENZ1l/Og
-# SixFFIqvqdIAyw0Q3J4uhbdmEbMrQye/S3lUf6OMhCnRlyy8NmwE2SCcN/QH9SE1
-# Th9yVXf1XSfE2BnJ5+BSEQZwblv0ErNPiaD/Vd4EZSkJpRRi2rWDufIwnus1/Ywo
-# ZWqymk5FfajR6+BHkrWWAEs1qfD0ZpFhb68gzLRzMpaJNmA0mn7H8uyrsgvYhywb
-# lnnsb96Y2qZvgl0RbNYxtXy3aKQBdZg6/8RH83mAu+qmGwnw/YWlXs7jpINszQjx
-# OWT2p3CoNiWiZjbZ9a9nvXPi1FoQJLJgi3r4vLP8w8q7Se6qimRKB3Ddr6Hg9Itp
-# NEtvUGh08EKTInzoLBIiELoIG09CrNkxvBIZeeD/oeHxGhYXI0uI661TgnLC1Dbb
-# Zh0mbu8DDmEZO2yb2Rnw1Qqc2JeCVgJUD8Bynhmc9xyeTsreByEiV59adoAJFIl4
+# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjE1MDQ1N1owLwYJ
+# KoZIhvcNAQkEMSIEIN3OYd2GH+e5UM/e+HQ6RKQ0SGhSFnSkQAe2IVm9q9eNMA0G
+# CSqGSIb3DQEBAQUABIICAIlf6hxvw/79+MpmWyFdSb7euqcbEWCOkYaDPq84oXHc
+# JUXAejbOfOnlEA5SxqwgSMGEapPlEaGLcFzK6T0ftG+WqwGkx8PL4vMUEw2yOVkD
+# +zdZzOzQAg2kU24SzwmwWs245aMGqeE2NmPfA0inPnwUWwGFJALiwltV7OrD+huN
+# yIf8Qv2DjYE+e2RGdyVJsrAkurdG87388GfYsX692lOXoehjH1IdtDXrAbaZfeVL
+# F3NUDqL678NwT9Ni6t8rQ8ADyrhPb/t4R6nI51N2WZR+UGjihTyvRtBbYTfK7Y03
+# /vW3l3kLqAxiCqtrcoEbjMa2FgxkgwAZ1qETbof2IbI4CDJKM+veKgJV3pDLiEXA
+# ufeRrijtx+OpJ18FvNIZ0z0Az4DvCU5NUXInV85sKP+RfmzGkEVrlxTmiCyQNnwM
+# HbmzO1MKfYZiHINoJUXFGMFHZcCoWXZculPO6toQL8PA49x91UxGy/y2agMRrZXV
+# OLFXzbmXPukLj9ZjA7PB1d6UTuVZ7ggfVRZFb1CsnJrdqToFLYgCtB9i15GUeNpD
+# Ur6IdpG0tCfSkkLpa2bZPu5qIKrnP+MyexLDqPv/CBbXXf+HJOkU71/A8LrCDcQ8
+# qYYMiScnuNdpswdTwGhfyRe5D2K/BC+HWW8TrCPDA0hr8tQgjuRqzaoVtLn1aJ/n
 # SIG # End signature block
