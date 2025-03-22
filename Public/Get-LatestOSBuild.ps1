@@ -264,38 +264,38 @@
 
             # Fetch the Atom feed content, used to obtain preview and out-of-band data
             If ($AtomFeedUrl -ne "N/A") {
-            $response = Invoke-WebRequest -Uri $AtomFeedUrl -Method Get -UseBasicParsing -ErrorAction Stop
-            }
+                $response = Invoke-WebRequest -Uri $AtomFeedUrl -Method Get -UseBasicParsing -ErrorAction Stop
 
-            # Extract raw content from the response
-            $feedContent = $response.Content
+                # Extract raw content from the response
+                $feedContent = $response.Content
 
-            # Use regular expressions to extract entries
-            $pattern = '<entry>\s*<id>(.*?)<\/id>\s*<title\s+type="text">(.*?)<\/title>\s*<published>(.*?)<\/published>\s*<updated>(.*?)<\/updated>\s*<link\s+rel="alternate"\s+href="(.*?)"\s*\/>\s*<content\s+type="text">(.*?)<\/content>\s*<\/entry>'
-            $AtomMatches = [regex]::Matches($feedContent, $pattern)
+                # Use regular expressions to extract entries
+                $pattern = '<entry>\s*<id>(.*?)<\/id>\s*<title\s+type="text">(.*?)<\/title>\s*<published>(.*?)<\/published>\s*<updated>(.*?)<\/updated>\s*<link\s+rel="alternate"\s+href="(.*?)"\s*\/>\s*<content\s+type="text">(.*?)<\/content>\s*<\/entry>'
+                $AtomMatches = [regex]::Matches($feedContent, $pattern)
 
-            If ($AtomMatches.Count -eq 0) {
-                Throw "Get-LatestOSBuild: No <entry> elements found in the atom feed."
-            }
-            Else {
-                # Initialize a list to store filtered feed entries
-                $feedEntries = New-Object System.Collections.Generic.List[PSObject]
+                If ($AtomMatches.Count -eq 0) {
+                    Throw "Get-LatestOSBuild: No <entry> elements found in the atom feed."
+                }
+                Else {
+                    # Initialize a list to store filtered feed entries
+                    $feedEntries = New-Object System.Collections.Generic.List[PSObject]
 
-                # Iterate over matched entries
-                ForEach ($AtomMatch in $AtomMatches) {
-                    $title     = $AtomMatch.Groups[2].Value
-                    $link      = $AtomMatch.Groups[5].Value
+                    # Iterate over matched entries
+                    ForEach ($AtomMatch in $AtomMatches) {
+                        $title     = $AtomMatch.Groups[2].Value
+                        $link      = $AtomMatch.Groups[5].Value
 
-                    # Filter out entries that do not contain "(OS Build" in the title
-                    If ($title -like '*(OS Build*') {
-                        # Create a hashtable for the entry
-                        $feedEntry = @{
-                            Title     = $title
-                            Link      = $link
+                        # Filter out entries that do not contain "(OS Build" in the title
+                        If ($title -like '*(OS Build*') {
+                            # Create a hashtable for the entry
+                            $feedEntry = @{
+                                Title     = $title
+                                Link      = $link
+                            }
+
+                            # Add the entry to the list
+                            $feedEntries.Add([PSCustomObject]$feedEntry)
                         }
-
-                        # Add the entry to the list
-                        $feedEntries.Add([PSCustomObject]$feedEntry)
                     }
                 }
             }
@@ -614,8 +614,8 @@
 # SIG # Begin signature block
 # MIImbAYJKoZIhvcNAQcCoIImXTCCJlkCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUD28sBrauhUTfwHrwgJRiLdRp
-# kOyggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUR7d98LO7JZqSmIa2ZNY+SI0j
+# y9OggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -791,30 +791,30 @@
 # BgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzemd0ILREkK
 # U+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkq
 # hkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGC
-# NwIBFTAjBgkqhkiG9w0BCQQxFgQUKfr+K4wjZcZFu2ypb8ZUbznzhqcwDQYJKoZI
-# hvcNAQEBBQAEggGAj8f07R/KkqxvBpI26Sj8a1u8Oo/uyg1+9DW0K1HSYSXSY2rx
-# dlPharj9qz6IzBCRCP5eguKcTYEP1268Iwo1NN3XKZLYd13RPGWLbRJR2YAWCcGC
-# SFHhoA9MVypF/jmwG0h5OTntyLHYDXSu3WkaklZ5s7xUAyx+n5ArYPYFnFI3zdE8
-# ADNplvAFwlZOCZyhsi0mRQnzA/yNZOmhRsDciRoDq94gRA05vlkwUW3vi1atxlNu
-# zLF01KXDDlZ8XMSaKSQF8RXWwqdSy70jn6dV+a9d2kN3fLvqKLrJVU2eN36oF0Zd
-# Jzx6PKVbR7PSu5P4OI1s39yu0fusqD9pGp8CtcZHCSwUvjpF4qoSGN/eRt83K9QE
-# AKjBmy2rN5cgK+M4V2bLJhurWmVTqquPAggIfgvc2GER8y/GeMKzwU9+0CFUFZH/
-# iqZE6+FDKzVx1ScDMsnvGkTlkrhUxKwMWxyLIjhFBfzn+fmo40FqepRb7Ztu+Fhh
-# PdM+4zTsQOIwRST+oYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
+# NwIBFTAjBgkqhkiG9w0BCQQxFgQU27Zv7UfPX/G90uYjJOYoxnjoReYwDQYJKoZI
+# hvcNAQEBBQAEggGAXv+HmpxlklaNwfTjk8mLGQ5/l4MLdiird0WnhdMCTvDjKnI3
+# crme+gI7zaT6PDpZIz0Cnkx4bSO2qZqYGLSjqEXuYADWYF/l4AA1q/0d8mohsPmh
+# pBtw7UmP0o0G1yS9xwgPnVbmehqgPptAzNkssdeQQyk1Y00otBX86AZUKKJOdN7j
+# IlXMd+9g+CTgcRx7ip5qw1iPwyRkRbkBlALCDefNs6aCZXnakEzeP/5JPQfqzHFf
+# YI1DxE3f8BIQAkUllRXGIVhgQQekHGprHxds9clXbDCcX9VciO1PIJ1loiotl7a3
+# jVPvaG3acRbeLyimuHnL19mj/I/udyThXs+Xkmhv0tRH9PgJhWSrkk8XooXErvqP
+# ImZsvHTP/E6ylgIIqbYbPU5oNp5cWf9upfLTf93r7TPIQaWM2LeodbvIHUH4VUAo
+# 7NpxkKnmqpj1zP8nHHlqnMeTbHplQQo8HKax2usIUGIsMRoHx5ixzF6rBGSWO/6E
+# 7GDV19gfnjdrm5KvoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
 # MAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYDVQQDEzJE
 # aWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFtcGluZyBD
 # QQIQC65mvFq6f5WHxvnpBOMzBDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJ
-# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjExMTkyNFowLwYJ
-# KoZIhvcNAQkEMSIEIE03J7FBTBjUQ6ebb/YOZfmazRanY55g0439QtKjLIJ/MA0G
-# CSqGSIb3DQEBAQUABIICAKPtTB3LtYIme4A3oii9yu04Rt+GnV8n+57x23q5/wmH
-# eiaI/TFIQSpZ+pn1PKosA3m8s41tifUiOR6ej+0C2uj8e8NJgtiV3tNKkljZ1dB5
-# B68qC2Jkw9GQskcEp+UXcQekWB6rw8pawQceDETlajLPmBvxvnYtfGZI0kJz6HsR
-# hAOom+DLBt23S09Pj8fYeYW/HqCPgyWa7fO2+LPO1F3Yg5FYI88Cb5rGBuGLJKG7
-# 9Db6k4HKb1c/uN0BKrqH0bsz2IdzXFRKbbcGYT+acb+UVdDKGXDcOavbgMjWbfdS
-# FNJLUC7Lelsv5S9U5AiU0cfiGk+e7AAhTiOqtVLNOEgdVUPgbPI7k1tHz2Ha55gq
-# SP5Lp1uRa7h3urVzYMwylL8bbxujqlzos5DiT1b8svLMP36y2FgJ48uAbGnSuObN
-# BlCjwyya6mj8udiFBFT9orZxk8d5C9JyJNSwiXqWQyaTKZBt9S3lM+zV7qaFc+DJ
-# s/FNvYJMGyD20boCZ7DSIP9QVCgLC+FFWCIUO/Qlropml8qbdbZg92QoCukR36v7
-# CEdrQFeUHsj0Eap7UcYfHj3zk1KfIbYdWge8/y2cZZTEzuDqjbmUv0fiMch13Fpp
-# Xzq9YfSz1EhanLMSueNs8FoNl3ixsRDqEdFNPgaOo95hhK0sI3hQ61qfB+VTVpWv
+# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjExMjYwNlowLwYJ
+# KoZIhvcNAQkEMSIEIMruJuWZymR5QF3OJyahCPozdLHsSnbDZENV3v8mv8fVMA0G
+# CSqGSIb3DQEBAQUABIICAI1H/kjQ6JSDOQieEg89nAQvjekwUN6TjTDvHP3A1oek
+# sSjFhVhGOcTr1d+Cfabs68dWkY9PaCmm2D9Q89d+V/NVHFfv56HYVNZA9D7h3z9C
+# TtNqxFE48pRRYwcV3xjHOqWqtLogqL8AM4HVyJEoMjeGDNyLndIAbCjT2t95SLfR
+# VhGeOZMMCoR9xNJnA64dnSdfJ4HpXrGSBxXqAOHec7flNcfwXW2QdA8TE3gd4iWL
+# YDURdDqJM7QSv/jVsNiVCFa6tZvjPdKesX8Ed9b84v/9/6BtZ8zbFUq3i6k2CM0R
+# br/3a/r3Wmh7oqc/b/Ik4Bj21WYNaHOzuDJkCFfLdlsaGfE5bwPrN/laZWmkic+U
+# ik68EAvPQL2DgEfB9Y8nTSJFTUnJOFNGf1IHeKPTBIP0GN+DzBvM8DbX1tr75BHY
+# BnyUCE6uh/T0F6z9TKYqb20TAqBeBk44KfZvSgnNaLfbnHMF3dXht7JtbI2xmkCy
+# ZpKSHO6Rv7dK4stAktnrOuar8iIhgzc8WU/k2JPHk0Iq5TNE/DVp9ylPlOgv2taw
+# lhonI7SJ6MJ0numP88a3C2kyXYh9taVRg6a7ZwkJFlphqFhHnV+Ar4TwuG4tcbC8
+# ljv0Zjn/EsprHqyGodUfeb8MyMG7BKD06GlHmkPxN68hSo4Jw8Ozn9fAxbnWWlk5
 # SIG # End signature block
