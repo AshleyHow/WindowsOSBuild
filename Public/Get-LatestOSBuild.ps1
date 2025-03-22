@@ -126,7 +126,7 @@
         # Disabled automatic detection of hotfix as it is not a reliable method of guaranteeing devices are applying hotpatch updates, non-hotpatch updates can still be applied.
         # $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
         if ($OSName -eq "Server2022Hotpatch") {
-            $URL = "https://support.microsoft.com/en-gb/topic/release-notes-for-hotpatch-in-azure-automanage-for-windows-server-2022-4e234525-5bd5-4171-9886-b475dabe0ce8"
+            $URL = "https://support.microsoft.com/en-us/topic/release-notes-for-hotpatch-in-azure-automanage-for-windows-server-2022-4e234525-5bd5-4171-9886-b475dabe0ce8"
             $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/2d67e9fb-2bd2-6742-08ee-628da707657f"
             $CategoryName = "Release notes for Hotpatch in Azure Automanage for Windows Server 2022"
         }
@@ -139,8 +139,8 @@
         # Disabled automatic detection of hotfix as it is not a reliable method of guaranteeing devices are applying hotpatch updates, non-hotpatch updates can still be applied.
         # $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
         if ($OSName -eq "Server2025Hotpatch") {
-            $URL = "https://support.microsoft.com/en-gb/topic/release-notes-for-hotpatch-on-windows-server-2025-datacenter-azure-edition-c548437e-8c7a-4e27-99f4-e8746f97f8fa"
-            #$AtomFeedUrl = "$null"
+            $URL = "https://support.microsoft.com/en-us/topic/release-notes-for-hotpatch-on-windows-server-2025-datacenter-azure-edition-c548437e-8c7a-4e27-99f4-e8746f97f8fa"
+            $AtomFeedUrl = "$null"
             $CategoryName = "Release notes for Hotpatch on Windows Server 2025 Datacenter Azure Edition"
         }
         Else {
@@ -379,7 +379,7 @@
                 }
                 If (($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
                     $ResultObject["KB URL"] = $Update.InfoURL
-                    $ResultObject["KB source URL"] = "https://support.microsoft.com/en-gb/help/" + $ResultObject.'KB source article'
+                    $ResultObject["KB source URL"] = "https://support.microsoft.com/help/" + $ResultObject.'KB source article'
                 }
                 Else {
                     $ResultObject["KB URL"] = $Update.InfoURL
@@ -614,8 +614,8 @@
 # SIG # Begin signature block
 # MIImbAYJKoZIhvcNAQcCoIImXTCCJlkCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU9ObagxzkEmV1wLKm6AfK41KJ
-# o1GggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUZ2bSyaZH09/mOPeY29pP3Mo1
+# YVaggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -791,30 +791,30 @@
 # BgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzemd0ILREkK
 # U+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkq
 # hkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGC
-# NwIBFTAjBgkqhkiG9w0BCQQxFgQUFkkLa3N6UkY7BBXo6YSGf7xA9RUwDQYJKoZI
-# hvcNAQEBBQAEggGAXULVD0FrW9MwCxOrcPfLZD7GRp9wHb7z7ijWuHPRig5I9K3I
-# SHSGmFqcesL0zZ4nVFxhaZUHcpZ+mHNoIYyP5rFK2fWOYjgohLWxUldk4DBstaCn
-# 9AUZPao5dpSgHabN2deNwdcBt2FBGILRd6SqkqsmyO9r+RRnC3NjSinwab7oM2PW
-# 6RrBbbbFCSCtOZOZG+fTS9ba/Ob99d4/TJ+bqTOIWell6ViKCf+6d1cPDIz4Qq3C
-# 9SPp0LwGHjHfmwmbwBEDOMuM5K2CBQFPW7f8kCf1T8zSeJ/Gj5yqllu+/52vg7Ie
-# aEHU5tlia10HPbkqUiYH0mQldTw1CK3qMwvswjXBdszi9Rw7u5BgiZUKCCBURe/9
-# sR1m/BpYSVcV+hF8O+q/zgMm7s80Td449sc+RXfBLkYoHbulUQRzSQsfhe+ihEjB
-# QB90t9FIUqXdfPetLP65ZwRYZd78nMUoDeIpHOxeTw/yUEwlSu49BX1IDfmBQIhM
-# C5tV3brnhQQLq13qoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
+# NwIBFTAjBgkqhkiG9w0BCQQxFgQU/4MrwfOryBzt92YRrePy5szyAjIwDQYJKoZI
+# hvcNAQEBBQAEggGAfh73xr7EKwzx4U0VgrwozcuwC7F0AcLkVw+HUIWwn1OZ1iJq
+# RTDW20IHH98i5crwlOsKhCOhokGQAJ+BUNKmJgFzO5TW5BGPBJdgQk70vRwlPAqf
+# VYSPwhbgs9+SdF4aCesVdCiecPhdc+NcWwS8RUyzaZTUDBuGL0+yV5X+vJ5Ehxac
+# om2kBxuPMAQWCmfULlfAIwsc+em3m1H7tSwPztCXV0h2B8U1GucDqaUQLjStOesD
+# H0RDFhcgK/fOu7j70/KQA7aRW6dxIIJOZSwwEDSnTeroWumMcY8uYeF8MIDV2mkM
+# b1QUjcU7tsMFd8kwXY9wz/5rOIiZfnOToPgdTc82lf/knv+8gmeFUMoVN18yJI5n
+# inc1s4Wzy7zFAe59vOqvOKha/Z3m0T681CXqiyDa/ocDJcXv/cgqcXlS5+Hi2agh
+# /ougWwm5Ho5+J8ydKQrw/jLE2eRAMgcZBRU4hd0OlB2cOm4Fv7+5AMAmEkcU/lLk
+# Ks6Wo2stx3mRJ2O2oYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
 # MAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYDVQQDEzJE
 # aWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFtcGluZyBD
 # QQIQC65mvFq6f5WHxvnpBOMzBDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJ
-# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjEwMDUyNlowLwYJ
-# KoZIhvcNAQkEMSIEIDNHysvqDkt2Of3RgqPj4IgiSjSY65DJezwr1WbXdal8MA0G
-# CSqGSIb3DQEBAQUABIICABVSkMhhnaRRR6+UhcI9xJih6rZbn7Zxg9ACtJ5IPxwd
-# ejbJuL749hva5BhKLoFK5F4r8JMJpD+b7oHKs/GbZliGCkYXkt/MJK7O+ycKkdzn
-# XhuRouhs48Yp3xTgT5Knz8fhVOssswT2H+cTsMtZHM5ruuc5k+5rsuo+z0YYuTGe
-# ws0vFIhd8okS9tdrYv6eGy4GGNJj871f+skb9d8ywxhnl7LD0IeUAL1XeHvik7Cf
-# 1EiWXcvv64GZfrc9M4xPlZGaWxKhTM/SiEUjKqdiwE8krZCGdWvu+kJJZGxMhHST
-# TnYmMNOQiF18R84fMVsZvlDx4KUBzHqEyTgWGRlZG24iz/v64hvylVP5KlP0qCSA
-# Na+eBwpJDBZxcuxjGoOf0t/OdNi+AtbaqaLKYL2ylUX6cbcwNO/HToA59Ao3M1tD
-# JixLnPQqxpeEdJrqubeoMf/mf8vyvKp4uPn2jvz0f2ef9clNd5XxUM/ZkTsaD8su
-# MYlZeXcZXm9nnbV2xbMYTlmDLIAYJZMdylTVfVsM+ORpZnUXdixQTRo8WsBsEBfF
-# ToI5fCdSvanZLTJmP2Q8Qj1Hk/r0sMSuTCKjXYN7xpPLMb+wThfDrTUWqHE94T3x
-# ubVpEuN+iwHiLJ8p7k8b65ygwOxJRZagSRewuQx7T8hvo+wpUAKSXQOaJwu/GH0T
+# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjEwMzIzOFowLwYJ
+# KoZIhvcNAQkEMSIEICr/y2IosXfTUw6vuWk1sLKIboRAeFstztCLRR2okFsQMA0G
+# CSqGSIb3DQEBAQUABIICAHDJUDEkO9mS0Wthz/kZLgY3Y+j9g5MPmdg67GErHroE
+# ix5MO+R2+d9tkeB5QJQIWrj6p5GuObORXWL9ViJJ7mHkKcMmi7eXXVTF0pruV5oj
+# 9N4q4dx0+Tx2MP8fz9S4SFZTYz6K5Jcr2efDYOfwFwflktQ7JRiNbpkw47IKC0LZ
+# zkbVi0TRc8q+F4bqs6HvisaY3SHOJJEntIHsH28h1CpK0kdIlPssmeHzb/MIPgDa
+# WJPnKvUxA0H6H2zwgPCWfh0Qb1RJ0vXk+6rj7X8BDNCHuNhsPTiujD7963v7I+gg
+# cbNdwzGqydBRuY8kwOcBdoHiZjpeNV+f9gjrOInvYcFHvtMwnDjIp3rMEfecKG/S
+# H2pT9ojLUEKuer4hp1K99iiCWTG0nDf6PooQ3bhpR6qmFh7iGItnnyPdTZoyIo2G
+# xbVs6Taf6w7cMLwWmEIaOVzKzqyUmwV6t2t5QKSTGJuVS62e6p1W6dvwYlLSO9yn
+# M/FfUV6aCPC57eQqqE4aBad3/e8uUDeUsNsV0Y66ji3/bjvCVH2pp57V203bVElm
+# JgtYR9r9B48VICRJ9AadD+1sLpFE9Q7BYjdER3eYkXM3MNncWfnxft2NCbulgFA1
+# li0tmde1adwf6J3Rc/rxQMApw/FZGfctBv5vReJbf4ucAjKOKxMcho0LenvArfr9
 # SIG # End signature block
