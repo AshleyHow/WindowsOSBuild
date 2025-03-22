@@ -2,7 +2,7 @@
     <#
         .SYNOPSIS
             Gets Windows patch release information (Version, Build, Availability date, Hotpatch, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions.
-            Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022 Azure Edition.
+            Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022.
         .DESCRIPTION
             Patch information retrieved from Microsoft Release Health / Update History (Server 2022 and above) pages and outputted in a usable format.
             These sources are updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
@@ -10,7 +10,7 @@
             This parameter is optional. OS name you want to check. Default value is Win10. Accepted values:
 
             Windows Client OS Names                              - Win10, Win11.
-            Windows Server OS Names                              - Server2016, Server2019, Server2022, Server2022Hotpatch, Server Semi-annual = ServerSAC.
+            Windows Server OS Names                              - Server2016, Server2019, Server2022, Server2022Hotpatch, Server2025, Server Semi-annual = ServerSAC.
         .PARAMETER OSVersion
             This parameter is mandatory. OS version number you want to check. Accepted values:
 
@@ -21,7 +21,7 @@
 
             Window Server OS Versions:
             SAC (Semi-Annual Channel)                            - 1709, 1803, 1809, 1903, 1909, 2004, 20H2.
-            LTSB/LTSC (Long-Term Servicing Build/Channel)        - Server 2016 = 1607, Server 2019 = 1809, Server 2022 = 21H2.
+            LTSB/LTSC (Long-Term Servicing Build/Channel)        - 2016 = 1607, 2019 = 1809, 2022 = 21H2, 2025 = 24H2.
         .PARAMETER LatestReleases
             This parameter is optional. Returns last x releases (where x is the number of releases you want to display). Default value is 1.
         .PARAMETER BuildOnly
@@ -131,7 +131,7 @@
             $CategoryName = "Release notes for Hotpatch in Azure Automanage for Windows Server 2022"
         }
         Else {
-            $URL = "https://support.microsoft.com/en-us/help/5005454"
+            $URL = "https://support.microsoft.com/en-us/topic/windows-server-2022-update-history-e1caa597-00c5-4ab9-9f3e-8212fe80b2ee"
             $CategoryName = "Windows Server 2022"
         }
     }
@@ -139,6 +139,7 @@
         # Disabled automatic detection of hotfix as it is not a reliable method of guaranteeing devices are applying hotpatch updates, non-hotpatch updates can still be applied.
         # $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
         if ($OSName -eq "Server2025Hotpatch") {
+            Throw "Get-LatestOSBuild: Windows Server 2025 Hotpatch is not yet supported"
             $URL = "https://support.microsoft.com/en-us/topic/release-notes-for-hotpatch-on-windows-server-2025-datacenter-azure-edition-c548437e-8c7a-4e27-99f4-e8746f97f8fa"
             $AtomFeedUrl = "N/A"
             $CategoryName = "Release notes for Hotpatch on Windows Server 2025 Datacenter Azure Edition"
@@ -379,7 +380,7 @@
                 }
                 If (($OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
                     $ResultObject["KB URL"] = $Update.InfoURL
-                    $ResultObject["KB source URL"] = "https://support.microsoft.com/help/en-us/" + $ResultObject.'KB source article'
+                    $ResultObject["KB source URL"] = "https://support.microsoft.com/en-us/help" + $ResultObject.'KB source article'
                 }
                 Else {
                     $ResultObject["KB URL"] = $Update.InfoURL
@@ -523,10 +524,10 @@
                     }
                     $ResultObject[$Title] = ("" + $Cells[$Counter].InnerText).Trim()
                     If ((![string]::IsNullOrEmpty($ResultObject.'KB article')) -and ($ResultObject.'KB article' -ne "N/A")) {
-                        $KBURL = "https://support.microsoft.com/help/en-us/" + ($ResultObject."KB article").Trim("KB")
+                        $KBURL = "https://support.microsoft.com/en-us/help/" + ($ResultObject."KB article").Trim("KB")
                         $ResultObject["KB URL"] = $KBURL
                         $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $ResultObject.'KB article'
-                        If ($KBURL -ne " https://support.microsoft.com/en-us/help/") {
+                        If ($KBURL -ne " https://support.microsoft.com//en-us/help") {
                             If ([string]::IsNullOrEmpty($feedEntries)) {
                                 $ResultObject["Preview"] = "Unknown"
                                 $ResultObject["Out-of-band"] = "Unknown"
@@ -614,8 +615,8 @@
 # SIG # Begin signature block
 # MIImbAYJKoZIhvcNAQcCoIImXTCCJlkCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUR7d98LO7JZqSmIa2ZNY+SI0j
-# y9OggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUquymtt34Qkl0Ya55Y2oFjdqD
+# EZ2ggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -791,30 +792,30 @@
 # BgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzemd0ILREkK
 # U+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkq
 # hkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGC
-# NwIBFTAjBgkqhkiG9w0BCQQxFgQU27Zv7UfPX/G90uYjJOYoxnjoReYwDQYJKoZI
-# hvcNAQEBBQAEggGAXv+HmpxlklaNwfTjk8mLGQ5/l4MLdiird0WnhdMCTvDjKnI3
-# crme+gI7zaT6PDpZIz0Cnkx4bSO2qZqYGLSjqEXuYADWYF/l4AA1q/0d8mohsPmh
-# pBtw7UmP0o0G1yS9xwgPnVbmehqgPptAzNkssdeQQyk1Y00otBX86AZUKKJOdN7j
-# IlXMd+9g+CTgcRx7ip5qw1iPwyRkRbkBlALCDefNs6aCZXnakEzeP/5JPQfqzHFf
-# YI1DxE3f8BIQAkUllRXGIVhgQQekHGprHxds9clXbDCcX9VciO1PIJ1loiotl7a3
-# jVPvaG3acRbeLyimuHnL19mj/I/udyThXs+Xkmhv0tRH9PgJhWSrkk8XooXErvqP
-# ImZsvHTP/E6ylgIIqbYbPU5oNp5cWf9upfLTf93r7TPIQaWM2LeodbvIHUH4VUAo
-# 7NpxkKnmqpj1zP8nHHlqnMeTbHplQQo8HKax2usIUGIsMRoHx5ixzF6rBGSWO/6E
-# 7GDV19gfnjdrm5KvoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
+# NwIBFTAjBgkqhkiG9w0BCQQxFgQUf4Q9yaRSdrnhQ+GM3NxsHtyAnfYwDQYJKoZI
+# hvcNAQEBBQAEggGAufgoRrh3iklsCvinVz5eYOSTt+HQtFGVhxxgJs9biFtuVF5i
+# SBYgKgZw35SUO6Ijr5htFDp7m97d4Adv8wkFX5IvOsLYh9Tlvag2nQVl2xECHS5c
+# lEYLRdZ95YooOEi3CnYfIWqfQ33dFxLd9AJ0j7NSIZKPz/ISTSaCrDurysgP4oCW
+# uxkaP3CgxC5sQWp9kKdsjhq3tVHvb7SlgYP2xQFlcFxdl25yuf+EsfitmstAfzjA
+# Q2m8I2gYSoAE/Um8v3iq2YCR4f/Bqq0exi3bF1rpluQtdpWr8H30LNOIKJJbYfjd
+# ck/BYxmqwJpNOWkX2SEFhBEspqAhJ+oJukttcUb32f75A4OLJajF8lCHlWPArFoK
+# 3w7Z3ViF6cICXtkkK+3NuGQSzgircZX560Zq0JvbjmTmtAKEnQcKPKlakJmPVxJo
+# CtwO5PbOLTWFQR1oI6pTPnLsbkifUf1pfVpw3beNoYRTqxz2SIKFcbDHpuJdVcE4
+# n7pK6ROvD4GabgB6oYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
 # MAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYDVQQDEzJE
 # aWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFtcGluZyBD
 # QQIQC65mvFq6f5WHxvnpBOMzBDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJ
-# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjExMjYwNlowLwYJ
-# KoZIhvcNAQkEMSIEIMruJuWZymR5QF3OJyahCPozdLHsSnbDZENV3v8mv8fVMA0G
-# CSqGSIb3DQEBAQUABIICAI1H/kjQ6JSDOQieEg89nAQvjekwUN6TjTDvHP3A1oek
-# sSjFhVhGOcTr1d+Cfabs68dWkY9PaCmm2D9Q89d+V/NVHFfv56HYVNZA9D7h3z9C
-# TtNqxFE48pRRYwcV3xjHOqWqtLogqL8AM4HVyJEoMjeGDNyLndIAbCjT2t95SLfR
-# VhGeOZMMCoR9xNJnA64dnSdfJ4HpXrGSBxXqAOHec7flNcfwXW2QdA8TE3gd4iWL
-# YDURdDqJM7QSv/jVsNiVCFa6tZvjPdKesX8Ed9b84v/9/6BtZ8zbFUq3i6k2CM0R
-# br/3a/r3Wmh7oqc/b/Ik4Bj21WYNaHOzuDJkCFfLdlsaGfE5bwPrN/laZWmkic+U
-# ik68EAvPQL2DgEfB9Y8nTSJFTUnJOFNGf1IHeKPTBIP0GN+DzBvM8DbX1tr75BHY
-# BnyUCE6uh/T0F6z9TKYqb20TAqBeBk44KfZvSgnNaLfbnHMF3dXht7JtbI2xmkCy
-# ZpKSHO6Rv7dK4stAktnrOuar8iIhgzc8WU/k2JPHk0Iq5TNE/DVp9ylPlOgv2taw
-# lhonI7SJ6MJ0numP88a3C2kyXYh9taVRg6a7ZwkJFlphqFhHnV+Ar4TwuG4tcbC8
-# ljv0Zjn/EsprHqyGodUfeb8MyMG7BKD06GlHmkPxN68hSo4Jw8Ozn9fAxbnWWlk5
+# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjEzMzQwOFowLwYJ
+# KoZIhvcNAQkEMSIEIOPk9A/qH3ACmW9BtuJrwalrm0dRhoBparXinc2hQslaMA0G
+# CSqGSIb3DQEBAQUABIICALOvkIc4Cf9qy3lKjXgQMAy2mtTv3packGxu9ExHbNCT
+# co0ojks17IpeMjp89n3MHMMX5UNezhDyAJ/tIKmV2dKxHABUPXZAF3loH0CKbKar
+# 0ruhAQoKy8qWjACbQlQVal2jJvn9NFPjhPisnPV2SN9aaTCvNYe4k/3m+3Z3XH4/
+# 8pPofVze7QwjDwVXH1HW+CL4AxPoWd+hepNudNiSpqmD2r9E+JPSpzCjf5d84KdJ
+# IHOQsKxZ04vq6rE7KZlOShZaeHp8zfI6VaRmMbW/84o8hWZn7HNXMlv2aoSCX2KO
+# Ox0LoVGDhuY2u3UN8ejiUo2kurLpXOjIqV/tT6B07BLByse7yYQ3t3DdZfCnd7Nl
+# hoU1OyNF20QBflu4uzJSZL10LuGK92ls0r7nK2Ei/xAMOKMxRxKQWdxsTuu/h6bO
+# pCgJcCxGs7rXPzkRGlCEXW3IA3GAm5/DqRUtBfiTmkVu1JJJzrrT2rHwbH08YOWF
+# YFRWpwEMpInnby8BNNdJmSuLs/D57RhyfHB28naAhjLhtkm+/wV6hEqmA+p7CR0g
+# h2soaqUdkndDWlXYnsVllwhyL5y/udFywD3AVpkPTfV+5V6A8OFv47Vo1e4tIDRK
+# FnalLREC8e9n+w5VM+ZbkaRVtiX6Dca7uMhvgarw3SWNOdZ5oRapYBy4SUGet+JU
 # SIG # End signature block
