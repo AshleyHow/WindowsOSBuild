@@ -263,7 +263,7 @@
             }
 
             # Fetch the Atom feed content, used to obtain preview and out-of-band data
-            If ($AtomFeed) {
+            If ($AtomFeedUrl) {
             $response = Invoke-WebRequest -Uri $AtomFeedUrl -Method Get -UseBasicParsing -ErrorAction Stop
             }
 
