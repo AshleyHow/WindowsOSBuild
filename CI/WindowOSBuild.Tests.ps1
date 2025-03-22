@@ -46,7 +46,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -63,7 +63,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -80,7 +80,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -97,7 +97,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -114,7 +114,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -131,7 +131,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -148,7 +148,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -164,7 +164,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -180,7 +180,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -196,7 +196,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -212,7 +212,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -228,7 +228,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -245,7 +245,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -261,7 +261,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -277,7 +277,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -293,7 +293,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -309,7 +309,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -325,7 +325,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -341,7 +341,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -358,7 +358,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -374,7 +374,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -391,7 +391,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -407,7 +407,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -432,7 +432,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -514,7 +514,7 @@ Else {
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -531,7 +531,7 @@ Else {
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -548,7 +548,7 @@ Else {
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -565,7 +565,7 @@ Else {
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -582,7 +582,7 @@ Else {
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -599,7 +599,7 @@ Else {
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -616,7 +616,7 @@ Else {
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -632,7 +632,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -648,7 +648,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -664,7 +664,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -680,7 +680,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -696,7 +696,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -713,7 +713,7 @@ Else {
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -729,7 +729,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -745,7 +745,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -761,7 +761,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -777,7 +777,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -793,7 +793,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -809,7 +809,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -826,7 +826,7 @@ Else {
                     $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -842,7 +842,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -859,7 +859,7 @@ Else {
                     $Results.'Out-of-band' | Should -Not -BeNullOrEmpty
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -875,7 +875,7 @@ Else {
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                    $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
                 }
             }
@@ -902,7 +902,7 @@ Else {
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
-                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/\d+|N/A"
+                $Results.'KB URL' | Should -Match "https://support.microsoft.com/help/([a-z]{2}-[a-z]{2})?\d+|N/A"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|N/A"
             }
         }
@@ -971,8 +971,8 @@ Else {
 # SIG # Begin signature block
 # MIImbAYJKoZIhvcNAQcCoIImXTCCJlkCAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU2jbgrNmWq84+qNQSiIP+/YpD
-# 0JGggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUCdXye9c6jpgNYadWEMOPrUUL
+# qhaggiAnMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -1148,30 +1148,30 @@ Else {
 # BgNVBAMTG0NlcnR1bSBDb2RlIFNpZ25pbmcgMjAyMSBDQQIQeAuTgzemd0ILREkK
 # U+Yq2jAJBgUrDgMCGgUAoHgwGAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkq
 # hkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGC
-# NwIBFTAjBgkqhkiG9w0BCQQxFgQUFSsrChyoMJbLMf9AeE/wNqBU9v0wDQYJKoZI
-# hvcNAQEBBQAEggGApZockBq9Y0/6I9fq8n16QYzpc8GNa52ib4rT1/tKJwGJ1uee
-# 0fJ/e18OuNYId6tzcV95Elq4+MiZaKE0VwUb3tYC5K5rxhDMmOGWrnr4utw+pQWu
-# 3vrJTdmKY+OhWxYTidEp8yPiq62TkuDch/3babSakqIg04TyJzGTG4Kw/y++D3se
-# AeY1Rx/xXQ9mFXwhAIkv5wvvjI/LDg6k5E+b88i36TY5szCB0AVyRHfzf/1BIsXv
-# x0I5INu7JyuEQZzly9s6T5zpVhvO9N8f89hkcyiDrv9GpLawNlvh/bgflu54pHUy
-# zsdCh6UGSXdTQuvfvWg3muGkhhd/f48ze2U/P9UvdwznmXSlpdw8L6krKVoSPEQj
-# wBPFS9yy5r3OCUc+I6XhFRmxMw8agyEbAUVVWvOqFOXa5EoNkTsc780iVKaDvkNr
-# Xd5WNQ9fx9TVAjwjkv43CDorP0KoYeMoUhwy+tdMAL3avuubVG59++j4HP1pA/SS
-# ie8gAxctFxSOYeCBoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
+# NwIBFTAjBgkqhkiG9w0BCQQxFgQUZCEPILOuYczS1OJOh1YOd/mBx3gwDQYJKoZI
+# hvcNAQEBBQAEggGA092vh5uozefb9Tpzf8u94+uztNJy9BSJhBnYvUN1yYogVOXZ
+# PcYkz0Ubs0ApYZuu34xrIeu9POMgAXLTJ+p+NeEQsMHcEuR1Gi9ukJT8Hh7pC3OC
+# O6vRkCb8+UdivPSXbeiJMUs2PzWTHC0bNZI8NypkPNi7/bxuuj/xgSGhyKZpigLM
+# wb4Rs/bIHtFNzujWGGm3N6lHFOeVXNj5IDDj8pb7fBCPhwlY73s06edyUpj0HTJU
+# rPQ5AoYRgRT1IdOBQDJN+yNLI07jnZTweMKvnfQSaXC1+oL545XmX2r0ePDr9qpk
+# 0HlgrKrOQFhhqEMQ0oOeTMhnME7tjDBgDr6qNjC9EqBXaEyuotMojoNaBnmD+UuH
+# crXaPPnvSOHSXdF/5Jub3wSn/WjBdngpThC33yV7wdiwcBhFOBUfGVjEsOtdRhz0
+# ccaAr3JJPkluORkrxovwSFcKJAqDjm1+N2IZFXncchRAv5PjnOMAcVUr7v8mvppq
+# K/1iVMDkXhYM0++LoYIDIDCCAxwGCSqGSIb3DQEJBjGCAw0wggMJAgEBMHcwYzEL
 # MAkGA1UEBhMCVVMxFzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMTswOQYDVQQDEzJE
 # aWdpQ2VydCBUcnVzdGVkIEc0IFJTQTQwOTYgU0hBMjU2IFRpbWVTdGFtcGluZyBD
 # QQIQC65mvFq6f5WHxvnpBOMzBDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJ
-# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjEwMzIzNlowLwYJ
-# KoZIhvcNAQkEMSIEICgzodfqtI0POHbNlEQgdhTzWbIl8quRrX2jo5SeemZSMA0G
-# CSqGSIb3DQEBAQUABIICAAFQZlQoGso3KO6VQ+TtZlzDmXAVUzZhN5qGWlGNyFJP
-# 9kDiOZTa3sWopnqwTGPW+0AA6g4BnczkFzlMR6iNfspglBHHpgyVHSmy9o6XaWQ3
-# Hgz1QKrf9uTyGzvfhzFvrGst/lnXNCKsMggmkw80fMqsGJqc2Jr1H0bqzT4fcPt6
-# y3YGRBtIrY9SXTnzg0YhctC2ORKylQvDeyvW+P8VMO2TI/B8XHMVDRUGEgHXgWU4
-# QHjFxF3l6VZswMuhrJcb/aQx8FSJC6pM05HrGTEqXLzNywExBhdDFqs0r3pwH1ZL
-# GdGM9PDAJCClrBeWURQ+F7lyS7IUQcvzjjUi/YZJAh+DfZdDQBsTz0yVA0s0uuo3
-# kbVVFwv+qcthuaI0FPcLx1KvEoyPFN1323tME4iE6UqaVrzyM8Ru8nJx+9sqc0vm
-# BXwcDqO5GGXXOtbr6/xAd2GFutiM9IoIlMT8xx7f/GBRui0ddVSqxRCKkIZegtxg
-# HvtwDEt5KKPvAE7dT1f/MSF9mAsPbFK2H0ofm3HN91FsbflZ+f0qZTfTH+Y/xmXm
-# ZE1FvHv/ZHi2m2I1KGRgfOSFFDe5fkJ0zxKX/Yn2NDqGnoKrFl9l/Q+JoEjUxJqz
-# pkDYoYEgVEPsGQSBYXyYFMil2DGz0eghZRm/2FQqkRnnsa/Ph9q5aZsPI5VuZPGP
+# AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDMyMjEwNTcxNlowLwYJ
+# KoZIhvcNAQkEMSIEIEOvyhI+L3RigmPypnB5LWQV9G76Sd1r5Y8d2HXSPoCbMA0G
+# CSqGSIb3DQEBAQUABIICAFt1wff0E/HX/NaOG8uzVF71P0OLHxwvyMAMv9JprIp5
+# ejehLZwPBxQRSxGBimgo1E1ivCSStbWVevp7L/sETDDviQUDDf8OXY0OGg6YM/ek
+# wwk2TIxdP1zX8FELTJ8wpr4whcGscf1bD6jPORZEjG1pwl+MaDjzBX1zvElxNwM0
+# t8klAZv0D9rEw1XdPm70SgB/Kov5GzBCihK9s15MS3lAhS4VS0Q+83kvm0Ij0VAi
+# /Cy1wcD4xh25qcaQIfzFv8XQXM46CILS2v5iwh2UWokIcepjiHkO5f2LPJIkXKr2
+# UHKz8dXLILOYugpsplmtRos+bm0htM38yJ4y0Us4dp3HP4C73VrbAOcEb97P3df/
+# GuS5SjyLp8gWsqvZEt7zQlZb/4r9yzPEr71czvo+c/pw0ZJbdO/1Mc2WwT6YR/SA
+# JjXytzVR97SqEHsyxyDZfgd12bMO3KMUDnS9MxZQN7wSttti2Z1VBCo/dhdMtI29
+# i+39ya5T9wCAhunFp8dL7MtMAqgFawD2Jcxb3dkooRNTitQH68+Zwk5sj5RfptHM
+# JBeExLRsgRKDoGY72Ea3NiqQxrxzfJDn4Fyr7XUKlIVkjDtMsuK4wHLmDZeOpWoH
+# rMI1/D+N9wLctjJTScxdhhK31imtOgMI50RdyV0PNeYfd7JqnpLo0dcjqLM7RmJJ
 # SIG # End signature block
