@@ -374,7 +374,7 @@
                     }
                     Else {
                         #Write-Warning "No matching feed entry for: $KBID"
-                        $ResultObject["Availability date"] = $null
+                        $ResultObject["Availability date"] = "N/A"
                     }
                     $ResultObject["Build"] = "Security Update"
                 }
