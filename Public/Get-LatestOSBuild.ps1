@@ -144,7 +144,6 @@
         # Disabled automatic detection of hotfix as it is not a reliable method of guaranteeing devices are applying hotpatch updates, non-hotpatch updates can still be applied.
         # $HotpatchOS = Get-HotFix -Id KB5003508 -ErrorAction SilentlyContinue
         if ($OSName -eq "Server2025Hotpatch") {
-            Throw "Get-LatestOSBuild: Windows Server 2025 Hotpatch is not yet supported"
             $URL = "https://support.microsoft.com/en-us/topic/release-notes-for-hotpatch-on-windows-server-2025-datacenter-azure-edition-c548437e-8c7a-4e27-99f4-e8746f97f8fa"
             $AtomFeedUrl = "https://support.microsoft.com/en-us/feed/atom/c7b7e227-e17e-8633-fd90-9d28fb739cc5"
             $CategoryName = "Release notes for Hotpatch on Windows Server 2025 Datacenter Azure Edition"
