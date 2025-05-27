@@ -288,13 +288,15 @@
                     # Iterate over matched entries
                     ForEach ($AtomMatch in $AtomMatches) {
                         $title     = $AtomMatch.Groups[2].Value
+                        $published = $AtomMatch.Groups[3].Value
                         $link      = $AtomMatch.Groups[5].Value
 
                         # Filter out entries that do not contain "OS" in the title
-                        If ($title -like '*OS*') {
+                        If (($title -like '*(OS*') -or ($title -like '*Security Update for*')) {
                             # Create a hashtable for the entry
                             $feedEntry = @{
                                 Title     = $title
+                                Published = $published
                                 Link      = $link
                             }
 
@@ -321,6 +323,7 @@
         $Table =  @(
             $VersionDataRaw = $null
             $VersionDataRaw = Get-ReleaseNotes -Webpage $webpage -CategoryName $CategoryName | Sort-Object -Property Title -Unique
+            # Excludes security updates from the list which are not updates that change the build e.g KB5061096—Security Update for Windows PowerShell
             $UniqueList =  (Convert-ParsedArray -Array $VersionDataRaw) | Sort-Object OSBuild -Descending
             ForEach ($Update in $UniqueList) {
                 $ResultObject = [Ordered] @{}
@@ -348,17 +351,36 @@
                 Else {
                     $ResultObject["Build"] = [String]$Update.OSBuild
                 }
-                $GetDate = [regex]::Match($Update.Update,"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}").Value
-                Try {
-                    $ConvertToDate = [Datetime]::ParseExact($GetDate, 'MMMM dd, yyyy', [Globalization.CultureInfo]::CreateSpecificCulture('en-US'))
+                # Exclude date calculation for updates that don't have dates published in the title
+                If ($Update -notlike "*Security Update*") {
+                    $GetDate = [regex]::Match($Update.Update,"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}").Value
+                    Try {
+                        $ConvertToDate = [Datetime]::ParseExact($GetDate, 'MMMM dd, yyyy', [Globalization.CultureInfo]::CreateSpecificCulture('en-US'))
+                    }
+                    Catch {
+                        $ConvertToDate = [Datetime]::ParseExact($GetDate, 'MMMM d, yyyy', [Globalization.CultureInfo]::CreateSpecificCulture('en-US'))
+                    }
+                    $FormatDate =  Get-Date($ConvertToDate) -Format 'yyyy-MM-dd'
+                    $ResultObject["Availability date"] = $FormatDate
                 }
-                Catch {
-                    $ConvertToDate = [Datetime]::ParseExact($GetDate, 'MMMM d, yyyy', [Globalization.CultureInfo]::CreateSpecificCulture('en-US'))
+                Else {
+                    # Extract KB ID from title - Security Updates
+                    $KBID = [regex]::Match($Update.Update, 'KB\d{7}').Value
+                    $MatchedEntry = $feedEntries | Where-Object { $_.Title -match $KBID }
+
+                    If ($MatchedEntry) {
+                        $PublishedDate = Get-Date($MatchedEntry.Published) -Format 'yyyy-MM-dd'
+                        $ResultObject["Availability date"] = $PublishedDate
+                    }
+                    Else {
+                        #Write-Warning "No matching feed entry for: $KBID"
+                        $ResultObject["Availability date"] = $null
+                    }
+                    $ResultObject["Build"] = "Security Update"
                 }
-                $FormatDate =  Get-Date($ConvertToDate) -Format 'yyyy-MM-dd'
-                $ResultObject["Availability date"] = $FormatDate
+
                 If ($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
-                    If ($Update.Update -match 'Baseline') {
+                    If ($Update.Update -match 'Baseline' -or $Update.Update -match 'Security Update') {
                         $ResultObject["Hotpatch"] = "False"
                     }
                     Else {
@@ -378,7 +400,7 @@
                     $ResultObject["Out-of-band"] = "False"
                 }
                 $ResultObject["Servicing option"] = "LTSC"
-                If (($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
+                If (($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False") -and ($ResultObject.Build -ne "Security Update")) {
                     $ResultObject["KB source article"] = [regex]::Match($SourceOSBuild, 'KB\d{7}').Value
                     $ResultObject["KB article"] = $Update.KB + " / " + $ResultObject.'KB source article'
                 }
