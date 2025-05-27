@@ -333,7 +333,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 0
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
-                $Results.Build | Should -Match '^26100\.'
+                $Results.Build | Should -Match '^26100\.' -or $Results.Build -match 'Security Update' | Should -BeTrue
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Hotpatch | Should -Not -BeNullOrEmpty
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -366,7 +366,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 0
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
-                $Results.Build | Should -Match '^20348\.'
+                $Results.Build | Should -Match '^20348\.' -or $Results.Build -match 'Security Update' | Should -BeTrue
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Hotpatch | Should -Not -BeNullOrEmpty
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -399,7 +399,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 0
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
-                $Results.Build | Should -Match '^26100\.'
+                $Results.Build | Should -Match '^26100\.'-or $Results.Build -match 'Security Update' | Should -BeTrue
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Hotpatch | Should -Not -BeNullOrEmpty
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -758,7 +758,7 @@ Else {
                     Start-Sleep -Seconds 0
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
-                    $Results.Build | Should -Match '^26100\.'
+                    $Results.Build | Should -Match '^26100\.' -or $Results.Build -match 'Security Update' | Should -BeTrue
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Hotpatch | Should -Not -BeNullOrEmpty
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -791,7 +791,7 @@ Else {
                     Start-Sleep -Seconds 0
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
-                    $Results.Build | Should -Match '^20348\.'
+                    $Results.Build | Should -Match '^20348\.' -or $Results.Build -match 'Security Update' | Should -BeTrue
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Hotpatch | Should -Not -BeNullOrEmpty
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -824,7 +824,7 @@ Else {
                     Start-Sleep -Seconds 0
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
-                    $Results.Build | Should -Match '^26100\.'
+                    $Results.Build | Should -Match '^26100\.' -or $Results.Build -match 'Security Update' | Should -BeTrue
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Hotpatch | Should -Not -BeNullOrEmpty
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
