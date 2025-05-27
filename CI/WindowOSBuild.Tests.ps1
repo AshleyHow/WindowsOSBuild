@@ -819,7 +819,6 @@ Else {
             }
         }
     }
-
     Describe "PWSH - Get-CurrentOSBuild" {
         Context "Build only" {
             It "Results" {

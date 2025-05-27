@@ -476,7 +476,7 @@
         }
 
         # Get version and table number to search of $OSVersion variable
-        $SearchVersion = ($TableMapping | Where-Object { $_.Version -like "Version $OSVersion*(OS build*)" }).Version
+        $SearchVersion = ($TableMapping | Where-Object { $_.Version -like "Version $OSVersion*(OS build*)" } | Select-Object -Unique).Version
         $SearchTable = ($TableMapping | Where-Object { $_.Version -like "Version $OSVersion*(OS build*)" }).TableNumber
 
         # Perform search and build table
@@ -511,7 +511,7 @@
                 ## Now go through the cells in the the row. For each, try to find the title that represents that column and create a hash table mapping those titles to content
                 $ResultObject = [Ordered] @{}
                 For ($Counter = 0; $Counter -lt $Cells.Count; $Counter++) {
-                    $ResultObject["Version"] = $SearchVersion[0]
+                    $ResultObject["Version"] = $SearchVersion
                 }
                 For ($Counter = 0; $Counter -lt $Cells.Count; $Counter++) {
                     $Title = $Titles[$Counter]
