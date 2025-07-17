@@ -474,7 +474,11 @@
         $HTML = (New-Object HtmlAgilityPack.HtmlWeb).Load($URL)
 
         # Table Mapping - required to obtain preview and out-of-band information of versions
-        $GetVersions = @($HTML.DocumentNode.SelectNodes("//strong"))
+            ## Select <strong> nodes that have an associated history table
+        $GetVersions = @($HTML.DocumentNode.SelectNodes("//strong") | Where-Object {
+            ## Check if there is a <table> following the <strong> with ID like historyTable_N. Hotpatch tables are excluded. Hotpatch is dealt with using a different method.
+            $null -ne $_.SelectSingleNode(".//following::table[starts-with(@id, 'historyTable_')]")
+        })
         $ReleaseVersions = ($GetVersions.innertext).Substring(0)
         $TableMapping = @()
         $TableMapping = ForEach ($Version in $ReleaseVersions) {
@@ -498,7 +502,7 @@
 
         # Get version and table number to search of $OSVersion variable
         $SearchVersion = ($TableMapping | Where-Object { $_.Version -like "Version $OSVersion*(OS build*)" } | Select-Object -Unique).Version
-        $SearchTable = ($TableMapping | Where-Object { $_.Version -like "Version $OSVersion*(OS build*)" }).TableNumber
+        $SearchTable = ($TableMapping | Where-Object { $_.Version -like "Version $OSVersion*(OS build*)" } ).TableNumber
 
         # Perform search and build table
         $Table = @()
