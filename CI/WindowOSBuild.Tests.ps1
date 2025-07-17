@@ -451,6 +451,91 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
             }
         }
+        Describe "PS - Get-CurrentOSBuild" {
+            Context "Build only" {
+                It "Results" {
+                    $Results = Get-CurrentOSBuild
+                    Start-Sleep -Seconds 0
+                    $Results.Count | Should -Be 1
+                }
+            }
+        }
+        Context "Detailed" {
+            It "Results" {
+                $Results = Get-CurrentOSBuild -Detailed
+                Start-Sleep -Seconds 0
+                $Results.Build.Count | Should -Be 1
+                $Results.Version | Should -Not -BeNullOrEmpty
+                $Results.Build | Should -Not -BeNullOrEmpty
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
+                $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
+                $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
+            }
+        }
+        Describe "Code Signing Certificate Test - WindowsOSBuild.psm1" {
+            Context "File Signature Check" {
+                It "Results" {
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\WindowsOSBuild.psm1"
+                    $signature | Should -Not -BeNullOrEmpty
+                    $signature.SignatureType| Should -Be "Authenticode"
+                    $signature.Status | Should -Be "Valid"
+                }
+            }
+        }
+        Describe "Code Signing Certificate Test - WindowsOSBuild.psd1" {
+            Context "File Signature Check" {
+                It "Results" {
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\WindowsOSBuild.psd1"
+                    $signature | Should -Not -BeNullOrEmpty
+                    $signature.SignatureType| Should -Be "Authenticode"
+                    $signature.Status | Should -Be "Valid"
+                }
+            }
+        }
+        Describe "Code Signing Certificate Test - Get-CurrentOSBuild.ps1" {
+            Context "File Signature Check" {
+                It "Results" {
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\Public\Get-CurrentOSBuild.ps1"
+                    $signature | Should -Not -BeNullOrEmpty
+                    $signature.SignatureType| Should -Be "Authenticode"
+                    $signature.Status | Should -Be "Valid"
+                }
+            }
+        }
+        Describe "Code Signing Certificate Test - Get-LatestOSBuild.ps1" {
+            Context "File Signature Check" {
+                It "Results" {
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\Public\Get-LatestOSBuild.ps1"
+                    $signature | Should -Not -BeNullOrEmpty
+                    $signature.SignatureType| Should -Be "Authenticode"
+                    $signature.Status | Should -Be "Valid"
+                }
+            }
+        }
+        Describe "Code Signing Certificate Test - Import-HtmlAgilityPack.ps1" {
+            Context "File Signature Check" {
+                It "Results" {
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\Private\Import-HtmlAgilityPack.ps1"
+                    $signature | Should -Not -BeNullOrEmpty
+                    $signature.SignatureType| Should -Be "Authenticode"
+                    $signature.Status | Should -Be "Valid"
+                }
+            }
+        }
+        Describe "Code Signing Certificate Test - WindowOSBuild.Tests.ps1" {
+            Context "File Signature Check" {
+                It "Results" {
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\CI\WindowOSBuild.Tests.ps1"
+                    $signature | Should -Not -BeNullOrEmpty
+                    $signature.SignatureType| Should -Be "Authenticode"
+                    $signature.Status | Should -Be "Valid"
+                }
+            }
+        }
     }
 }
 Else {
@@ -875,6 +960,66 @@ Else {
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                 $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
+            }
+        }
+        Describe "Code Signing Certificate Test - WindowsOSBuild.psm1" {
+            Context "File Signature Check" {
+                It "Results" {
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\WindowsOSBuild.psm1"
+                    $signature | Should -Not -BeNullOrEmpty
+                    $signature.SignatureType| Should -Be "Authenticode"
+                    $signature.Status | Should -Be "Valid"
+                }
+            }
+        }
+        Describe "Code Signing Certificate Test - WindowsOSBuild.psd1" {
+            Context "File Signature Check" {
+                It "Results" {
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\WindowsOSBuild.psd1"
+                    $signature | Should -Not -BeNullOrEmpty
+                    $signature.SignatureType| Should -Be "Authenticode"
+                    $signature.Status | Should -Be "Valid"
+                }
+            }
+        }
+        Describe "Code Signing Certificate Test - Get-CurrentOSBuild.ps1" {
+            Context "File Signature Check" {
+                It "Results" {
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\Public\Get-CurrentOSBuild.ps1"
+                    $signature | Should -Not -BeNullOrEmpty
+                    $signature.SignatureType| Should -Be "Authenticode"
+                    $signature.Status | Should -Be "Valid"
+                }
+            }
+        }
+        Describe "Code Signing Certificate Test - Get-LatestOSBuild.ps1" {
+            Context "File Signature Check" {
+                It "Results" {
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\Public\Get-LatestOSBuild.ps1"
+                    $signature | Should -Not -BeNullOrEmpty
+                    $signature.SignatureType| Should -Be "Authenticode"
+                    $signature.Status | Should -Be "Valid"
+                }
+            }
+        }
+        Describe "Code Signing Certificate Test - Import-HtmlAgilityPack.ps1" {
+            Context "File Signature Check" {
+                It "Results" {
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\Private\Import-HtmlAgilityPack.ps1"
+                    $signature | Should -Not -BeNullOrEmpty
+                    $signature.SignatureType| Should -Be "Authenticode"
+                    $signature.Status | Should -Be "Valid"
+                }
+            }
+        }
+        Describe "Code Signing Certificate Test - WindowOSBuild.Tests.ps1" {
+            Context "File Signature Check" {
+                It "Results" {
+                    $signature = Get-AuthenticodeSignature -FilePath "$((Split-Path -Path $PSScriptRoot -Parent).TrimEnd('\'))\CI\WindowOSBuild.Tests.ps1"
+                    $signature | Should -Not -BeNullOrEmpty
+                    $signature.SignatureType| Should -Be "Authenticode"
+                    $signature.Status | Should -Be "Valid"
+                }
             }
         }
     }
