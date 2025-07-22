@@ -11,7 +11,7 @@ Gets Windows patch release information (Version, Build, Availability date, Hotpa
 
 Patch information retrieved from Microsoft Release Health / Update History and relevant Atom feed pages (Preview, Out-of-Band and Hotpatch info) outputted in a usable format. These sources are updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
 
-The code signing certificate has now expired as of 2025-04-11. If you have found this project useful please [:heart:Sponsor](https://github.com/sponsors/AshleyHow) to help fund the renewal of the code signing certificate for the next year.
+If you have found this project useful please [:heart:Sponsor](https://github.com/sponsors/AshleyHow) to help fund the renewal of the code signing certificate for the next year.
 
 ## Installing the Module
 
