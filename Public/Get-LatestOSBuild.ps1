@@ -249,7 +249,7 @@
         }
 
         # Return the categorized links as output
-        return $categorizedLinks | Where-Object { $_.Title -notlike "*$CategoryName*" }
+        return $categorizedLinks | Where-Object { $_.Title -ne $CategoryName }
     }
 
     # Obtain data from webpage
