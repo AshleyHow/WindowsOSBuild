@@ -249,7 +249,8 @@
         }
 
         # Return the categorized links as output
-        return $categorizedLinks | Where-Object { $_.Title -ne $CategoryName }
+        ## Match KB numbers like KB5066360 or match dates like "January 11, 2022"
+        return $categorizedLinks | Where-Object { $_.Title -match 'KB\d{6,7}' -or $_.Title -match '(January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}, \d{4}' }
     }
 
     # Obtain data from webpage
@@ -374,7 +375,7 @@
                     }
                     Else {
                         #Write-Warning "No matching feed entry for: $KBID"
-                        $ResultObject["Availability date"] = "N/A"
+                        $ResultObject["Availability date"] = "0000-00-00"
                     }
                     $ResultObject["Build"] = "Security Update"
                 }
