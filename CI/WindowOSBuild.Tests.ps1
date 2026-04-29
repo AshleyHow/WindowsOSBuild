@@ -34,7 +34,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1507)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1507 (RTM) (OS build 10240)'
                 $Results.Build | Should -Match '^10240\.'
@@ -51,7 +51,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1511)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1511 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1511 (OS build 10586)'
                 $Results.Build | Should -Match '^10586\.'
@@ -68,7 +68,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 / Server 2016 (1607)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1607 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1607 (OS build 14393)'
                 $Results.Build | Should -Match '^14393\.'
@@ -85,7 +85,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1703)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1703 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1703 (OS build 15063)'
                 $Results.Build | Should -Match '^15063\.'
@@ -102,7 +102,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1709)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1709 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1709 (OS build 16299)'
                 $Results.Build | Should -Match '^16299\.'
@@ -119,7 +119,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1803)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1803 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1803 (OS build 17134)'
                 $Results.Build | Should -Match '^17134\.'
@@ -136,7 +136,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 / Server 2019 (1809)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1809 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1809 (OS build 17763)'
                 $Results.Build | Should -Match '^17763\.'
@@ -153,7 +153,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1903)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1903 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1903 (OS build 18362)'
                 $Results.Build | Should -Match '^18362\.'
@@ -169,7 +169,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (1909)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1909 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1909 (OS build 18363)'
                 $Results.Build | Should -Match '^18363\.'
@@ -185,7 +185,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (2004)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 2004 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 2004 (OS build 19041)'
                 $Results.Build | Should -Match '^19041\.'
@@ -201,7 +201,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (20H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 20H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 20H2 (OS build 19042)'
                 $Results.Build | Should -Match '^19042\.'
@@ -217,7 +217,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (21H1)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 21H1 (OS build 19043)'
                 $Results.Build | Should -Match '^19043\.'
@@ -233,7 +233,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (21H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 21H2 (OS build 19044)'
                 $Results.Build | Should -Match '^19044\.'
@@ -250,7 +250,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 10 (22H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 22H2 (OS build 19045)'
                 $Results.Build | Should -Match '^19045\.'
@@ -266,7 +266,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 11 (21H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 21H2 (OS build 22000)'
                 $Results.Build | Should -Match '^22000\.'
@@ -282,7 +282,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 11 (22H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 22H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 22H2 (OS build 22621)'
                 $Results.Build | Should -Match '^22621\.'
@@ -298,7 +298,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 11 (23H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 23H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 23H2 (OS build 22631)'
                 $Results.Build | Should -Match '^22631\.'
@@ -314,7 +314,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 11 (24H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 24H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
                 $Results.Build | Should -Match '^26100\.'
@@ -330,7 +330,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Win 11 (25H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 25H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 25H2 (OS build 26200)'
                 $Results.Build | Should -Match '^26200\.'
@@ -346,7 +346,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Windows 11 Hotpatch (24H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11Hotpatch -OSVersion 24H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
                 (($Results.Build -match '^26100\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
@@ -363,7 +363,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Windows 11 Hotpatch (25H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11Hotpatch -OSVersion 25H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 25H2 (OS build 26200)'
                 (($Results.Build -match '^26200\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
@@ -380,7 +380,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Server 2022 (21H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Server2022 -OSVersion 21H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
                 $Results.Build | Should -Match '^20348\.'
@@ -396,7 +396,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Server 2022 Hotpatch (21H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
                 (($Results.Build -match '^20348\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
@@ -413,7 +413,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Server 2025 (24H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Server2025 -OSVersion 24H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
                 $Results.Build | Should -Match '^26100\.'
@@ -429,7 +429,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Server 2025 Hotpatch (24H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Server2025Hotpatch -OSVersion 24H2 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
                 (($Results.Build -match '^26100\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
@@ -446,7 +446,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Server SAC (1709)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName ServerSAC -OSVersion 1709 -latestreleases 1000
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1709 (OS build 16299)'
                 $Results.Build | Should -Match '^16299\.'
@@ -464,14 +464,14 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Build only" {
             It "Results" {
                 $Results = Get-CurrentOSBuild
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Count | Should -Be 1
             }
         }
         Context "Detailed" {
             It "Results" {
                 $Results = Get-CurrentOSBuild -Detailed
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -Be 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -488,7 +488,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
             Context "Build only" {
                 It "Results" {
                     $Results = Get-CurrentOSBuild
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Count | Should -Be 1
                 }
             }
@@ -496,7 +496,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         Context "Detailed" {
             It "Results" {
                 $Results = Get-CurrentOSBuild -Detailed
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -Be 1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -577,7 +577,7 @@ Else {
             Context "Win 10 (1507)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1507 (RTM) (OS build 10240)'
                     $Results.Build | Should -Match '^10240\.'
@@ -594,7 +594,7 @@ Else {
             Context "Win 10 (1511)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1511 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1511 (OS build 10586)'
                     $Results.Build | Should -Match '^10586\.'
@@ -611,7 +611,7 @@ Else {
             Context "Win 10 / Server 2016 (1607)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1607 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1607 (OS build 14393)'
                     $Results.Build | Should -Match '^14393\.'
@@ -628,7 +628,7 @@ Else {
             Context "Win 10 (1703)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1703 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1703 (OS build 15063)'
                     $Results.Build | Should -Match '^15063\.'
@@ -645,7 +645,7 @@ Else {
             Context "Win 10 (1709)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1709 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1709 (OS build 16299)'
                     $Results.Build | Should -Match '^16299\.'
@@ -662,7 +662,7 @@ Else {
             Context "Win 10 (1803)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1803 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1803 (OS build 17134)'
                     $Results.Build | Should -Match '^17134\.'
@@ -679,7 +679,7 @@ Else {
             Context "Win 10 / Server 2019 (1809)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1809 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1809 (OS build 17763)'
                     $Results.Build | Should -Match '^17763\.'
@@ -696,7 +696,7 @@ Else {
             Context "Win 10 (1903)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1903 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1903 (OS build 18362)'
                     $Results.Build | Should -Match '^18362\.'
@@ -712,7 +712,7 @@ Else {
             Context "Win 10 (1909)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1909 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1909 (OS build 18363)'
                     $Results.Build | Should -Match '^18363\.'
@@ -728,7 +728,7 @@ Else {
             Context "Win 10 (2004)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 2004 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 2004 (OS build 19041)'
                     $Results.Build | Should -Match '^19041\.'
@@ -744,7 +744,7 @@ Else {
             Context "Win 10 (20H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 20H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 20H2 (OS build 19042)'
                     $Results.Build | Should -Match '^19042\.'
@@ -760,7 +760,7 @@ Else {
             Context "Win 10 (21H1)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H1 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 21H1 (OS build 19043)'
                     $Results.Build | Should -Match '^19043\.'
@@ -776,7 +776,7 @@ Else {
             Context "Win 10 (21H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 21H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 21H2 (OS build 19044)'
                     $Results.Build | Should -Match '^19044\.'
@@ -793,7 +793,7 @@ Else {
             Context "Win 10 (22H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 22H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 22H2 (OS build 19045)'
                     $Results.Build | Should -Match '^19045\.'
@@ -809,7 +809,7 @@ Else {
             Context "Win 11 (21H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 21H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 21H2 (OS build 22000)'
                     $Results.Build | Should -Match '^22000\.'
@@ -825,7 +825,7 @@ Else {
             Context "Win 11 (22H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 22H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 22H2 (OS build 22621)'
                     $Results.Build | Should -Match '^22621\.'
@@ -841,7 +841,7 @@ Else {
             Context "Win 11 (23H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 23H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 23H2 (OS build 22631)'
                     $Results.Build | Should -Match '^22631\.'
@@ -857,7 +857,7 @@ Else {
             Context "Win 11 (24H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 24H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
                     $Results.Build | Should -Match '^26100\.'
@@ -873,7 +873,7 @@ Else {
             Context "Win 11 (25H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 25H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 25H2 (OS build 26200)'
                     $Results.Build | Should -Match '^26200\.'
@@ -889,7 +889,7 @@ Else {
             Context "Windows 11 Hotpatch (24H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win11Hotpatch -OSVersion 24H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
                     (($Results.Build -match '^26100\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
@@ -906,7 +906,7 @@ Else {
             Context "Windows 11 Hotpatch (25H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win11Hotpatch -OSVersion 25H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 25H2 (OS build 26200)'
                     (($Results.Build -match '^26200\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
@@ -923,7 +923,7 @@ Else {
             Context "Server 2022 (21H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Server2022 -OSVersion 21H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
                     $Results.Build | Should -Match '^20348\.'
@@ -939,7 +939,7 @@ Else {
             Context "Server 2022 Hotpatch (21H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
                     (($Results.Build -match '^20348\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
@@ -956,7 +956,7 @@ Else {
             Context "Server 2025 (24H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Server2025 -OSVersion 24H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
                     $Results.Build | Should -Match '^26100\.'
@@ -972,7 +972,7 @@ Else {
             Context "Server 2025 Hotpatch (24H2)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Server2025Hotpatch -OSVersion 24H2 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
                     (($Results.Build -match '^26100\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
@@ -989,7 +989,7 @@ Else {
             Context "Server SAC (1709)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName ServerSAC -OSVersion 1709 -latestreleases 1000
-                    Start-Sleep -Seconds 0
+                    Start-Sleep -Seconds 1
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1709 (OS build 16299)'
                     $Results.Build | Should -Match '^16299\.'
@@ -1008,14 +1008,14 @@ Else {
         Context "Build only" {
             It "Results" {
                 $Results = Get-CurrentOSBuild
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Count | Should -Be 1
             }
         }
         Context "Detailed" {
             It "Results" {
                 $Results = Get-CurrentOSBuild -Detailed
-                Start-Sleep -Seconds 0
+                Start-Sleep -Seconds 1
                 $Results.Build.Count | Should -Be  1
                 $Results.Version | Should -Not -BeNullOrEmpty
                 $Results.Build | Should -Not -BeNullOrEmpty
@@ -1093,8 +1093,8 @@ Else {
 # SIG # Begin signature block
 # MIImoQYJKoZIhvcNAQcCoIImkjCCJo4CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUZDwOhKi7KwCNhg9hIJ9e8n7X
-# uPeggiBWMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUFKbt83ouJiGtv6Iib3x/fde6
+# FPeggiBWMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -1271,31 +1271,31 @@ Else {
 # A1UEAxMbQ2VydHVtIENvZGUgU2lnbmluZyAyMDIxIENBAhArB55OJJX0JFBQxYq3
 # KFFaMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqG
 # SIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3
-# AgEVMCMGCSqGSIb3DQEJBDEWBBQLJiyUXXIKQpK6TdgcDSuzjpoYHjANBgkqhkiG
-# 9w0BAQEFAASCAYBYSqZrzqhwMZgcQf0BfuT6hu4jKZoQzWA97G6pajjU/RQ5mqB8
-# gGOoDFzg//X4PueTIhGKws9cCj/ODbQLgtagOZYRu74iqojzq/+yBketfxuhZAot
-# 8EBD4gi5Ui/DBTzM83Bkb/PHf/6U89D2lvWOFXGBSiD89+b8RA6TUgYSCh2uVMXJ
-# MRsh8rwHjfXrTnAJUYZgvTOQ/I2ATzXfuRpKryJwmp/c29Ez4FLi+rihevlqgPZS
-# OaS4FvI/0vz26CJFSoPSRnWTJWjj5qZt2bLLuRVNPqN7FUGuSqdtdPvUQFGrtTmW
-# b27YGfd6qPMJMgsVI/a5lwRo3Dt7rJENBySUiq5Gfwn+qXwue3KNYh8D1r45vTNd
-# f0AUrPq9a4ao441w8V2dlnbfTbbDd7z6coyWpsFBVdmawkwF4fvwN11Fo931/Iue
-# w55Sog91aMnFq+44vJtbCEBWcVV0HT+gBDo0Zu0q4P+mfzyQFVq1YN6eDqClcxjW
-# 4UtkjpHI8+i9wtGhggMmMIIDIgYJKoZIhvcNAQkGMYIDEzCCAw8CAQEwfTBpMQsw
+# AgEVMCMGCSqGSIb3DQEJBDEWBBRSH1UPsUlagyDTg2HO7cP75SGRujANBgkqhkiG
+# 9w0BAQEFAASCAYAEx010ewyXJIF0GlC2u0mWcCD2CaodallooyP+r2DHIHD4liQQ
+# WdNKbfbjqtikR0cZW9xDb+ChtbJ6PiGght2cquVvnHKwdg/Fe1BT9fhsTfJ03Lct
+# ECSAyRi10y9MXXhsLLjCgi6jsHnf5P5V5XgpNUW3y8MMLFSFVitDKr2O3DsgCeOs
+# RX/IPxWlglLsJZ+O+vvsOonp27z3sTJBPikAPxf4y/1czv0bCTHA86qeBB9Bb9A6
+# gGcRnvu9WOWdPNgWgAsheUj7ghC9t2I0XIw4hScmGNxE8R7PEnmy0NKBpkuMVXQ0
+# zQ3R49R8nKAl+yjxNmmb2TZPkgisenCt2vbw87SP95fciNFFo/frz0iprZT/OV9M
+# u2F0VhCe6ebwXidJ8pXvddZNuYnHQxrmHGeyTncGayk41xJiDIBCT+FFssJ/1bPz
+# S9TbItTo2kEYbPu5ZaGWTqmdJ0JFhg6n38UQZY/SBVPsSz6bm2MKP6Yze3bAX9kv
+# uOGLWCgAYnANSi2hggMmMIIDIgYJKoZIhvcNAQkGMYIDEzCCAw8CAQEwfTBpMQsw
 # CQYDVQQGEwJVUzEXMBUGA1UEChMORGlnaUNlcnQsIEluYy4xQTA/BgNVBAMTOERp
 # Z2lDZXJ0IFRydXN0ZWQgRzQgVGltZVN0YW1waW5nIFJTQTQwOTYgU0hBMjU2IDIw
 # MjUgQ0ExAhAKgO8YS43xBYLRxHanlXRoMA0GCWCGSAFlAwQCAQUAoGkwGAYJKoZI
-# hvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjYwMzA5MjEyODU1
-# WjAvBgkqhkiG9w0BCQQxIgQgwsgW8fhr1ncDRtiXehR9QX2Ia+y2KGZYrabX5ety
-# GXkwDQYJKoZIhvcNAQEBBQAEggIAesAGJDPZbjIHneDsbr3G9VAtrSKihYfsxd1Z
-# gL1xrHUpQsfjbMEpVOeOrqyMG81QUNvm3m6pnILVR1Hz+ybrY1K5xXHdg9wZSmz7
-# Bs9lXf0s9l5U6jzWz267fagkQjNsAr2/KXjmXV5wLuYsxJ9MqcgNuBLbEoLl5McB
-# TGloMCqGWjKnSTLuydTv9R/0syN4XJ4TlqgDRmYI8FWenDqizpCquJPz06WDI9rZ
-# Y8A/pr4dCcymehd85AbUaIPPeV1Y7ulHx2czJ5iidN3l+/l3pXHgghlOsIsXqaUQ
-# NM6kg0Mg3jD1cLLm6kroELp6fUcXzhMdwju2FGH0aTCz36+oJ/DKgRfBQTpQfbbd
-# j84UwHsFsAV1q1yCHh2EWEP+jBTzLg4X0LqmmQWPMkXecJizALfnNpvD8AZW1ktH
-# qjYskeBALJYr2KvJ5sGyH6sy+0xvQ2wHzjV4FNdjNR+n6gHYANvAyL7C9mis8aTc
-# t+CKfZWJ231CqsPScPEFNa5qRUXs5d6mGYuBTiquYOOBJ4obDi+lmkLiRfdkDQkR
-# pdJU3HZtl8EdPzoIz1mXbTjONbv1iU3yC2S9G0bMymGBIb5yXm5XXNiTe30G7iOk
-# MKlH1mLI2Vj5oq9el80VeF0NcxAOYKSWOHygkyHTvmholyeN+gCfOH5slOhAK+Yw
-# jQQOZg8=
+# hvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjYwNDI5MjAxNzQ0
+# WjAvBgkqhkiG9w0BCQQxIgQgbcc3M6tv32Cczw1bX8EEUe3HeDZRZzdg2xqcbzcf
+# cCcwDQYJKoZIhvcNAQEBBQAEggIAtD+BVWkzXX1lg55vN64HTqFE1Uw5WQqvE+Je
+# zAJBMnuCDAygsC27Wbu3fhS/HD6MGQqOysSKMedv90+Avm7itX3nFJETZ7HawK0D
+# yYckI6hY7aXzxWIjFBLbOn1wVqcdNknfnc0UbkUulkSi38KRid0+AsKxztFiedgI
+# KtB+OUHNFjkknOLlhrYRSi30rIypGwNWVI922BRTqGmFRbKw00wlQs9aT+S8Du6P
+# 5Gd9rUHLWSCT83/NkTlkTYxkLFhKAHFXuI8Gf94jdRTfj/N2jX2eKbuHVmZuiZg6
+# gvbwKCZ9M8HlDb14QeUf78WgeTAUHvkD+v7NpryS4fC5I+xR5wkz+CJSsQFzwdDi
+# z1RD/KjSP2dmtQgrBx0Hw9TM70ky6RYNtMyWciOYSzPCHav/IXsBx2HEG5ZfhxGH
+# mkMfVCeQk64mNKuyZf10qKa+cRVkdKA2KxWCU0o1Usd5f10dnc5ywv5k3+OktxF1
+# MOBNEcW0nzqoFcMcl7RFz9vMF0KWDX8r7UwECJhVLkt76paoMCoAfe4U2XQW05Sc
+# f4pxKqdjUT9sE3P1jL/YldgfF33ECdSTFEIV4RuxQSk++StcukOzgUXdmXtuJ6J6
+# Jg7uJjb9iLNPdFOKv0ZvtZMGag2x+bR36ASOVuBqiTYnaW73lVKPJMo0Y/yoPgCK
+# 1jqmg8Y=
 # SIG # End signature block

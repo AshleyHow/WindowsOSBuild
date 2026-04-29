@@ -91,6 +91,18 @@ This parameter is optional. Returns preview release/s only.
 
 This parameter is optional. Returns out-of-band/s only.
 
+  - NoCache
+
+This parameter is optional. Bypasses the local web cache completely for the current command. No cache is read and no cache is written.
+
+  - RefreshCache
+
+This parameter is optional. Forces a fresh download of Microsoft source pages and updates the local cache.
+
+  - CacheTTLHours / TTL
+
+This parameter is optional. Defines cache lifetime in hours. Alias: TTL. Default: 8. Range: 0.01 to 720.
+
 ## Get-CurrentOSBuild Function
 
 Gets the currently installed OS Build release information. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows Server 2022 Azure Edition.

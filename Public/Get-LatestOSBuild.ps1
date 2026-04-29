@@ -34,6 +34,13 @@
             This parameter is optional. Returns preview release/s only.
         .PARAMETER OutOfBandOnly
             This parameter is optional. Returns out-of-band/s only.
+        .PARAMETER NoCache
+            This parameter is optional. Bypasses cache completely for this run. No cache is read and no cache is written.
+        .PARAMETER RefreshCache
+            This parameter is optional. Forces fresh download from Microsoft sources and updates the cache.
+        .PARAMETER CacheTTLHours
+            This parameter is optional. Defines cache lifetime in hours. Alias: TTL. Default: 8. Range: 0.01 to 720.
+
         .EXAMPLE
             Get-LatestOSBuild -OSName Win11 -OSVersion 25H2
             Show all information on the latest available OS build for Windows 11 Version 25H2 in list format.
@@ -75,8 +82,8 @@
             https://gist.githubusercontent.com/SMSAgentSoftware/79fb091a4b7806378fc0daa826dbfb47/raw/0f6b52cddf82b2aa836a813cf6bc910a52a48c9f/Get-CurrentPatchInfo.ps1
     #>
 
-        Param(
-        [CmdletBinding()]
+    [CmdletBinding()]
+    Param(
         [Parameter(Mandatory = $true)]
         [String]$OSVersion,
 
@@ -100,7 +107,18 @@
         [Switch]$PreviewOnly,
 
         [Parameter(Mandatory = $false)]
-        [Switch]$OutOfBandOnly
+        [Switch]$OutOfBandOnly,
+
+        [Parameter(Mandatory = $false)]
+        [Switch]$NoCache,
+
+        [Parameter(Mandatory = $false)]
+        [Switch]$RefreshCache,
+
+        [Alias('TTL')]
+        [Parameter(Mandatory = $false)]
+        [ValidateRange(0.01,720)]
+        [double]$CacheTTLHours = 8
     )
 
     # Disable progress bar to speed up Invoke-WebRequest calls
@@ -108,6 +126,147 @@
 
     # Enforce TLS 1.2
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+    # Local raw web cache to reduce repeated requests and avoid Microsoft CDN denial-of-service protection.
+    # Cache is stored in the original raw format (HTML/XML/text), not JSON or CLIXML.
+    $CachePath = Join-Path $env:LOCALAPPDATA 'WindowsOSBuild\Cache'
+    $CacheTTL = New-TimeSpan -Hours $CacheTTLHours
+
+    Function Get-OSBuildCacheFile {
+        Param(
+            [Parameter(Mandatory = $true)]
+            [String]$Key
+        )
+
+        If (-not (Test-Path $CachePath)) {
+            New-Item -Path $CachePath -ItemType Directory -Force | Out-Null
+        }
+
+        $SHA256 = [System.Security.Cryptography.SHA256]::Create()
+        $HashBytes = $SHA256.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($Key))
+        $Hash = [BitConverter]::ToString($HashBytes).Replace('-', '').ToLowerInvariant()
+
+        Return (Join-Path $CachePath "$Hash.cache")
+    }
+
+    Function Get-CachedContent {
+        Param(
+            [Parameter(Mandatory = $true)]
+            [String]$Key,
+
+            [Parameter(Mandatory = $true)]
+            [ScriptBlock]$ScriptBlock,
+
+            [Switch]$NoCache,
+
+            [Switch]$RefreshCache
+        )
+
+        $CacheFile   = Get-OSBuildCacheFile -Key $Key
+        $CacheFolder = Split-Path -Path $CacheFile -Parent
+        $TempFile    = "$CacheFile.tmp"
+
+        If (-not (Test-Path $CacheFolder)) {
+            New-Item -Path $CacheFolder -ItemType Directory -Force | Out-Null
+        }
+
+        If ($NoCache) {
+            Write-Verbose "Bypassing cache: $Key"
+        }
+        ElseIf ($RefreshCache) {
+            Write-Verbose "Refreshing cache: $Key"
+        }
+        ElseIf ((Test-Path $CacheFile) -and (((Get-Date) - (Get-Item $CacheFile).LastWriteTime) -lt $CacheTTL)) {
+            Write-Verbose "Using cached content: $CacheFile"
+            Return [System.IO.File]::ReadAllText($CacheFile, [System.Text.Encoding]::UTF8)
+        }
+
+        Try {
+            $Content = [String](& $ScriptBlock)
+
+            If ([String]::IsNullOrWhiteSpace($Content)) {
+                Throw "Downloaded content was empty. Cache not updated."
+            }
+
+            If (-not $NoCache) {
+                Write-Verbose "Writing cache: $CacheFile"
+                [System.IO.File]::WriteAllText($TempFile, $Content, [System.Text.Encoding]::UTF8)
+                Move-Item -Path $TempFile -Destination $CacheFile -Force
+            }
+
+            Return $Content
+        }
+        Catch {
+            If (Test-Path $TempFile) {
+                Remove-Item -Path $TempFile -Force -ErrorAction SilentlyContinue
+            }
+
+            If (-not $NoCache -and (Test-Path $CacheFile)) {
+                Write-Verbose "Using stale cache after failure: $CacheFile"
+                Return [System.IO.File]::ReadAllText($CacheFile, [System.Text.Encoding]::UTF8)
+            }
+
+            Throw
+        }
+    }
+
+    Function Invoke-CachedWebRequestContent {
+        Param(
+            [Parameter(Mandatory = $true)]
+            [String]$Uri,
+
+            [String]$Method = 'Get',
+
+            [Switch]$NoCache,
+
+            [Switch]$RefreshCache
+        )
+
+        Return Get-CachedContent -Key "Invoke-WebRequest|$Method|$Uri" -NoCache:$NoCache -RefreshCache:$RefreshCache -ScriptBlock {
+            (Invoke-WebRequest -Uri $Uri -Method $Method -UseBasicParsing -ErrorAction Stop).Content
+        }
+    }
+
+    Function Invoke-CachedRestMethodContent {
+        Param(
+            [Parameter(Mandatory = $true)]
+            [String]$Uri,
+
+            [Switch]$NoCache,
+
+            [Switch]$RefreshCache
+        )
+
+        Return Get-CachedContent -Key "Invoke-RestMethod|$Uri" -NoCache:$NoCache -RefreshCache:$RefreshCache -ScriptBlock {
+            $Result = Invoke-RestMethod -Uri $Uri -UseBasicParsing -ErrorAction Stop
+
+            If ($null -ne $Result.Content) {
+                $Result.Content
+            }
+            Else {
+                [String]$Result
+            }
+        }
+    }
+
+    Function Invoke-CachedHtmlWebLoad {
+        Param(
+            [Parameter(Mandatory = $true)]
+            [String]$Uri,
+
+            [Switch]$NoCache,
+
+            [Switch]$RefreshCache
+        )
+
+        $RawHtml = Get-CachedContent -Key "HtmlWeb.Load|$Uri" -NoCache:$NoCache -RefreshCache:$RefreshCache -ScriptBlock {
+            ((New-Object HtmlAgilityPack.HtmlWeb).Load($Uri)).DocumentNode.OuterHtml
+        }
+
+        $HtmlDocument = New-Object HtmlAgilityPack.HtmlDocument
+        $HtmlDocument.LoadHtml($RawHtml)
+        Return $HtmlDocument
+    }
 
     # Define variables for OSName
     If (($OSName) -eq "Win11") {
@@ -263,24 +422,21 @@
     # Obtain data from webpage
     Try {
         If ($OSName -eq "Server2022" -or $OSName -eq "Server2025") {
-            $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -ErrorAction Stop
+            $Webpage = Invoke-CachedWebRequestContent -Uri $URL -NoCache:$NoCache -RefreshCache:$RefreshCache
         }
         # Supports Server 2022 Hotpatch
         Else {
             If ($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
-                $Webpage = Invoke-WebRequest -Uri $URL -UseBasicParsing -ErrorAction Stop
+                $Webpage = Invoke-CachedWebRequestContent -Uri $URL -NoCache:$NoCache -RefreshCache:$RefreshCache
             }
             Else {
                 # All other OS
-                $Webpage = Invoke-RestMethod -Uri $URL -UseBasicParsing -ErrorAction Stop
+                $Webpage = Invoke-CachedRestMethodContent -Uri $URL -NoCache:$NoCache -RefreshCache:$RefreshCache
             }
 
             # Fetch the Atom feed content, used to obtain preview and out-of-band data
             If ($AtomFeedUrl -ne "N/A") {
-                $response = Invoke-WebRequest -Uri $AtomFeedUrl -Method Get -UseBasicParsing -ErrorAction Stop
-
-                # Extract raw content from the response
-                $feedContent = $response.Content
+                $feedContent = Invoke-CachedWebRequestContent -Uri $AtomFeedUrl -Method Get -NoCache:$NoCache -RefreshCache:$RefreshCache
 
                 # Use regular expressions to extract entries
                 $pattern = '<entry>\s*<id>(.*?)<\/id>\s*<title\s+type="text">(.*?)<\/title>\s*<published>(.*?)<\/published>\s*<updated>(.*?)<\/updated>\s*<link\s+rel="alternate"\s+href="(.*?)"\s*\/>\s*<content\s+type="text">(.*?)<\/content>\s*<\/entry>'
@@ -479,7 +635,7 @@
     # All other OS
     Else {
         # Create HTML object using HTML Agility Pack
-        $HTML = (New-Object HtmlAgilityPack.HtmlWeb).Load($URL)
+        $HTML = Invoke-CachedHtmlWebLoad -Uri $URL -NoCache:$NoCache -RefreshCache:$RefreshCache
 
         # Table Mapping - required to obtain preview and out-of-band information of versions
             ## Select <strong> nodes that have an associated history table
@@ -652,12 +808,12 @@
         # No parameters
         ($Table | Select-Object -First $LatestReleases)
     }
-}
+
 # SIG # Begin signature block
 # MIImoQYJKoZIhvcNAQcCoIImkjCCJo4CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQURa7wjClzKwadjv1DZJlLLt3J
-# zHuggiBWMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUIZTiocf52w4pcUzQ8HtAnxng
+# U2uggiBWMIIFjTCCBHWgAwIBAgIQDpsYjvnQLefv21DiCEAYWjANBgkqhkiG9w0B
 # AQwFADBlMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYD
 # VQQLExB3d3cuZGlnaWNlcnQuY29tMSQwIgYDVQQDExtEaWdpQ2VydCBBc3N1cmVk
 # IElEIFJvb3QgQ0EwHhcNMjIwODAxMDAwMDAwWhcNMzExMTA5MjM1OTU5WjBiMQsw
@@ -834,31 +990,31 @@
 # A1UEAxMbQ2VydHVtIENvZGUgU2lnbmluZyAyMDIxIENBAhArB55OJJX0JFBQxYq3
 # KFFaMAkGBSsOAwIaBQCgeDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqG
 # SIb3DQEJAzEMBgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3
-# AgEVMCMGCSqGSIb3DQEJBDEWBBS7KGWTVf3zTf+qZvRvQAYbNDJVmjANBgkqhkiG
-# 9w0BAQEFAASCAYBGHG9CX0mbdfzkXvmqS3I2YDi7v2q71Wdl+cTYcoztHwFwfZ05
-# A6SlkvLV7YFCjDbqzC8D+ymZmelFZANhah/w/LUJVlPkJpAJJUpYbsWAikB9L9h6
-# mm5YNfEcm7WBJLeXE1p4AXTq8zC6lKkBiUFCg/Ladvw9tusdgsjWJzkOunutGmif
-# VpoF4xvkONv6IfAmxpHzwsg1NOPf320i/IkuNYhZXq8HLuvV8Kn2xhYq6mOw/YIg
-# x042VHag+V2tyexH9Nhom2Nu78SYXwbKBPghyYSIX3zh6nKJOiUIFtRbCh3wsmS0
-# dlUEH8TeY9+94rCiw2N7TFW3xt9vKPwYNxvItpPa7ns/nFrpCJWpC/sQv9c2Un8o
-# GeC3EvwVX5zUf+8BoZcHoOBoKbFZ8vfJ1PJO3qPNVF9co+HH153+5hZCEpiOf5r7
-# 1mWIGKi+qWLA34ZQV6l57JH2avKzjc98ggLWP2rJ1NWWM6qNJTLZnZDWm/rghg+L
-# BnrBEtS1MkPZqXqhggMmMIIDIgYJKoZIhvcNAQkGMYIDEzCCAw8CAQEwfTBpMQsw
+# AgEVMCMGCSqGSIb3DQEJBDEWBBTaO7xIbcZIpbyHJiuh6F8+5PSzOTANBgkqhkiG
+# 9w0BAQEFAASCAYBbEqeVslalm3MN5Lq+8xwYsY9i8AklYdanajpDFsTw5+/WUuuB
+# wFc2wa2rnrqkqGGt7OMmOwCaFOQ0axv2SkA+RkuYNwXaBDOInpd1dSue6iFCUeIE
+# /u5DH60O8h2B8CFREgjN1iYwvad2KgqLK8RBD7bYO7+34EqfzVxXnVg1pIAjAVDq
+# L1MIeckOy90xn2KXfeSgl7hoOFvm3Z6FjV1zQR0oM8RFWgkPNgT5sRvFARhOq2pr
+# RyJFmcIL/NWAFc3hGC/i52AjZ1m9YIsDMXcWh1ohj8q0dsWYZFQUplFxKzRNwc5x
+# Dwv6nY/Nog382xgWAKF+oXxcfslWJmt9wim6SIODq8vS+BhScuAdNv0oDDD7Vm5G
+# fKu3ESxUyVea3bUsqaVJwiHTTMmM4gtz8JS2sD2emb5Ya4m5HvlEGWN/U0if+MQZ
+# cMM1Ooeab5t6qe5psqUeArR1tfeehUb1yu11YcPz/uTreVnBraKaOrfqTjzEr1eR
+# n05wEeeyvIg54I+hggMmMIIDIgYJKoZIhvcNAQkGMYIDEzCCAw8CAQEwfTBpMQsw
 # CQYDVQQGEwJVUzEXMBUGA1UEChMORGlnaUNlcnQsIEluYy4xQTA/BgNVBAMTOERp
 # Z2lDZXJ0IFRydXN0ZWQgRzQgVGltZVN0YW1waW5nIFJTQTQwOTYgU0hBMjU2IDIw
 # MjUgQ0ExAhAKgO8YS43xBYLRxHanlXRoMA0GCWCGSAFlAwQCAQUAoGkwGAYJKoZI
-# hvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjYwMzA5MjEzNTQ1
-# WjAvBgkqhkiG9w0BCQQxIgQgDwyVYzf8nCPw69Ehr1mzR3laZxl9bUoQDW9qVwlx
-# hGQwDQYJKoZIhvcNAQEBBQAEggIALImLccis1+ul+umxp5GjaR7trIJTqdq+tFk3
-# GVz2Qtjt07VuktbRH+hvkFNwNRA6Y/xKKwtDNGm1wos9h8aI4+H6ks6AT7SAf/yX
-# xv5Yt43V5ckIaPy414t7sI1kw1Y7ERRI6xvu+ZNBI00iQyVry5TpDSPehTCZhnN5
-# vtp1bZGWTVcSqOI0K4vxAmdwxgdSHYgVJoXPL+NKTp3KwErSRsnBk5L+EospamDY
-# SeBpauWXyM62D2Ta6vGPB8FypD+wvIaaHlWOxLUgL1esrm5SIrrxkaROZrVMVleE
-# 7rVLRB+jsK3RNSS6pEZUaO0YofokoK+3sIiA4D8aj6+KjoA7ZJpxy7Aup3lFSLgZ
-# NBjaooQXp4jQoPfeW+TBiTuH4stqgsQYwDSoTAKp9CGieGGyYsZcW3Ojd07tBjG4
-# fmCFTVYJrqN/j6/q9kpo82Fqm5/VETBvAQj0m//No+uSDMLO1SLT7nuwgoqyyqB8
-# WZgdLWLpuT3J2FCNq2VsuWgkM5ToEMapLjdTkKoyiT5qWImkcWd1N2Elkcm7C5W1
-# mpYGUA2kmwJSqhjg7QCAntIoF75e8sfrorUaOAxK4V2c3hQmKZgdYAqQwBPdsrsf
-# hrtgZY5h36rOPYkgwp4ZZGntclzqsI1D+OuzfBfNpkU1qsykSVswR/qKojiUTyrC
-# UVFQVXQ=
+# hvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjYwNDI5MjA1MzU4
+# WjAvBgkqhkiG9w0BCQQxIgQgIsROmTPHyvoa0TbwQai6hjxMmyWShDtdze+IVexJ
+# XCswDQYJKoZIhvcNAQEBBQAEggIAipwD8XIBfVfeH1gNyIw0ekOY/z4Qf04w209Z
+# VhgdlmLLb3oetiFIiZRd2/SWSaXBQ5l244E1dIbe0nzYVxyJaho9wCeCeMYcBSKY
+# QHHY4ki6NtEcmJ5h8N9uy9+aT2amAN8w/FVEo0hTHXS7w39QMpF1FC466osb4PE6
+# QO5gCdF95pDFwoYdEw/bGmt1GvEGWiA+vmXAB596LxMPfPQpbMuU1bw11jGysihK
+# tyyvMg7gd5p2SeUxxVFh8CIhIDeM6/uf9/ikD1VyvUy07p/SzcccL+rClFlRGfUf
+# 8euabObx0Zp4fHAtXo5CfJdrniwIZsR0n6zAMKylmAUolbdkLs9U/EiJbzIIYmJw
+# zDDD6yq8o69y1YSUO0cSt3/ILVruYtKTGfZOrrFH/EI1v6KB+6/or5fMy8Ztisr6
+# 9UTjVIlZU9Dfw/4GmYQvPQnUGw7Xad6RnUMltgAEe5+IiVMT7szTYWMLQiqkDiYm
+# LVmE8fM6ceECj1x9IS6826EV3sxz7I18K2YXLGPLC0g14KyAzmrVzXVGU6ZE8Twa
+# WM9elj7nlHZlgX70WEm3zbfb2Dp+310VI280p5pWgyV/BhErlwdHpOck8/xfNYV6
+# 09jhp3XfnfNe/6378SruPEKT7nYRILzfqR3yNdtAl/+Oh/fkqTv1ZWFKYr3fRtLw
+# m9scanA=
 # SIG # End signature block
