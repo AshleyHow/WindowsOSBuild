@@ -6,6 +6,9 @@ skip_commits:
     - "CI/WindowOSBuild.Tests.ps1"
     - "**/WindowsOSBuild.psd1"
 
+cache:
+  - '%USERPROFILE%\AppData\Local\WindowsOSBuild\Cache -> WindowsOSBuild.psm1'
+
 install:
 - ps: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
