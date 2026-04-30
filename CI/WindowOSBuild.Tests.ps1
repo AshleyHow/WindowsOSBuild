@@ -1,6 +1,7 @@
-BeforeAll {
+﻿BeforeAll {
+    Remove-Module WindowsOSBuild -Force -ErrorAction SilentlyContinue
     $Path =  (Get-Item $PsScriptRoot).parent.FullName + "\WindowsOSBuild.psm1"
-    . Import-Module -Name $Path -Verbose
+    Import-Module -Name $Path -Force -Verbose -ErrorAction Stop
 
     # Function to check if a string contains a valid date in YYYY-MM-DD format
     Function Find-ValidDate {
@@ -37,12 +38,14 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1507 (RTM) (OS build 10240)'
-                $Results.Build | Should -Match '^10240\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^10240\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                 $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -54,12 +57,14 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1511 (OS build 10586)'
-                $Results.Build | Should -Match '^10586\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^10586\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                 $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -71,12 +76,14 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1607 (OS build 14393)'
-                $Results.Build | Should -Match '^14393\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^14393\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                 $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -88,12 +95,14 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1703 (OS build 15063)'
-                $Results.Build | Should -Match '^15063\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^15063\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                 $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -105,12 +114,14 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1709 (OS build 16299)'
-                $Results.Build | Should -Match '^16299\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^16299\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                 $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -122,12 +133,14 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1803 (OS build 17134)'
-                $Results.Build | Should -Match '^17134\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^17134\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                 $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -139,12 +152,14 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1809 (OS build 17763)'
-                $Results.Build | Should -Match '^17763\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^17763\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                 $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -156,7 +171,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1903 (OS build 18362)'
-                $Results.Build | Should -Match '^18362\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^18362\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -172,7 +189,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1909 (OS build 18363)'
-                $Results.Build | Should -Match '^18363\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^18363\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -188,7 +207,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 2004 (OS build 19041)'
-                $Results.Build | Should -Match '^19041\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^19041\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -204,7 +225,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 20H2 (OS build 19042)'
-                $Results.Build | Should -Match '^19042\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^19042\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -220,7 +243,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 21H1 (OS build 19043)'
-                $Results.Build | Should -Match '^19043\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^19043\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -236,12 +261,14 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 21H2 (OS build 19044)'
-                $Results.Build | Should -Match '^19044\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^19044\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                 $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                 $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -253,7 +280,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 22H2 (OS build 19045)'
-                $Results.Build | Should -Match '^19045\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^19045\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -269,7 +298,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 21H2 (OS build 22000)'
-                $Results.Build | Should -Match '^22000\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^22000\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -285,7 +316,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 22H2 (OS build 22621)'
-                $Results.Build | Should -Match '^22621\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^22621\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -301,7 +334,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 23H2 (OS build 22631)'
-                $Results.Build | Should -Match '^22631\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^22631\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -317,7 +352,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
-                $Results.Build | Should -Match '^26100\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^26100\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -333,7 +370,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 25H2 (OS build 26200)'
-                $Results.Build | Should -Match '^26200\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^26200\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -349,7 +388,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
-                (($Results.Build -match '^26100\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
+                $Results.Build | ForEach-Object {
+                    ($_ -match '^26100\.\d+$' -or $_ -eq 'Security Update') | Should -BeTrue
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Hotpatch | Should -Not -BeNullOrEmpty
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -366,7 +407,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 25H2 (OS build 26200)'
-                (($Results.Build -match '^26200\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
+                $Results.Build | ForEach-Object {
+                    ($_ -match '^26200\.\d+$' -or $_ -eq 'Security Update') | Should -BeTrue
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Hotpatch | Should -Not -BeNullOrEmpty
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -383,7 +426,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
-                $Results.Build | Should -Match '^20348\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^20348\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -399,7 +444,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
-                (($Results.Build -match '^20348\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
+                $Results.Build | ForEach-Object {
+                    ($_ -match '^20348\.\d+$' -or $_ -eq 'Security Update') | Should -BeTrue
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Hotpatch | Should -Not -BeNullOrEmpty
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -416,7 +463,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
-                $Results.Build | Should -Match '^26100\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^26100\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -432,7 +481,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
-                (($Results.Build -match '^26100\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
+                $Results.Build | ForEach-Object {
+                    ($_ -match '^26100\.\d+$' -or $_ -eq 'Security Update') | Should -BeTrue
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Hotpatch | Should -Not -BeNullOrEmpty
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -449,7 +500,9 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
                 $Results.Version | Should -Contain 'Version 1709 (OS build 16299)'
-                $Results.Build | Should -Match '^16299\.'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^16299\.\d+$'
+                }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -580,12 +633,14 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1507 (RTM) (OS build 10240)'
-                    $Results.Build | Should -Match '^10240\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^10240\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                     $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -597,12 +652,14 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1511 (OS build 10586)'
-                    $Results.Build | Should -Match '^10586\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^10586\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                     $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -614,12 +671,14 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1607 (OS build 14393)'
-                    $Results.Build | Should -Match '^14393\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^14393\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                     $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -631,12 +690,14 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1703 (OS build 15063)'
-                    $Results.Build | Should -Match '^15063\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^15063\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                     $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -648,12 +709,14 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1709 (OS build 16299)'
-                    $Results.Build | Should -Match '^16299\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^16299\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                     $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -665,12 +728,14 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1803 (OS build 17134)'
-                    $Results.Build | Should -Match '^17134\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^17134\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                     $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -682,12 +747,14 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1809 (OS build 17763)'
-                    $Results.Build | Should -Match '^17763\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^17763\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                     $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -699,7 +766,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1903 (OS build 18362)'
-                    $Results.Build | Should -Match '^18362\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^18362\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -715,7 +784,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1909 (OS build 18363)'
-                    $Results.Build | Should -Match '^18363\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^18363\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -731,7 +802,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 2004 (OS build 19041)'
-                    $Results.Build | Should -Match '^19041\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^19041\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -747,7 +820,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 20H2 (OS build 19042)'
-                    $Results.Build | Should -Match '^19042\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^19042\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -763,7 +838,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 21H1 (OS build 19043)'
-                    $Results.Build | Should -Match '^19043\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^19043\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -779,12 +856,14 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 21H2 (OS build 19044)'
-                    $Results.Build | Should -Match '^19044\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^19044\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
-                    $Results.'Servicing option' | ForEach-Object { $_ -match "â€¢|\u2022" } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | ForEach-Object { $_ -match "Ã¢â‚¬Â¢|\u2022" } | Where-Object { $_ -eq $true }
                     $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
                     $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
@@ -796,7 +875,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 22H2 (OS build 19045)'
-                    $Results.Build | Should -Match '^19045\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^19045\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -812,7 +893,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 21H2 (OS build 22000)'
-                    $Results.Build | Should -Match '^22000\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^22000\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -828,7 +911,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 22H2 (OS build 22621)'
-                    $Results.Build | Should -Match '^22621\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^22621\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -844,7 +929,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 23H2 (OS build 22631)'
-                    $Results.Build | Should -Match '^22631\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^22631\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -860,7 +947,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
-                    $Results.Build | Should -Match '^26100\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^26100\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -876,7 +965,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 25H2 (OS build 26200)'
-                    $Results.Build | Should -Match '^26200\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^26200\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -892,7 +983,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
-                    (($Results.Build -match '^26100\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
+                    $Results.Build | ForEach-Object {
+                        ($_ -match '^26100\.\d+$' -or $_ -eq 'Security Update') | Should -BeTrue
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Hotpatch | Should -Not -BeNullOrEmpty
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -909,7 +1002,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 25H2 (OS build 26200)'
-                    (($Results.Build -match '^26200\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
+                    $Results.Build | ForEach-Object {
+                        ($_ -match '^26200\.\d+$' -or $_ -eq 'Security Update') | Should -BeTrue
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Hotpatch | Should -Not -BeNullOrEmpty
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -926,7 +1021,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
-                    $Results.Build | Should -Match '^20348\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^20348\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -942,7 +1039,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 21H2 (OS build 20348)'
-                    (($Results.Build -match '^20348\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
+                    $Results.Build | ForEach-Object {
+                        ($_ -match '^20348\.\d+$' -or $_ -eq 'Security Update') | Should -BeTrue
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Hotpatch | Should -Not -BeNullOrEmpty
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -959,7 +1058,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
-                    $Results.Build | Should -Match '^26100\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^26100\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -975,7 +1076,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 24H2 (OS build 26100)'
-                    (($Results.Build -match '^26100\.') -or ($Results.Build -match 'Security Update')) | Should -BeTrue
+                    $Results.Build | ForEach-Object {
+                        ($_ -match '^26100\.\d+$' -or $_ -eq 'Security Update') | Should -BeTrue
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Hotpatch | Should -Not -BeNullOrEmpty
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -992,7 +1095,9 @@ Else {
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
                     $Results.Version | Should -Contain 'Version 1709 (OS build 16299)'
-                    $Results.Build | Should -Match '^16299\.'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^16299\.\d+$'
+                    }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
@@ -1093,8 +1198,8 @@ Else {
 # SIG # Begin signature block
 # MIImxgYJKoZIhvcNAQcCoIImtzCCJrMCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA32ZalW/1dBfGs
-# liQusS4EsTDijhtpthi7Pxm311A52KCCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBIml91rX22mnUz
+# oi07Ksd5ft00ZuqEbLpnu1jyFhHPv6CCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
 # 5+/bUOIIQBhaMA0GCSqGSIb3DQEBDAUAMGUxCzAJBgNVBAYTAlVTMRUwEwYDVQQK
 # EwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAiBgNV
 # BAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yMjA4MDEwMDAwMDBa
@@ -1271,31 +1376,31 @@ Else {
 # dGEgU3lzdGVtcyBTLkEuMSQwIgYDVQQDExtDZXJ0dW0gQ29kZSBTaWduaW5nIDIw
 # MjEgQ0ECECsHnk4klfQkUFDFircoUVowDQYJYIZIAWUDBAIBBQCggYQwGAYKKwYB
 # BAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAc
-# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQgCTEn
-# 3HS2Yc/Blbi+TX1ueiTuYhzVpjqa66m29VLeElYwDQYJKoZIhvcNAQEBBQAEggGA
-# UA/C+hCN17ucFsR4vpL4x3oZPxzAxTqUx/pZ67Yo/fY1Nyr/oJEYJg76WvSTW0Ll
-# eYdYfMG8PgeEHFy3wwp0iYwrRx2NRzduhcsAjnuFuhbNn/guEJv2QmKOdh5JsGud
-# lytY1Mq20gZBsI2rgUM/ekh6GdKq63f3y/wY2i4KID7nUHXX1l2U1+tYbgMddYtA
-# QZo/jf9j401A6K1QogRbkfN1JIziPCRkkkwSFwjvpNv+76t/zLM9xijXOmOadSep
-# o6sPhdKnlq6qIG+GpOK7jFzy286tydoNpjQVMFAaJ4O4hf2TcXzy4ubPQBjEb7Gl
-# So9jDKr1kgRyFcEgYJ1ZYaSpZNUx4omOJADGvPIEs/yQX6Ssq4B84DQor/ooSfuN
-# rtH2DCasNN06T6U9tFrWwOzsqzZI+dnTHNighq72NhbkC+mdwBlHqKjQTSW0d+SI
-# eLrVDW82G8MNXUKxpzj1V/UiCZ6lQLxhfjjkUnieQlbTjJ0WZ9DSWBIzs5M7LB39
+# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQgtrJi
+# 0ZEKUMLDfjPWWEJhMqtlF+0lP8qNJgzlLAaRvgYwDQYJKoZIhvcNAQEBBQAEggGA
+# CiieVZO9Ks+swqnt9SI7qpelbZ0QZaxai0ZTGSPUw2DqVot6qn1eX3ZEEh09zuHA
+# G5RrR9VV8QY6eunLSapdUGYbiCylrB+lZDmO1JbPWY4bvLlstTc5scPklT75JgQA
+# pgSZMxfi1tctWyVB3dgM3W4I7dXa+CFg4kN/rwjU+vxaLfV9cPzHKeAjn48NVqLt
+# YP6WIdQ3UssichSW5r0bxbv8wEFTUXWXEbOTBaZN5lP988SHYThZDdplfBltbiYx
+# HkFHjlDoi5kCqab+81M13FfY9Mrl5VPJh8xrB+ZemfyjgiYWOR0oI1MElMHm6ApR
+# pGONSskVdrcmd2a939SQJoZmUOKamaJZkA/Ig7Iplr0OJHih8IPr/MiobQStxxlh
+# e66IvAC+ZBq2tUCTYGREwk3st9UXWX9OZdMZXahCEEB07zcktRO6ed07h322VscX
+# PVoz4l2CG4vfkkCLpQyeHJzFIDuAP6NuMu/25CrLWmpMadL7UhAxcQMk67pIkzCv
 # oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMCVVMx
 # FzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBUcnVz
 # dGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQCoDv
 # GEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzELBgkq
-# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDQzMDE5MDc1NVowLwYJKoZIhvcN
-# AQkEMSIEIBJCkIJ6g6zUCmSYIxN9/R/3HqrPCv4n/amUr9lpfXw7MA0GCSqGSIb3
-# DQEBAQUABIICAMQ+fOkALGcoNpPCM1WdNUFvfk2PAPQ30gYohzMSaV5vRc5f23w8
-# W9r61Hs7FvyX8MvuwPxMCDpMWyJupC810Gjr5dDCnxBBFKO9hiKUVo8eY5+q9Kfy
-# BTeOFGdV5EKYFVp9jehX05cCMpoc0n5w+8PO2QYUQFmWfGI+6X91xbDxLA3iNEhc
-# 2Z1rfC4o60xGLayGG4RKEDRR+jRxzM6BoAA+3dP/W80vVT99mRG6r0rq/Qyx9Zpj
-# l0LS24XZ8CHeh0G8Vw3XeZrVZhDnrQo0gzU/keJUc3lEmt7NL3pQIM53eTJJZbDk
-# rMyXCtvDQMpi9tcOS0vo3X1ajIyb7oiR9lnOOBHUs0goozBssM3l9dq55vFBGVxU
-# LkFQRvlV3IOKAHjFrirvCHPcm8GPVSXU3tGNed+QU3Pv19KL9Fi8CIKh/MAG3Ps8
-# SxU2G8AmIYTFxrjq4ykg6Nn2U/XiHnXuRiL8EwWBB4wiJsQRGIKN3jUNWbzkiuaU
-# RmvnZFYaAwXBPejvaFhEB/MesV/WHwqDggxbX0YhVzFME7MtwbTZJgBsSW7qP4WV
-# mANX5+88+4RBzem2FyRcFmUPyD+42YrkguRC9HdYVFLbMyPsKTH9z1ir9pQRuQb2
-# GRsLXvPHm/pB0IHklv4vGM+0Lw21eMhuXZFxrENmaVVswgxFvpbTC7KV
+# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDQzMDE5NTUxNFowLwYJKoZIhvcN
+# AQkEMSIEIDmCowR6nkHGqApC1ZRMt5qXjXtdPslwA4RpGkw8JhveMA0GCSqGSIb3
+# DQEBAQUABIICAGCSg0ZppKiXPbex/xGcEZys75BueSwWV9E47lSsBypYoBegFH1B
+# 1OHoE4kc60yxpHD3nZguK53MLBIsCiEfd2gqhU5y0aOb0reTl+ZTmG7JSYZ2D/+L
+# /GtHmyP17IGicfM0vs3GHL7n2wOBIF7fUZiQN5BSDGiHKXXKedguiRD+CPQ3x+0M
+# dUEaGdOTfp/t9a7YFIwzTlYrpTykFrNXaiBC3/KO7/bT1swnrqa45sPUWveofSJ7
+# WfpjwftKvy092+hDFPZHi4hccESERW/N5QcR9k7ytwULsBIPa55S9TOyqAjQae5L
+# 48RaR4Ij1vy+L6V2N0V0JM0XtiR8dWr3gqa+ttDpJPh5V0IDHE9W/+tMIHKNTWe0
+# 6ux5a3TAlAx/zeg8qsAYXAYC2M6DmP9GDzNs7PFsTw8PQjEPCxHSBWD+zpCs3lSG
+# je2iuq1fsxh+qlL5zRJT3yRtfmiV+1KnkdjxNTFAknOT/WpqQNE0Vvrj6BK5rFev
+# kvF+fABcHO8gcZN3Dajp8OUYUgcSdsJj2csIkrO3SxDSmPuHTy09XQC3HYSZpB5t
+# RV8S4e/jQzNNSNdvldcZgKJ6Bo0k482v5ijqUJ1Bcpfo29gAh36O2F+UDNpQYYU2
+# Gk23gGOgWUdJWihBnTIFPQea0tfGEXVSz41y0T1Wvz93jLM1Hg02wPdz
 # SIG # End signature block

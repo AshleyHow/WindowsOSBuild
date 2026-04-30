@@ -513,15 +513,43 @@
                 Else {
                     $ResultObject["Version"] = "Version $OSVersion (OS build $($Update.OSBuild.Major))"
                 }
-                # Support for Hotpatch - As we are performing matching based on date, this accounts for erroronus spaces in the date.
+                # Support for Hotpatch - As we are performing matching based on date, this accounts for erroneous spaces in the date.
                 If ($null -eq $Update.OSBuild) {
                     $updateDate = ($Update.Update -replace '^([A-Za-z]+\s\d{1,2},\s\d{4}).*', '$1').Trim()
-                    $SourceOSBuild = $feedEntries.Title -like "*$updateDate*"
-                    $ResultObject["Build"] = [String]$SourceOSBuild -replace '.*OS Build (\d+\.\d+).*', '$1'
+
+                    # Derive expected build prefix from Version string
+                    $ExpectedBuildPrefix = ""
+
+                    If ($ResultObject["Version"] -match 'OS build\s+(\d+)') {
+                        $ExpectedBuildPrefix = $Matches[1]
+                    }
+
+                    # Find the correct title entry
+                    $SourceOSBuild = $feedEntries.Title |
+                        Where-Object {
+                            $_ -like "*$updateDate*" -and
+                            ($ExpectedBuildPrefix -eq "" -or $_ -match "\b$ExpectedBuildPrefix\.\d+\b")
+                        } |
+                        Select-Object -First 1
+
+                    # Extract build
+                    If ($ExpectedBuildPrefix -and -not [String]::IsNullOrWhiteSpace($SourceOSBuild)) {
+                        $BuildMatch = [regex]::Match($SourceOSBuild, "\b$ExpectedBuildPrefix\.\d+\b")
+
+                        If ($BuildMatch.Success) {
+                            $ResultObject["Build"] = $BuildMatch.Value
+                        }
+                        Else {
+                            $ResultObject["Build"] = "Unknown"
+                        }
+                    }
+                    Else {
+                        $ResultObject["Build"] = "Unknown"
+                    }
                 }
                 Else {
                     $ResultObject["Build"] = [String]$Update.OSBuild
-                }
+}
                 # Exclude date calculation for updates that don't have dates published in the title
                 If ($Update -notlike "*Security Update*") {
                     $GetDate = [regex]::Match($Update.Update,"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}").Value
@@ -819,8 +847,8 @@
 # SIG # Begin signature block
 # MIImxgYJKoZIhvcNAQcCoIImtzCCJrMCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBUJVEj7/tMd3Iz
-# 9xayoUuxclvYChM4VAelu+AG3nME96CCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC1APNFX7/ud6/5
+# W6JUgGyhjelj9+SdZvh0tkURHkqfcKCCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
 # 5+/bUOIIQBhaMA0GCSqGSIb3DQEBDAUAMGUxCzAJBgNVBAYTAlVTMRUwEwYDVQQK
 # EwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAiBgNV
 # BAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yMjA4MDEwMDAwMDBa
@@ -997,31 +1025,31 @@
 # dGEgU3lzdGVtcyBTLkEuMSQwIgYDVQQDExtDZXJ0dW0gQ29kZSBTaWduaW5nIDIw
 # MjEgQ0ECECsHnk4klfQkUFDFircoUVowDQYJYIZIAWUDBAIBBQCggYQwGAYKKwYB
 # BAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAc
-# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQgnfZN
-# KqZAKsFvN/yA5VfJIYRGWebtdP18FP/9869ZAcwwDQYJKoZIhvcNAQEBBQAEggGA
-# lze0ubOXCzf4K+woLW+WMzJQZfFI0By9WXwduwC0LnTIdmDEGQYCDfeCwgbD2q69
-# ypJJzlI9yx6dxXc13gZcx/1VO1xRcSzoJ6KVt2KcYDRiIpD8Yc39I5ehJGopbaj0
-# RBmdFGsXHQGtOHqk3sc8WF3yzjCLgJ8HrGG/hmFIdOOWb/XbsfsREfbdmClkLUZs
-# W8XqdHMIYLEMdSKhcbd+xR+ZxKAEP332dv5EdcZMfUysHsjLt7wQD8RMaRjLB+9S
-# fGzMmIUv43L0l15EBKkP1W7zeYqcwocigHc/KQtLVRd6jxf45YhimyJhNyutH5LJ
-# pT/Lxa3Z3zZAB6lVBh493DBBUsAE43Qz2X5w8WV49DWjqNi39JoeMa8y0z1czG30
-# oZBCZMhkZhvY5wj/AV52aagbsL6D50197B0IfTavnpRsgvuDu2ntkUff/5hI85XM
-# SaIn/P31whLv3MbmmjjqPpt2YjKo94Xt7brLTP2vKn+kFByDhNPDTVtSHNfwlhgA
+# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQg85zv
+# lpLleHj9LnCvWCPfmjWp49eUFHnuBXGIfakiWN4wDQYJKoZIhvcNAQEBBQAEggGA
+# QIKPIngSCwan1eOLbyAGyQRCc6cVrEr8/ll5nCatOdOhBh+ZRW0+v4Qq06cf8dSV
+# uKlsQHv+3DMmajCWsza7we6+fXYrUq6/y+cdJMzPrjSxn3FsgDwUcFOkvRgm6pf1
+# MGvZutN0/7MG1D3m5Z/7MvOY8493LYo0dMbgwDjx/UuTep4yplINL7en7ko6Ww+8
+# WlnmImDoWzx877Cej3pUMyYFI3PdlTvS1r4wOP+eZpGxTZcZMfPB0O+HpP/onlUh
+# ocQwSNiMPeQfhbHbXmowCqu1jMMszGZaYJ0CzXE2y/D0NyHVJpK6gKdfsoC6Co//
+# +ZLG9c6/1FpWHfYgqMQ0b66wHiT/iOzPjpXt/KKrZI4ZT+WctW4cJrZsTUgjaqXL
+# fNK/lOWseZS8Lavt1c0mjAr/QgUO4wWxbAJ4reYC/F/oMTy7VGaZz0NexUhrKdCE
+# Y1eD0a9h/br0pPZDjDqUVRwgJambQ7ktHAX93C6iXg6FM0MMDdT099MDFa+uK7O7
 # oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMCVVMx
 # FzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBUcnVz
 # dGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQCoDv
 # GEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzELBgkq
-# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDQzMDE5MDc1NlowLwYJKoZIhvcN
-# AQkEMSIEIJVtPFjTvzT9GcycWhTh7aB8cRfFtbCHK6Y4ER2USrMxMA0GCSqGSIb3
-# DQEBAQUABIICAH3QtyVpSBeKuntebgDeRW741c0EaGHkD5tKj5EwMrNfl6W43ynF
-# +i9Lx3uqVjaIZuPsBt8gk+ceC1NMszn5RGTbCLfTEvqIQ6OAw9OXELykUBsdjwDu
-# zxNYcJp7RJztdFOORF5LcUV8vGIdSIhSThJk6/PTrfj3XEVO2G5XnW0AfwGIBEmz
-# 1htCb0k8R8ZupYWROxfq8yyC0iFeIJlYWEdCFD9BeqqYLwiK8YCP4oOHVG5reZ/s
-# gpa9tepf0+1WNOR9StXcxyfzqSlelwcAW0dGETecj7faSPA5Cfit85mAkqONU+TU
-# 0End+3y4Ukpy3Fa25lVOuw0r2VSKAhIj27MDhv4WmGW9Y7FH4CyKgL1Dukh+6Sid
-# DNEqwP1xjlKJZb3EU6VbgYHBUhAMlEg58Ng1LP0ExCvR22quUyZGZk46YE6sJiwF
-# BJO3lkBDIzTpLKVuohbloxun5WVV2VJjHtF6GfUpwYoTHeoypdGM+3YNwoMjw/QN
-# 2OBLRXnm1dGfrvlDKmp97EYOyoP1WzQnG4eM+Vzh4bsNqvJSyU/ffa2flC/lOnJS
-# lOFP5CW5dvm4wVq4/83rBRqa8Bgn8zXywrOeIZDm1qEy/cu0/hoDUhwm/50NWZGk
-# rNGuFgStzxb6lwza0WXtb57l90J4qxeE26ga0OM7TPmzlFzXX2llQzJ/
+# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDQzMDIwMjE1M1owLwYJKoZIhvcN
+# AQkEMSIEIFRUSpg6D9b63DSjJjNWtCVeTZl3qjg5B3ib+YCl49WPMA0GCSqGSIb3
+# DQEBAQUABIICAL/fc7Td1Wm4Qesrbl09XfvOYQ6CvNbp0V105J+SbDYaj6Spe8vQ
+# TRphuLA1vGH6JpX5dzJQBeIcq3vAIEwlC1L/Q5On1JrwRvW8bN1TnwYx+laqc07l
+# CWkO1oFBIvhY1AZhm2rm8Qwh9qksRNZIL6EuvQpoHFo86Yfhb1kEfi80DmBvggl6
+# 1KBemBH90tPdWBsW6Vqsh9bpqqN+oy0GazEwXtJcb1jqt4BRbLkF5hIwXNMrKUN8
+# uizyNroFX9VvPZIAQPOLMqziF8cUx8KXQNrG2FOGO151NsdSOUHFlq+KK5eUB6cE
+# 36tJc7hzQkbZzWFvjl1Z4SIIamZnq5FpTIjLHy/tonrouFh6uysaiSHUjRm49VQ3
+# Yb5O8H2eZzi97Z+a72UesVns6bXjJmPouPYZENwtY+Ku7cXQZrpnOhjDrzznDdTN
+# R84IkpmX1pEGGwe8ua2FCc0lXoIRyVlzkUm31sk5hibW4VjnwxGQxyBHL3oyAAsv
+# PQN0w5r+vyw192+/dJaO6lb/R2cXrNCtbPknT7hlWrFp+3jv1O/bb8vx18OJpVEO
+# ZxIl78Zfv1UjCuMA7O8E3V5wBvK9s58QRlXzedy144xzKurto6UWf32wPV4/q6CF
+# nCSfCDQVcDkxW78NP5xPsJpf8eF9mXIKshoG32r2ZiyZsKpMK3Srf6sE
 # SIG # End signature block
