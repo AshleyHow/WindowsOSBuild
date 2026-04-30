@@ -124,8 +124,16 @@
     # Disable progress bar to speed up Invoke-WebRequest calls
     $ProgressPreference = 'SilentlyContinue'
 
-    # Enforce TLS 1.2
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    # Allow TLS 1.2 without overriding OS or external TLS configuration
+    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+
+    # Modern browser-like headers to avoid CDN blocking in Windows PowerShell
+    $Headers = @{
+        "User-Agent"      = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+        "Accept"          = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8"
+        "Accept-Language" = "en-GB,en;q=0.9"
+        "Connection"      = "keep-alive"
+    }
 
     # Local raw web cache to reduce repeated requests and avoid Microsoft CDN denial-of-service protection.
     # Cache is stored in the original raw format (HTML/XML/text), not JSON or CLIXML.
@@ -223,7 +231,7 @@
         )
 
         Return Get-CachedContent -Key "Invoke-WebRequest|$Method|$Uri" -NoCache:$NoCache -RefreshCache:$RefreshCache -ScriptBlock {
-            (Invoke-WebRequest -Uri $Uri -Method $Method -UseBasicParsing -ErrorAction Stop).Content
+            (Invoke-WebRequest -Uri $Uri -Method $Method -Headers $Headers -UseBasicParsing -ErrorAction Stop).Content
         }
     }
 
@@ -238,7 +246,7 @@
         )
 
         Return Get-CachedContent -Key "Invoke-RestMethod|$Uri" -NoCache:$NoCache -RefreshCache:$RefreshCache -ScriptBlock {
-            $Result = Invoke-RestMethod -Uri $Uri -UseBasicParsing -ErrorAction Stop
+            $Result = Invoke-RestMethod -Uri $Uri -Headers $Headers -UseBasicParsing -ErrorAction Stop
 
             If ($null -ne $Result.Content) {
                 $Result.Content
@@ -812,8 +820,8 @@
 # SIG # Begin signature block
 # MIImxgYJKoZIhvcNAQcCoIImtzCCJrMCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCK5L4FMovxRLSL
-# Au6aK0XsUro/GU8guuQ4eLZ0Xpl/lKCCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA5VSFCiHmqczzs
+# 3ZRh6wrLL9l5E58SbLfgzp/FQiu076CCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
 # 5+/bUOIIQBhaMA0GCSqGSIb3DQEBDAUAMGUxCzAJBgNVBAYTAlVTMRUwEwYDVQQK
 # EwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAiBgNV
 # BAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yMjA4MDEwMDAwMDBa
@@ -990,31 +998,31 @@
 # dGEgU3lzdGVtcyBTLkEuMSQwIgYDVQQDExtDZXJ0dW0gQ29kZSBTaWduaW5nIDIw
 # MjEgQ0ECECsHnk4klfQkUFDFircoUVowDQYJYIZIAWUDBAIBBQCggYQwGAYKKwYB
 # BAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAc
-# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQgYls0
-# GDoIySGDBbV84mppxkiQkmgxvtDnKQU1+ix8QyUwDQYJKoZIhvcNAQEBBQAEggGA
-# 2R55QbswId3PviuYQutnpDg9H0QGb+i5ah/rXicbsYtUi2/rKYoU9z6tp8qgP+dF
-# xV3PBJqZf3NsF5debqXt2GYXSWyGzNucCWx73Wro9gMnZvGb1gzy22lgQtnVKw5Y
-# y9R0kQ6uqL7NcfRU0yJn7+8prSQUiD4P1GtCQTiJ81Ish0FXk5uDkafNUTfe6ohM
-# 7liwBp+9kMOCzQ70jDH3VRUV6cBTrVjsl9K3QX3hJbLoxzIDREI19lfM1rnzzqMw
-# 2sH95GwJZfgPPI0m3wuJP2xLaduXDbLOhgz12TNlS5Obt/vyChXg2nhO8wmhl25C
-# Pmh9kaTPpMSWxGQ1Y8f4UAQDaw5sCxFJBLLKEYJMABEwgR3IvBrSuZfMFlSeLG+R
-# G99BMioE6Np6b+o9LQuTnuyaHG9d1+Vu3ad9hnlQIM2SJ+ZwQV+lQ4DZlTrm+v/r
-# maLjdhwxpD9oci2J5teAi914tBEC3HWQGBzMKxzTK8FHU5CaRQDplnfI8CNYs05A
+# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQg6Rdp
+# v8oVtPgXoY+JN+feoLVUrBSagL2Hl+Bb2XQOLzMwDQYJKoZIhvcNAQEBBQAEggGA
+# yKIPGfbwtshf5p8GW/uxCmg5CfuracmuEXnLxb6g9zXGXxATHPJAOIUn1uuOK0GM
+# i4uTMrzX5msjz38hDMUGJ8Ullz/MITgtnO6+uHbhMKDZ0cVEVAChvY3oleYcRzbp
+# rwe9p8jkla9zs34FRL/q+v7d0uKxhtjyuzL7kl56l2WCTbAunD+cZ5pwaFQlji75
+# J3atGfZsoyOxqfzSSsdNfYrcaihb7EQqHAo106uVXqbfHptRuBkBib5Yvfe6ZFW6
+# h0ecmyxknaZN0ehqJlmVvAIC9fccJQzQQoVi7gMp0+rmVYb9mJKgFUS0FbdgcC+/
+# RfzTbOnnskBVXt4tPrsHU6QPc6M04BVK2WatTLAM45xD6ClFmIfK2d77OvOzI0bC
+# /IATsF2LrUr+t4hddUSBJwyGqEBA0f8j2D/1EtDseZlUDUMlFUJRP0tMa7nDXx2P
+# wWBkAPvaJUfvrPG9HktfcAitXv+zvo0rdbxYpAKxOON0zqJDxqkyX/0Ko2yX3zMo
 # oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMCVVMx
 # FzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBUcnVz
 # dGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQCoDv
 # GEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzELBgkq
-# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDQyOTIyNTkxNVowLwYJKoZIhvcN
-# AQkEMSIEICEvGpH64RY75vZjn93bu8ZZSDV/3S2YPh6xmQ/vUEoNMA0GCSqGSIb3
-# DQEBAQUABIICALeW/712LHqMpirJoQsQnDG0k1Ds0dh+NpxMC2oUY8RvtpXJjgNn
-# cl/LKQEBGT8RhGXWDxBO/dToOgSUQI8N/PC6yTl38WqQ0mGC4tnyKtGnHo7uH/5Y
-# zc5U4DbLNLLl6W4h0OzxbDUNogWn7jZcaDOtfD9XPKWUuqkRr7bAhY0RcWgxKBs5
-# OigTGxcNynzSCBsMCXc2lxMeMo3g4CIY+BaFRqRNQen7MVqpK/Wrajxar+qBsLba
-# 93AaBtmv5LyucwnDptDbCHnWRhr56B/Oi3MOYeoZOI0PAfR3BXude8H13o+oumNa
-# 04vPcV2NE9CX/q7qMOaiy+pbs1BLrmDBRmBTQt4EDO/O/7x2BKS++1ZBV3DYpiwp
-# 2nInZGwSC8h/5Ze8Dm2Ara+g8lRkNEgSJ0Csss6XScb1tDjY8e1kk7yTNoR/GXC3
-# UBBlzJ0FJAyUAY8G6AoJs/9zm3Yq7tGwCynhXyMlNiFs+25Oqb2I5H4qnvpULacO
-# sp1Y7mGSgS4krAADH6PFD7VjkaXgo+eKHdYCeaPgXoSn5gDOpLqikqu2gKzmedYd
-# pCkNcebKEK9lNlEgss4cLBkI+k0mQnpGgr5Yqhhw8XAParzTEg7TTVKL0dEZuggR
-# MmvrMSfOZPbvRHAZ0kVaPQeKXaIuk6tOHmnGnje0iZ6g3Ql4TDm6KSYk
+# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDQzMDE4NTkzOFowLwYJKoZIhvcN
+# AQkEMSIEIHTvC6Qpmm/qCfJosEw9Xj12DUUawrYzQ25pk/1zyEoWMA0GCSqGSIb3
+# DQEBAQUABIICAG8VIA0tvmhUgtwr5Z8MqTBRWya9q5o4wcq04Gp0BYCRMP/w7Z4u
+# 62E6uNeHHZzkp4//boLwJcW+jLsmOhrXEAIfFrVnhLJt3iv0Rs7zIaY6NvNzDW4H
+# HWggvO+ZqAf8YmjbUkn5mEiI9lPsfcQCkrGr1nUa+gLifpp7i7lw+yRjBV20Ocsx
+# l4bVgGxGi1GMh12f2a9JKRAxu3GANmyOLFs1ga9APzYSn860aWYXaXP6urZDysQ4
+# yf4tUiY7wgATp39Xt43/KF/bED3XKPgYaRs6n2yY7ye+ZueKkw1haVSimqgaFx05
+# jf59hbwqtMcsKvWkkkhyUGCORoNwsKRY9NZWOL76qQ8Zpj60GY+4V8rOlQ4iuEwF
+# dm7TGbVQ8dsnQ5/a6u+Wvr3lbpM9tSg90vBVSXSvYrwvlRUGzbsCJnMR2dufTl/S
+# ycWzDZ6E6jom87+nCLZPsr0bkEbE99DequPk8k9JSkv0QEb7bmZcNpQ/xrv4UdYZ
+# lMMs0KbG0CUrbFJKtCabi/P1Ca1MNy1YVRqyRe41dNj+pi4/hT06zwoB6zzKjc1r
+# fkRA10D+w2rgCbmL29Zxdx5i3nPcFxs4bfjxfS6rtqTJEyzgX5Vn2sxDamc08Mbq
+# AEQKT0IAsupOFXZiKndADDJ1oYzalPVlcVwnkqTUMg2SCPpOrASKZFx8
 # SIG # End signature block

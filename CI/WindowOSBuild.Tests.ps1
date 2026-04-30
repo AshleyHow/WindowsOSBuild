@@ -395,8 +395,6 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         }
         Context "Server 2022 Hotpatch (21H2)" {
             It "Results" {
-                # Longer cooldown for hotpatch
-                Start-Sleep -Seconds 10
                 $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
@@ -430,8 +428,6 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
         }
         Context "Server 2025 Hotpatch (24H2)" {
             It "Results" {
-                # Longer cooldown for hotpatch
-                Start-Sleep -Seconds 10
                 $Results = Get-LatestOSBuild -OSName Server2025Hotpatch -OSVersion 24H2 -latestreleases 1000
                 Start-Sleep -Seconds 5
                 $Results.Build.Count | Should -BeGreaterThan 0
@@ -942,8 +938,6 @@ Else {
             }
             Context "Server 2022 Hotpatch (21H2)" {
                 It "Results" {
-                    # Longer cooldown for hotpatch
-                    Start-Sleep -Seconds 10
                     $Results = Get-LatestOSBuild -OSName Server2022Hotpatch -OSVersion 21H2 -latestreleases 1000
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
@@ -977,8 +971,6 @@ Else {
             }
             Context "Server 2025 Hotpatch (24H2)" {
                 It "Results" {
-                    # Longer cooldown for hotpatch
-                    Start-Sleep -Seconds 10
                     $Results = Get-LatestOSBuild -OSName Server2025Hotpatch -OSVersion 24H2 -latestreleases 1000
                     Start-Sleep -Seconds 5
                     $Results.Build.Count | Should -BeGreaterThan 0
