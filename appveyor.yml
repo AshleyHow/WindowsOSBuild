@@ -3,11 +3,11 @@ skip_commits:
     - "**/*.md"
     - "**/*.png"
     - "**/*LICENCE"
-    - "CI/WindowOSBuild.Tests.ps1"
+    - "CI/WindowsOSBuild.Tests.ps1"
     - "**/WindowsOSBuild.psd1"
 
 cache:
-  - '%USERPROFILE%\AppData\Local\WindowsOSBuild\Cache -> WindowsOSBuild.psm1'
+  - '%USERPROFILE%\AppData\Local\WindowsOSBuild\Cache -> public\*.ps1, public\*.psm1'
 
 install:
 - ps: |
@@ -27,7 +27,7 @@ test_script:
       $ResultsPS = Invoke-Pester -OutputFormat NUnitXml -OutputFile $testResultsFile -Show All -PassThru
       (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path $testResultsFile))
       If ($ResultsPS.FailedCount -gt 0) {
-          throw "$($res.FailedCount) tests failed."
+          throw "$($ResultsPS.FailedCount) tests failed."
       }
 - pwsh: |
       Import-Module -Name "Pester" -Force
@@ -36,5 +36,5 @@ test_script:
       $ResultsPWSH = Invoke-Pester -OutputFormat NUnitXml -OutputFile $testResultsFile -Show All -PassThru
       (New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path $testResultsFile))
       If ($ResultsPWSH.FailedCount -gt 0) {
-          throw "$($res.FailedCount) tests failed."
+          throw "$($ResultsPWSH.FailedCount) tests failed."
       }
