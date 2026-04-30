@@ -19,6 +19,24 @@ install:
 
 build: off
 
+before_test:
+- ps: |
+      $CachePath = "$env:LOCALAPPDATA\WindowsOSBuild\Cache"
+      Write-Host "Cache path: $CachePath"
+      Write-Host "Cache exists: $(Test-Path $CachePath)"
+
+      if (Test-Path $CachePath) {
+            Get-ChildItem $CachePath -Recurse | Select-Object FullName, Length, LastWriteTime | Format-Table -AutoSize
+      }
+- pwsh: |
+      $CachePath = "$env:LOCALAPPDATA\WindowsOSBuild\Cache"
+      Write-Host "Cache path: $CachePath"
+      Write-Host "Cache exists: $(Test-Path $CachePath)"
+
+      if (Test-Path $CachePath) {
+            Get-ChildItem $CachePath -Recurse | Select-Object FullName, Length, LastWriteTime | Format-Table -AutoSize
+      }
+
 test_script:
 - ps: |
       Import-Module -Name "Pester" -Force
