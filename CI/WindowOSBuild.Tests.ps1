@@ -382,6 +382,24 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
             }
         }
+        Context "Win 11 (26H1)" {
+            It "Results" {
+                $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 26H1 -latestreleases 1000
+                Start-Sleep -Seconds 5
+                $Results.Build.Count | Should -BeGreaterThan 0
+                $Results.Version | Should -Contain 'Version 26H1 (OS build 28000)'
+                $Results.Build | ForEach-Object {
+                    $_ | Should -Match '^28000\.\d+$'
+                }
+                $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
+                $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
+                $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
+            }
+        }
         Context "Windows 11 Hotpatch (24H2)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win11Hotpatch -OSVersion 24H2 -latestreleases 1000
@@ -967,6 +985,24 @@ Else {
                     $Results.Version | Should -Contain 'Version 25H2 (OS build 26200)'
                     $Results.Build | ForEach-Object {
                         $_ | Should -Match '^26200\.\d+$'
+                    }
+                    $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
+                    $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
+                    $Results.'Servicing option' | Should -Not -BeNullOrEmpty
+                    $Results.'KB article' | Should -Match "^KB\d+( / KB\d+)*$|^N/A$"
+                    $Results.'KB URL' | Should -Match "^\s*(https://support.microsoft.com/([a-z]{2}-[a-z]{2})?/help/\d+)\s*$|^\s*N/A\s*$"
+                    $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
+                }
+            }
+            Context "Win 11 (26H1)" {
+                It "Results" {
+                    $Results = Get-LatestOSBuild -OSName Win11 -OSVersion 26H1 -latestreleases 1000
+                    Start-Sleep -Seconds 5
+                    $Results.Build.Count | Should -BeGreaterThan 0
+                    $Results.Version | Should -Contain 'Version 26H1 (OS build 28000)'
+                    $Results.Build | ForEach-Object {
+                        $_ | Should -Match '^28000\.\d+$'
                     }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
