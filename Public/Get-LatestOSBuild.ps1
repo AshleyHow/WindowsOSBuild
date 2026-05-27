@@ -138,6 +138,7 @@
     # Cache is stored in the original raw format (HTML/XML/text), not JSON or CLIXML.
     $CachePath = Join-Path $env:LOCALAPPDATA 'WindowsOSBuild\Cache'
     $CacheTTL = New-TimeSpan -Hours $CacheTTLHours
+    $CacheEncoding = New-Object System.Text.UTF8Encoding($false, $true)
 
     Function Get-OSBuildCacheFile {
         Param(
@@ -184,8 +185,21 @@
             Write-Verbose "Refreshing cache: $Key"
         }
         ElseIf ((Test-Path $CacheFile) -and (((Get-Date) - (Get-Item $CacheFile).LastWriteTime) -lt $CacheTTL)) {
-            Write-Verbose "Using cached content: $CacheFile"
-            Return [System.IO.File]::ReadAllText($CacheFile, [System.Text.Encoding]::UTF8)
+            $CachedContent = $null
+
+            Try {
+                $CachedContent = [System.IO.File]::ReadAllText($CacheFile, $CacheEncoding)
+            }
+            Catch {
+                Write-Debug "Cached content could not be read and will be refreshed: $CacheFile"
+            }
+
+            If (-not [String]::IsNullOrWhiteSpace($CachedContent)) {
+                Write-Verbose "Using cached content: $CacheFile"
+                Return $CachedContent
+            }
+
+            Write-Debug "Cached content was empty or corrupt and will be refreshed: $CacheFile"
         }
 
         Try {
@@ -197,7 +211,7 @@
 
             If (-not $NoCache) {
                 Write-Verbose "Writing cache: $CacheFile"
-                [System.IO.File]::WriteAllText($TempFile, $Content, [System.Text.Encoding]::UTF8)
+                [System.IO.File]::WriteAllText($TempFile, $Content, $CacheEncoding)
                 Move-Item -Path $TempFile -Destination $CacheFile -Force
             }
 
@@ -209,8 +223,19 @@
             }
 
             If (-not $NoCache -and (Test-Path $CacheFile)) {
-                Write-Verbose "Using stale cache after failure: $CacheFile"
-                Return [System.IO.File]::ReadAllText($CacheFile, [System.Text.Encoding]::UTF8)
+                Try {
+                    $CachedContent = [System.IO.File]::ReadAllText($CacheFile, $CacheEncoding)
+
+                    If (-not [String]::IsNullOrWhiteSpace($CachedContent)) {
+                        Write-Verbose "Using stale cache after failure: $CacheFile"
+                        Return $CachedContent
+                    }
+                }
+                Catch {
+                    Write-Debug "Stale cache could not be read after refresh failure: $CacheFile"
+                }
+
+                Write-Debug "Stale cache was empty or corrupt after refresh failure: $CacheFile"
             }
 
             Throw
@@ -847,8 +872,8 @@
 # SIG # Begin signature block
 # MIImxgYJKoZIhvcNAQcCoIImtzCCJrMCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC1APNFX7/ud6/5
-# W6JUgGyhjelj9+SdZvh0tkURHkqfcKCCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCzyPyOQbWPL5oT
+# 6zQvWIJInqXbQSPlPjVeBpl20qeMgaCCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
 # 5+/bUOIIQBhaMA0GCSqGSIb3DQEBDAUAMGUxCzAJBgNVBAYTAlVTMRUwEwYDVQQK
 # EwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAiBgNV
 # BAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yMjA4MDEwMDAwMDBa
@@ -1025,31 +1050,31 @@
 # dGEgU3lzdGVtcyBTLkEuMSQwIgYDVQQDExtDZXJ0dW0gQ29kZSBTaWduaW5nIDIw
 # MjEgQ0ECECsHnk4klfQkUFDFircoUVowDQYJYIZIAWUDBAIBBQCggYQwGAYKKwYB
 # BAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAc
-# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQg85zv
-# lpLleHj9LnCvWCPfmjWp49eUFHnuBXGIfakiWN4wDQYJKoZIhvcNAQEBBQAEggGA
-# QIKPIngSCwan1eOLbyAGyQRCc6cVrEr8/ll5nCatOdOhBh+ZRW0+v4Qq06cf8dSV
-# uKlsQHv+3DMmajCWsza7we6+fXYrUq6/y+cdJMzPrjSxn3FsgDwUcFOkvRgm6pf1
-# MGvZutN0/7MG1D3m5Z/7MvOY8493LYo0dMbgwDjx/UuTep4yplINL7en7ko6Ww+8
-# WlnmImDoWzx877Cej3pUMyYFI3PdlTvS1r4wOP+eZpGxTZcZMfPB0O+HpP/onlUh
-# ocQwSNiMPeQfhbHbXmowCqu1jMMszGZaYJ0CzXE2y/D0NyHVJpK6gKdfsoC6Co//
-# +ZLG9c6/1FpWHfYgqMQ0b66wHiT/iOzPjpXt/KKrZI4ZT+WctW4cJrZsTUgjaqXL
-# fNK/lOWseZS8Lavt1c0mjAr/QgUO4wWxbAJ4reYC/F/oMTy7VGaZz0NexUhrKdCE
-# Y1eD0a9h/br0pPZDjDqUVRwgJambQ7ktHAX93C6iXg6FM0MMDdT099MDFa+uK7O7
+# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQgzxwQ
+# 7Ukc2cnn3K/SCtkV6kInkZJawafRizhFBLFsttEwDQYJKoZIhvcNAQEBBQAEggGA
+# AZ38ASJEcXuQu4UVQ//9dkXstveEJbLEon3U3wR7rOb82SrtVm0wXHRY9mlG53DF
+# AXQdEQHoRa4pHWyn3xOOS7pnzSM4+bENy0UWg9LX9NKxPWFh+Oc1jnix7x4OlQ1F
+# +tjrc5NIc0+KNAk/psqUM2iNMcLYqyH88w94As4DJw+BxpNK0ffop4lisTLb6cAP
+# iZtrYy40uNUw4uuctmsKnZ3q1kmACi49ljDwDUALG09AxIPf+GsBapjDN7Ftp7/F
+# 7hGJAs+fdw6I43eOvrnwdt1ZINlcqXB6uBS7rgz3IESahPqhA8+50tlCLajfFDNw
+# uB0tcs7XjRvVC7JovrPeWlDFyioh0Ekk9mvE2Lfxj54onR/CQF8VaTQLnQBtFjXu
+# QBEokEO9XZ+GRDscET+T7J8o9AnDDGYwRGGxL6u0EtcPgO9QZHXcEacKI0KMB+9b
+# RhKgRdlWK7TEBdrbMR/aJlg5G5mTH16RnDILPERo/4SidfP3mahX5cGybVwQ3Tuh
 # oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMCVVMx
 # FzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBUcnVz
 # dGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQCoDv
 # GEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzELBgkq
-# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDQzMDIwMjE1M1owLwYJKoZIhvcN
-# AQkEMSIEIFRUSpg6D9b63DSjJjNWtCVeTZl3qjg5B3ib+YCl49WPMA0GCSqGSIb3
-# DQEBAQUABIICAL/fc7Td1Wm4Qesrbl09XfvOYQ6CvNbp0V105J+SbDYaj6Spe8vQ
-# TRphuLA1vGH6JpX5dzJQBeIcq3vAIEwlC1L/Q5On1JrwRvW8bN1TnwYx+laqc07l
-# CWkO1oFBIvhY1AZhm2rm8Qwh9qksRNZIL6EuvQpoHFo86Yfhb1kEfi80DmBvggl6
-# 1KBemBH90tPdWBsW6Vqsh9bpqqN+oy0GazEwXtJcb1jqt4BRbLkF5hIwXNMrKUN8
-# uizyNroFX9VvPZIAQPOLMqziF8cUx8KXQNrG2FOGO151NsdSOUHFlq+KK5eUB6cE
-# 36tJc7hzQkbZzWFvjl1Z4SIIamZnq5FpTIjLHy/tonrouFh6uysaiSHUjRm49VQ3
-# Yb5O8H2eZzi97Z+a72UesVns6bXjJmPouPYZENwtY+Ku7cXQZrpnOhjDrzznDdTN
-# R84IkpmX1pEGGwe8ua2FCc0lXoIRyVlzkUm31sk5hibW4VjnwxGQxyBHL3oyAAsv
-# PQN0w5r+vyw192+/dJaO6lb/R2cXrNCtbPknT7hlWrFp+3jv1O/bb8vx18OJpVEO
-# ZxIl78Zfv1UjCuMA7O8E3V5wBvK9s58QRlXzedy144xzKurto6UWf32wPV4/q6CF
-# nCSfCDQVcDkxW78NP5xPsJpf8eF9mXIKshoG32r2ZiyZsKpMK3Srf6sE
+# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDUyNzIwMjYwOFowLwYJKoZIhvcN
+# AQkEMSIEIJ0cPMDjaHFFgaJv/td4NqCF6x1dHRt2oElpwc56DSc3MA0GCSqGSIb3
+# DQEBAQUABIICAMqRWXsE3nG1Z9IpLAo4WCNBsxAMwM6JElt367P1cAYWnZWQSeot
+# lBpniFlnqL4peHM53FRF3W0HUrISwi7dA3Q6vy94g3uNnq0awG9Ahz6NvkLxsvTa
+# W9kGkVA6M2JdksJ3EXAy2sM1MhcsSas5x8ILVxPhdMHaquhGN2UzrItL4UbU7aTB
+# Mg3jAJd8tZ5JcMHCo5cwzkbKyVGe28jDJh15rC61ZWTINtzgDtCibPNvb31cbTpG
+# YT5Tb3/7wOI18pyDkVMy77Vsn+fsKP65+RciClFiUf9fvodIiZY148i/tUeS3TEd
+# 0S1mmsGkLGBbP6elaAGF1tgLTsTkpPuwbAi79kX960d/nwY3e/GU4BT5y80ZeFBz
+# dlwsveSi8+5pZNT7VO5lPdvJFsZFRju6aPlClmqc18LOaE/cd/VPHulS0DfibhbP
+# it6cNavXDESSnH7THVIKeh6d4LAs8hmTdmY5ysKCKyItxKRtYaWAt27Z8Q6hraau
+# glkDFx8iYMwrLfKLGQJTbJEtrw5kOvFMb00nCzmszpjBrWPR7C7vhMLq6s7oi2QM
+# yELpEdZGGnC5nQ4wQYa0Acg6mI7PWDyOnW5WCgFbs0pam1x++1At1g11csEfoyA/
+# lHzTqFknqArrt6IHxef7lNpEJrPfodQNgTpL6W2jVKqqk0Dhy/90/UZN
 # SIG # End signature block
