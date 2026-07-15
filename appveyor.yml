@@ -39,7 +39,7 @@ before_test:
 
 test_script:
 - ps: |
-      Import-Module -Name "Pester" -Force
+      Install-Module Pester -RequiredVersion 4.10.1 -Force
       Import-Module -Name "C:\projects\windowsosbuild"
       $testResultsFile = ".\TestsResults_PS.xml"
       $ResultsPS = Invoke-Pester -OutputFormat NUnitXml -OutputFile $testResultsFile -Show All -PassThru
@@ -48,7 +48,7 @@ test_script:
           throw "$($ResultsPS.FailedCount) tests failed."
       }
 - pwsh: |
-      Import-Module -Name "Pester" -Force
+      Install-Module Pester -RequiredVersion 4.10.1 -Force
       Import-Module -Name "C:\projects\windowsosbuild"
       $testResultsFile = ".\TestsResults_PWSH.xml"
       $ResultsPWSH = Invoke-Pester -OutputFormat NUnitXml -OutputFile $testResultsFile -Show All -PassThru
