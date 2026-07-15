@@ -12,10 +12,10 @@ cache:
 install:
 - ps: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Install-Module Pester -RequiredVersion 4.10.1 -Force
+      Install-Module Pester -RequiredVersion 5.7.1 -Force
 - pwsh: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Install-Module Pester -RequiredVersion 4.10.1 -Force
+      Install-Module Pester -RequiredVersion 5.7.1 -Force
 
 build: off
 
