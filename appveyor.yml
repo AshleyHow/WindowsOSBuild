@@ -12,10 +12,10 @@ cache:
 install:
 - ps: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Install-Module Pester -Force
+      Install-Module Pester -RequiredVersion 4.10.1 -Force
 - pwsh: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-      Install-Module Pester -Force
+      Install-Module Pester -RequiredVersion 4.10.1 -Force
 
 build: off
 
@@ -39,7 +39,6 @@ before_test:
 
 test_script:
 - ps: |
-      Install-Module Pester -RequiredVersion 4.10.1 -Force
       Import-Module -Name "C:\projects\windowsosbuild"
       $testResultsFile = ".\TestsResults_PS.xml"
       $ResultsPS = Invoke-Pester -OutputFormat NUnitXml -OutputFile $testResultsFile -Show All -PassThru
@@ -48,7 +47,6 @@ test_script:
           throw "$($ResultsPS.FailedCount) tests failed."
       }
 - pwsh: |
-      Install-Module Pester -RequiredVersion 4.10.1 -Force
       Import-Module -Name "C:\projects\windowsosbuild"
       $testResultsFile = ".\TestsResults_PWSH.xml"
       $ResultsPWSH = Invoke-Pester -OutputFormat NUnitXml -OutputFile $testResultsFile -Show All -PassThru
