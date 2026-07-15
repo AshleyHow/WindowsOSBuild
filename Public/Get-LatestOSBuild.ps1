@@ -384,10 +384,13 @@
             }
 
             [Void]$ArrayList.Add([PSCustomObject]@{
-                Update = $item.Title.Replace('&#x2014;', ' — ').Trim()
-                KB       = "KB" + $item.link.Split('/')[-1]
-                InfoURL  = "https://support.microsoft.com" + $item.Link
-                OSBuild  = $OSBuild  # Add OSBuild here in the hashtable
+                Update  = $item.Title.Replace('&#x2014;', ' — ').Trim()
+                KB      = [regex]::Match($item.Title, 'KB\d{6,7}').Value
+                InfoURL = ([System.Uri]::new(
+                    [System.Uri]$ServicingBaseURL,
+                    $item.Link
+                )).AbsoluteUri
+                OSBuild = $OSBuild
             })
         }
         Return $ArrayList
@@ -410,10 +413,10 @@
         }
 
         # Find all categories with 'supLeftNavCategoryTitle' class
-        $categoryTitles = $htmlDocument.DocumentNode.SelectNodes('//div[contains(@class, "supLeftNavCategoryTitle")]')
+        $categoryTitles = $htmlDocument.DocumentNode.SelectNodes('//div[contains(@class,"supLeftNavCategoryTitle") or contains(@class,"learnRenderLeftNavCategoryTitle")]')
 
         if (!$categoryTitles) {
-            $categoryTitles = @()
+            return
         }
 
         # Initialize a list to store categorized links
@@ -428,7 +431,7 @@
                 continue
             }
 
-            $articlesList = $category.ParentNode.SelectNodes('.//ul[contains(@class, "supLeftNavArticles")]')
+            $articlesList = $category.ParentNode.SelectNodes('.//ul[contains(@class,"supLeftNavArticles") or contains(@class,"learnRenderLeftNavArticles")]')
 
             if ($articlesList) {
                 foreach ($articleList in $articlesList) {
@@ -441,28 +444,6 @@
                                 Title    = $articleLinkNode.InnerText.Trim()
                             }
                         }
-                    }
-                }
-            }
-        }
-
-        # Fallback for newer Microsoft Support page layout
-        if (-not $categorizedLinks) {
-            $articleLinks = $htmlDocument.DocumentNode.SelectNodes('//a[@href]')
-
-            foreach ($articleLinkNode in @($articleLinks)) {
-                $title = [System.Net.WebUtility]::HtmlDecode(
-                    $articleLinkNode.InnerText
-                ).Trim()
-
-                if (
-                    $title -match 'KB\d{6,7}' -or
-                    $title -match '(January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}, \d{4}'
-                ) {
-                    $categorizedLinks += [PSCustomObject]@{
-                        Category = $CategoryName
-                        Link     = $articleLinkNode.GetAttributeValue('href', '')
-                        Title    = $title
                     }
                 }
             }
@@ -541,6 +522,20 @@
         $Table =  @(
             $VersionDataRaw = $null
             $VersionDataRaw = Get-ReleaseNotes -Webpage $webpage -CategoryName $CategoryName | Sort-Object -Property Title -Unique
+            $CanonicalURL = [regex]::Match(
+                $Webpage,
+                '<link\s+rel="canonical"\s+href="([^"]+)"'
+            ).Groups[1].Value
+
+            If (-not [String]::IsNullOrWhiteSpace($CanonicalURL)) {
+                $ServicingBaseURL = ([System.Uri]::new(
+                    [System.Uri]$CanonicalURL,
+                    './'
+                )).AbsoluteUri
+            }
+            Else {
+                $ServicingBaseURL = $URL
+            }
             # Excludes security updates from the list which are not updates that change the build e.g KB5061096—Security Update for Windows PowerShell
             $UniqueList =  (Convert-ParsedArray -Array $VersionDataRaw) | Sort-Object OSBuild -Descending
             ForEach ($Update in $UniqueList) {
@@ -572,12 +567,27 @@
                     }
 
                     # Find the correct title entry
-                    $SourceOSBuild = $feedEntries.Title |
-                        Where-Object {
-                            $_ -like "*$updateDate*" -and
-                            ($ExpectedBuildPrefix -eq "" -or $_ -match "\b$ExpectedBuildPrefix\.\d+\b")
-                        } |
-                        Select-Object -First 1
+                    $SourceOSBuild = $null
+
+                    If (-not [String]::IsNullOrWhiteSpace($Update.KB)) {
+                        $SourceOSBuild = $feedEntries.Title |
+                            Where-Object {
+                                $_ -match [regex]::Escape($Update.KB) -and
+                                ($ExpectedBuildPrefix -eq "" -or
+                                    $_ -match "\b$([regex]::Escape($ExpectedBuildPrefix))\.\d+\b")
+                            } |
+                            Select-Object -First 1
+                    }
+
+                    If ([String]::IsNullOrWhiteSpace($SourceOSBuild)) {
+                        $SourceOSBuild = $feedEntries.Title |
+                            Where-Object {
+                                $_ -like "*$updateDate*" -and
+                                ($ExpectedBuildPrefix -eq "" -or
+                                    $_ -match "\b$([regex]::Escape($ExpectedBuildPrefix))\.\d+\b")
+                            } |
+                            Select-Object -First 1
+                    }
 
                     # Extract build
                     If ($ExpectedBuildPrefix -and -not [String]::IsNullOrWhiteSpace($SourceOSBuild)) {
@@ -626,11 +636,19 @@
                 }
 
                 If ($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
-                    If ($Update.Update -match 'Baseline' -or $Update.Update -match 'Security Update') {
+                    If ($Update.Update -match 'Baseline') {
+                        $ResultObject["Baseline"] = "True"
                         $ResultObject["Hotpatch"] = "False"
                     }
                     Else {
-                        $ResultObject["Hotpatch"] = "True"
+                        $ResultObject["Baseline"] = "False"
+
+                        If ($Update.Update -match 'Security Update') {
+                            $ResultObject["Hotpatch"] = "False"
+                        }
+                        Else {
+                            $ResultObject["Hotpatch"] = "True"
+                        }
                     }
                 }
                 If ($Update.Update -match 'Preview') {
@@ -647,28 +665,67 @@
                 }
                 $ResultObject["Servicing option"] = "LTSC"
                 If (($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False") -and ($ResultObject.Build -ne "Security Update")) {
-                    $ResultObject["KB source article"] = ([regex]::Match($SourceOSBuild, 'KB\s?\d{7}').Value) -replace '\s', ''
-                    $ResultObject["KB article"] = $Update.KB + " / " + $ResultObject.'KB source article'
+                    If (-not [String]::IsNullOrWhiteSpace($SourceOSBuild)) {
+                        $ResultObject["KB source article"] =
+                            ([regex]::Match($SourceOSBuild, 'KB\s?\d{6,7}').Value) -replace '\s', ''
+                    }
+                    Else {
+                        $ResultObject["KB source article"] = ""
+                    }
+                    $ResultObject["KB article"] = (
+                        @(
+                            $Update.KB
+                            $ResultObject.'KB source article'
+                        ) |
+                            Where-Object {
+                                -not [String]::IsNullOrWhiteSpace($_)
+                            } |
+                            Select-Object -Unique
+                    ) -join ' / '
                 }
                 Else {
                     $ResultObject["KB article"] = $Update.KB
                 }
                 If (($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "False")) {
                     $ResultObject["KB URL"] = $Update.InfoURL
-                    $ResultObject["KB source URL"] = "https://support.microsoft.com/en-us/help" + $ResultObject.'KB source article'
+                    $KBSourceEntry = $feedEntries |
+                        Where-Object {
+                            $_.Title -match [regex]::Escape(
+                                $ResultObject.'KB source article'
+                            )
+                        } |
+                        Select-Object -First 1
+
+                    If ($KBSourceEntry) {
+                        $ResultObject["KB source URL"] = $KBSourceEntry.Link
+                    }
+                    Else {
+                        $ResultObject["KB source URL"] = "N/A"
+                    }
                 }
                 Else {
                     $ResultObject["KB URL"] = $Update.InfoURL
                 }
                 If (($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") -and ($ResultObject.Hotpatch -eq "True")) {
-                    $ResultObject["Catalog URL"] =  "N/A"
+                    $ResultObject["Catalog URL"] = "N/A"
                 }
                 Else {
-                    $ResultObject["Catalog URL"] =  "https://www.catalog.update.microsoft.com/Search.aspx?q=" + $Update.KB
+                    $CatalogKB = $Update.KB
+
+                    If ([String]::IsNullOrWhiteSpace($CatalogKB)) {
+                        $CatalogKB = $ResultObject.'KB source article'
+                    }
+
+                    If ([String]::IsNullOrWhiteSpace($CatalogKB)) {
+                        $ResultObject["Catalog URL"] = "N/A"
+                    }
+                    Else {
+                        $ResultObject["Catalog URL"] = "https://www.catalog.update.microsoft.com/Search.aspx?q=$CatalogKB"
+                    }
                 }
                 # Cast hash table to a PSCustomObject
                 If ($OSName -eq "Win11Hotpatch" -or $OSName -eq "Server2022Hotpatch" -or $OSName -eq "Server2025Hotpatch") {
-                    [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date', 'Hotpatch', 'Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
+                    [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date', 'Hotpatch', 'Baseline', 'Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
                 }
                 Else {
                     [PSCustomObject]$ResultObject | Select-Object -Property 'Version', 'Build', 'Availability date', 'Preview', 'Out-of-band', 'Servicing option', 'KB article', 'KB URL', 'Catalog URL'
