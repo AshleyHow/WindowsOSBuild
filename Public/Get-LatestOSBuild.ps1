@@ -413,7 +413,7 @@
         $categoryTitles = $htmlDocument.DocumentNode.SelectNodes('//div[contains(@class, "supLeftNavCategoryTitle")]')
 
         if (!$categoryTitles) {
-            return
+            $categoryTitles = @()
         }
 
         # Initialize a list to store categorized links
@@ -441,6 +441,28 @@
                                 Title    = $articleLinkNode.InnerText.Trim()
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        # Fallback for newer Microsoft Support page layout
+        if (-not $categorizedLinks) {
+            $articleLinks = $htmlDocument.DocumentNode.SelectNodes('//a[@href]')
+
+            foreach ($articleLinkNode in @($articleLinks)) {
+                $title = [System.Net.WebUtility]::HtmlDecode(
+                    $articleLinkNode.InnerText
+                ).Trim()
+
+                if (
+                    $title -match 'KB\d{6,7}' -or
+                    $title -match '(January|February|March|April|May|June|July|August|September|October|November|December) \d{1,2}, \d{4}'
+                ) {
+                    $categorizedLinks += [PSCustomObject]@{
+                        Category = $CategoryName
+                        Link     = $articleLinkNode.GetAttributeValue('href', '')
+                        Title    = $title
                     }
                 }
             }
