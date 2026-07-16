@@ -9,6 +9,10 @@ skip_commits:
 cache:
   - '%USERPROFILE%\AppData\Local\WindowsOSBuild\Cache -> public\*.ps1, public\*.psm1'
 
+artifacts:
+  - path: TestArtifacts\*.json
+    name: Tests Raw Results
+
 install:
 - ps: |
       [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
