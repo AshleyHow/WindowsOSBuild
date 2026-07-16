@@ -30,27 +30,60 @@
         Return $Value -eq $true -or $Value -eq $false
     }
 }
-AfterEach {
-    If ($null -ne $Results) {
-        $ArtifactPath = Join-Path $env:APPVEYOR_BUILD_FOLDER 'TestArtifacts'
-
-        If (-not (Test-Path $ArtifactPath)) {
-            New-Item -Path $ArtifactPath -ItemType Directory -Force | Out-Null
-        }
-
-        $script:ArtifactCounter++
-        $FileName = "Get-LatestOSBuild-$($script:ArtifactCounter)-PS$($PSVersionTable.PSVersion.Major).json"
-
-        $Results |
-            ConvertTo-Json -Depth 10 |
-            Set-Content -Path (Join-Path $ArtifactPath $FileName) -Encoding UTF8
-    }
-
-    $Results = $null
-}
 
 If ($PSVersionTable.PSVersion.Major -le 6) {
     Describe "PS - Get-LatestOSBuild" {
+
+        AfterEach {
+            If ($null -ne $Results) {
+                $BuildFolder = If ($env:APPVEYOR_BUILD_FOLDER) {
+                    $env:APPVEYOR_BUILD_FOLDER
+                }
+                Else {
+                    Split-Path -Path $PSScriptRoot -Parent
+                }
+
+                $ArtifactPath = Join-Path $BuildFolder 'TestArtifacts'
+
+                If (-not (Test-Path $ArtifactPath)) {
+                    New-Item `
+                        -Path $ArtifactPath `
+                        -ItemType Directory `
+                        -Force |
+                        Out-Null
+                }
+
+                $FirstResult = $Results | Select-Object -First 1
+
+                If ($FirstResult -and $FirstResult.Version) {
+                    $VersionName = $FirstResult.Version -replace '^Version\s+', ''
+                }
+                Else {
+                    $VersionName = 'Unknown'
+                }
+
+                $SafeName = $VersionName -replace '[^\w.-]', '_'
+
+                If ($FirstResult.PSObject.Properties.Name -contains 'Hotpatch') {
+                    $ReleaseType = 'Hotpatch'
+                }
+                Else {
+                    $ReleaseType = 'Standard'
+                }
+
+                $FileName = "$ReleaseType-$SafeName-PS$($PSVersionTable.PSVersion.Major).json"
+                $FilePath = Join-Path $ArtifactPath $FileName
+
+                $Results |
+                    ConvertTo-Json -Depth 10 |
+                    Set-Content `
+                        -Path $FilePath `
+                        -Encoding UTF8
+            }
+
+            $Results = $null
+        }
+
         Context "Win 10 (1507)" {
             It "Results" {
                 $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
@@ -667,7 +700,57 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
 }
 Else {
     Describe "PWSH - Get-LatestOSBuild" {
-        Describe "PS - Get-LatestOSBuild" {
+
+        AfterEach {
+            If ($null -ne $Results) {
+                $BuildFolder = If ($env:APPVEYOR_BUILD_FOLDER) {
+                    $env:APPVEYOR_BUILD_FOLDER
+                }
+                Else {
+                    Split-Path -Path $PSScriptRoot -Parent
+                }
+
+                $ArtifactPath = Join-Path $BuildFolder 'TestArtifacts'
+
+                If (-not (Test-Path $ArtifactPath)) {
+                    New-Item `
+                        -Path $ArtifactPath `
+                        -ItemType Directory `
+                        -Force |
+                        Out-Null
+                }
+
+                $FirstResult = $Results | Select-Object -First 1
+
+                If ($FirstResult -and $FirstResult.Version) {
+                    $VersionName = $FirstResult.Version -replace '^Version\s+', ''
+                }
+                Else {
+                    $VersionName = 'Unknown'
+                }
+
+                $SafeName = $VersionName -replace '[^\w.-]', '_'
+
+                If ($FirstResult.PSObject.Properties.Name -contains 'Hotpatch') {
+                    $ReleaseType = 'Hotpatch'
+                }
+                Else {
+                    $ReleaseType = 'Standard'
+                }
+
+                $FileName = "$ReleaseType-$SafeName-PS$($PSVersionTable.PSVersion.Major).json"
+                $FilePath = Join-Path $ArtifactPath $FileName
+
+                $Results |
+                    ConvertTo-Json -Depth 10 |
+                    Set-Content `
+                        -Path $FilePath `
+                        -Encoding UTF8
+            }
+
+            $Results = $null
+        }
+
             Context "Win 10 (1507)" {
                 It "Results" {
                     $Results = Get-LatestOSBuild -OSName Win10 -OSVersion 1507 -latestreleases 1000
@@ -1170,7 +1253,6 @@ Else {
                     $Results.'Catalog URL' | Should -Match "https://www.catalog.update.microsoft.com/Search.aspx\?q=KB\d+|^N/A$"
                 }
             }
-        }
     }
     Describe "PWSH - Get-CurrentOSBuild" {
         Context "Build only" {
@@ -1261,8 +1343,8 @@ Else {
 # SIG # Begin signature block
 # MIImxgYJKoZIhvcNAQcCoIImtzCCJrMCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBfV9BH/uDlOsSq
-# RPY5gfHE0zfeH/9f9fS1IG80YPBrTaCCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBCsjn9DD46kkEg
+# dBS5doA7R1Sn6tztvTk8NPCfzivJbKCCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
 # 5+/bUOIIQBhaMA0GCSqGSIb3DQEBDAUAMGUxCzAJBgNVBAYTAlVTMRUwEwYDVQQK
 # EwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAiBgNV
 # BAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yMjA4MDEwMDAwMDBa
@@ -1439,31 +1521,31 @@ Else {
 # dGEgU3lzdGVtcyBTLkEuMSQwIgYDVQQDExtDZXJ0dW0gQ29kZSBTaWduaW5nIDIw
 # MjEgQ0ECECsHnk4klfQkUFDFircoUVowDQYJYIZIAWUDBAIBBQCggYQwGAYKKwYB
 # BAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAc
-# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQgHEfZ
-# nbFAyKfT8CPzUknZBz5ogqWbj/vPqHAwfDR4TUcwDQYJKoZIhvcNAQEBBQAEggGA
-# QNY11NMEkxgFKsqlID1nC5c0OVWGBaKLQovmwX/NZ4DupzqP1wcih0JhNA5QB9rD
-# nBJ4YAwdCta4iK/KPXqlxVLxf9wxIkutdh3p/AJdoQm5iYqQo3Ae+s3G/g0+6Sl7
-# OtmsHaKesX0T3h957/Kv9/ASk2qfTbZ7hKukQrEqVhstbdTikoil8XuNAEnov0nB
-# yIz6GDJsLmHniRGWCvbjBoRhYyYBeJjegJX3+9tPEzVr9uhbycpEUsXSdBKu3POO
-# NyWQw6dtWmNjozcI3+1qhxQx0VLd9wWtZBcPK1IrRrUd3pn92Bb9w3L3H4g8jDue
-# eBIPNOW0vEW2bBKWulS+0TxH9P/Wro62UiMrOCZ97ySR7edmp0xKmRQUlKpJFF5k
-# QtgpN2mAztxJddIRKu46hCr2LCjK+oqAhFmcD0KgsNmSmsAkcLG/LfDItFZ3HUo9
-# jpUmtl/U8V0att0hXBC0kBwVCPvyvXKFcEipwdXQUdz+xKix2FL3dkQUeBi1AiDH
+# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQgLKJs
+# 2pm7XTEJbFK+EEVLNM+xU4VOEuOnxca54v0z54swDQYJKoZIhvcNAQEBBQAEggGA
+# h9BW55ZeCXF/EuQTShRCcC69Dpyjtade0ed6ILQKAIkiai31GdfaUL3HNPbtCXpN
+# 1VGNvSTxY/pAWdPa9njN1yzKGMawC4zYvcFkCj7vPEvUaWzqCrGIuiCcaltUMoz6
+# Miu4e6AulE14eRZFOWpmCZl7SxrYWkuXqiGMc2P4Ftx+Y05WMWcND7N6tpcW53mP
+# eSkgfOTHNq7TmEf4KdPSrcDbOVhgw1rdNI/Z2bbiCJP2qCRNinyH7dVgJNGtEFSi
+# Atm/R0DP0BnxHsKrQ5sQeqg4WZFNr0KTWWBKFNA641AGZDg0CJfkysT860f1dRsL
+# W7Qmh5iKOMxafqU7O9oJ+Kb5ARGaWjdbXh+MDZgB3+8L4vn9f+im0Wqza2zl1a9x
+# 2Gec6brDsQhIOsKhP9BTEQE0gtQhYHyYLK3F7Vj8CmdFHj8SWYwAmyRXFebeJrZs
+# q0OhyyA+r75X2QB+YjT4LIzhTrUmlYmMoH2xKKG8B7CZnkHWNBivvcPusZwW8V1K
 # oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMCVVMx
 # FzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBUcnVz
 # dGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQCoDv
 # GEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzELBgkq
-# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDcxNjAxMTY0MVowLwYJKoZIhvcN
-# AQkEMSIEIBxN2/Pbp/Ekn47Opjj58E4h92Wz6q3phdngZkpdRuhrMA0GCSqGSIb3
-# DQEBAQUABIICACbgPPWc5LwWfAklF0HCb1XSTAE6IJeZgFDlTOMXCZmdUy1g+7T4
-# 2s0uBG3kV2YYmbK7a3m2qX7vYUBjiJwpkyr5Hkq32gcHWHflhpPLh5lVj97SE1AR
-# MWrAMYU8CQv0NYGg78LoujA8AOdp4f3rlnM/+lWZrsUTInuw8sD3w3abUmk6QmQ/
-# q7cfhPvxuKyK9FOZk3ZaKmL2UNKsUCAb7XlUq4L8x2J4VjKhqFDlss2A3SmtKPRk
-# Tz7qUbn6WY4Jj8EPV1mhSEyFICFaGsVo3akBS+ywDxrmFCDhY/mZ+38wDBaXna4o
-# XDLRbdDL9Ty/fV9PyDVoPOuVquG6veKzbpwBfpuTPRwAHjY6mBTSTC7yz8T+7Wdd
-# nOEi6W11GB+JbsVwIf30L7Yd8qiptyclFHppUC3I/TWjDgeyR1xwdUb2x8UcgqM/
-# opy542/qrU7dTeH0G4XribTIo8Xc3NNFf+1MAtwTDVpmEFmDAy5xElRYntaQXYdo
-# AqR5peErlG9wcD7H1wnvffLpltgQrHemSRr+Ebg5rwB/bwY4XC4EHLZCNgudU5Nv
-# Ylim5ngHUdTHZXN+vLWFWwuJnFmCyiul+iDKytWeVOU18jucE+pez/+6/VA66e0b
-# tFGyV07VsFvL/Mj3cc7lHHgeVxiRz8W/SVJVcPB4m/KVYbGyfo373yX0
+# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDcxNjAyMTQyNFowLwYJKoZIhvcN
+# AQkEMSIEIOYiGwp7lzq+IqGIbqqeTaXxvjDOSTSwQ4H3Esa7rn3lMA0GCSqGSIb3
+# DQEBAQUABIICAAxZt0k+oeihpYz0N1u/f9/1auHxxzTTyTWSNKZ8tfJNYgCxOHlS
+# R+tTjNvEmZj75ZZOBgBB1Ksl/+mRjk6l+hk53pOU991kcPq3957FXXolzFClTtTy
+# Uq7nbenYXAoRM9FfaZKzWCN49Eg+EGu0btz1Q4dg1u0ydrRDP8ed15FEVJbkspiQ
+# DxPrdSK/WKmOTxKc9/uOkytfkWIm0pNWSoqTX3OeUBOWFYfxZoWTTYWHntLS5gTg
+# /m5rjJrAC+W8j3UU+IQ9Y38X+OC6LEdfCMKkT8/p809ObpYiiwBfFubo/BKqQEM4
+# rCZLIa8bLVP4cMlBlkMDlmdT5yWKXclIbKyjnrzNvlBjMJ9gqje5xrdncWgd9D8d
+# QmD1NHs2ER4HWBCnFrq8qA3swVTNMl/1rH5BqiecblGErhMtRzTbTN5ri0jama5X
+# 3Dk6NLJ5DX7qZ3haBXx06UjkDQ+IMAlGhyurThXQs9ojMzVvFYbx9dP4DQFc5kZc
+# LBrUJ3HAfc2i39Fb6BZyAQwL2h4B83ISASujS1yVarPhI9ELOZsWvxI+Z+M9OcS0
+# a9W8gItT0W4GQHaisOmASYTkrC0VFRHjDO4jR/+oxX98U3VYoUWnJsImosKe1bLL
+# jPUmqv3XsLDCt0Jvs2gXBoT1YN6p9XLVBj8TT3mP1TrmEXTztQ2ghf0K
 # SIG # End signature block
