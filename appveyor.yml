@@ -1,3 +1,7 @@
+artifacts:
+  - path: TestArtifacts\*.json
+    name: TestArtifacts
+
 skip_commits:
   files:
     - "**/*.md"
@@ -8,10 +12,6 @@ skip_commits:
 
 cache:
   - '%USERPROFILE%\AppData\Local\WindowsOSBuild\Cache -> public\*.ps1, public\*.psm1'
-
-artifacts:
-  - path: TestArtifacts\*.json
-    name: Tests Raw Results
 
 install:
 - ps: |
