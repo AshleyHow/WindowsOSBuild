@@ -411,6 +411,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Hotpatch | Should -Not -BeNullOrEmpty
+                $Results.Baseline | Should -Not -BeNullOrEmpty
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
@@ -430,6 +431,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Hotpatch | Should -Not -BeNullOrEmpty
+                $Results.Baseline | Should -Not -BeNullOrEmpty
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
@@ -467,6 +469,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Hotpatch | Should -Not -BeNullOrEmpty
+                $Results.Baseline | Should -Not -BeNullOrEmpty
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
@@ -504,6 +507,7 @@ If ($PSVersionTable.PSVersion.Major -le 6) {
                 }
                 $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                 $Results.Hotpatch | Should -Not -BeNullOrEmpty
+                $Results.Baseline | Should -Not -BeNullOrEmpty
                 $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                 $Results.'Servicing option' | Should -Not -BeNullOrEmpty
@@ -1024,6 +1028,7 @@ Else {
                     }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Hotpatch | Should -Not -BeNullOrEmpty
+                $Results.Baseline | Should -Not -BeNullOrEmpty
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
@@ -1043,6 +1048,7 @@ Else {
                     }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Hotpatch | Should -Not -BeNullOrEmpty
+                $Results.Baseline | Should -Not -BeNullOrEmpty
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
@@ -1080,6 +1086,7 @@ Else {
                     }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Hotpatch | Should -Not -BeNullOrEmpty
+                $Results.Baseline | Should -Not -BeNullOrEmpty
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
@@ -1117,6 +1124,7 @@ Else {
                     }
                     $Results.'Availability date' | ForEach-Object { Find-ValidDate $_ } | Where-Object { $_ -eq $true }
                     $Results.Hotpatch | Should -Not -BeNullOrEmpty
+                $Results.Baseline | Should -Not -BeNullOrEmpty
                     $Results.Preview | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Out-of-band' | ForEach-Object { Find-TrueOrFalse $_ } | Where-Object { $_ -eq $true }
                     $Results.'Servicing option' | Should -Not -BeNullOrEmpty
@@ -1234,8 +1242,8 @@ Else {
 # SIG # Begin signature block
 # MIImxgYJKoZIhvcNAQcCoIImtzCCJrMCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA4BW74s96Z0rik
-# +d2MBhM8Bl7orOTFk9VHv+PzUkCiRaCCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBJVoJfHw/ngjB3
+# Er58AM6yDysgbzF6OQLyGYvFG8m3p6CCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
 # 5+/bUOIIQBhaMA0GCSqGSIb3DQEBDAUAMGUxCzAJBgNVBAYTAlVTMRUwEwYDVQQK
 # EwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAiBgNV
 # BAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yMjA4MDEwMDAwMDBa
@@ -1412,31 +1420,31 @@ Else {
 # dGEgU3lzdGVtcyBTLkEuMSQwIgYDVQQDExtDZXJ0dW0gQ29kZSBTaWduaW5nIDIw
 # MjEgQ0ECECsHnk4klfQkUFDFircoUVowDQYJYIZIAWUDBAIBBQCggYQwGAYKKwYB
 # BAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAc
-# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQgFgWb
-# hI/hptGqp8yunCwOxyIe6cf0zzRrSXOJy4Hj6ikwDQYJKoZIhvcNAQEBBQAEggGA
-# bzSHHd41umduc9jbAEass1ztkoEDR3/3yPjMkd0/iJoch0/AqmxO5mqa7E8nZNbq
-# ELXbEFUlvKXnrz0jpVkReirieTrh85TnMag6K8p+azujzcp438K2ULMIo09trt8H
-# agY/VqcdSvWV1lXXyiIR21h9g2+JluJeU19hoj9LM9ishKFEbCZ+R6pvJCZwxk+c
-# fDv8jtOpDALA9qiIHfZq0fKbvZPgKsk7/amdGH/fTnrHli0fWFB0sgXKp9Rza1zc
-# YOnJI1j0hEpJe0kPbCZp6xh77RKe79beo+nSKJIQET7+DiWQRX7K6+/3GcDys7uE
-# UGdbXfSR/Dcw0BFr3JP/ln9vAzz9LBScSZF2UfIVyEkNU3qQV/jyvSVqdLwKByfG
-# OI51h0IU3S8h1B5t1oEuiCqxWIq8llD+GEZn+NmLhFzT6jF6mRGAdFlvVL2BbH8q
-# 38HkWHkEgec4S5jBpRYmhcUNRg0PVeCzOkFsyrbOjE+hmUES4Mryx0+EFeFcEpqO
+# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQgF2p+
+# 33cbt0Uu1/HqsfoSEUhxkTT66MQRCaxrcT6weu0wDQYJKoZIhvcNAQEBBQAEggGA
+# 4YQ0fnT1OXAA4ThX/kn8A+DNtowi+8qY8x8C06SOgi1xPCj2LjqHnIzuXZEGc3QM
+# amJcbkhbKXD/Zg/8thHABmC7qIoDWA+HSbAuLZ0uOa2VHP10gu6MQ+g9iC/dWCIJ
+# O9oQ2Ckm5r00283tglejNUyv5aJ6NotXYtYebT5e5GLFFxiXj3xs99XRpiQdDyA/
+# J2zlMi4yVCj7fSqB2NtqWj32qYdJXADOLVweA3bPT1TOcj4K0Mrka5BMXFOL8uQl
+# M43MjiJBzDQp1OBXX+SO8ai2sokiqpl4JNLv1QN8D7oR++d4mt1z2l3IiNYbbnli
+# CviLr3dHOMb3G8S5/bhcNEa2tXxZcOE6phmjBEat+A89/qJQ48kBqRZbL8BCiJ3t
+# zF7x8flP+ksoelThSm9SJ0WzSXRB0g9/HxUQynE/4v7KC4ZmhoK/iFbYk1XkWEJt
+# eWSIFdMtfjey7/kZm3HLCEHIhGap7VHo2AwEOKnAPNPWC2YAUr/jgXbPuMUeloTF
 # oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMCVVMx
 # FzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBUcnVz
 # dGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQCoDv
 # GEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzELBgkq
-# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDcxNjAwMTAwOFowLwYJKoZIhvcN
-# AQkEMSIEIHkudBp7Z+SAmjSgnNmZIHiyDeXXZ8pM4pfBX4Mgwx01MA0GCSqGSIb3
-# DQEBAQUABIICACOSJ9zdKBUfH75qsCI/CwJEVE/8WS1pL2ZFfcfDXf8a9XTLHc+S
-# gP1q6YBNmB9lo8Nwj5OTSWrWS3xBs8M2P7/DjZToh+vkQ8iWDlChLvha3hjwiE2u
-# GjujRPp1T3org9vP2Lm5nCu0yA8IkpkRZ+fJz98Sc0n5sXxlPry6ig74kIKJzGr+
-# JhPiK+Bu9qNp50LXe3XfKupwZGHLDqt38QGJeht09UtQ6ZJzjSyLP3HzjBOH5pnF
-# iAFZleJB/Ibwuji2AXMFm3CT6/VMtzj+og6U5x7LzX61+WGla00l9Lddm/AO5cVg
-# VpZLdmFCJ5n5sXx6Q5NoAR4bnDg7h/1Y5/DGnCFLG539S4QFMUu33pbJM1AbkB4T
-# NKzmoKkkrybg/1Zs5iRUuIcDT2wRqb1lDF561CsHVpLQwgrkWfu87crTSm6N0SUi
-# etfsoOw40WL5pgD+30muHzVrncvjmZxIO8WQYvGCNU2Qkqq/tWevE1Qe1x8kzQV/
-# 3czmE5DM/rd5nWMf6caf9BgiYbzvF6876XDEnt6rs59LCVadL60pM6Ib9GaTgiku
-# m7b50suaX9nwgeJ9TlYVXa2XE/0NZW4sHPOkSkH16FAe4cX2t9JxopwbKMgoprPq
-# ThmWfN/hFCQpixuMEdNIEKATWiprJQGHddjyL6f5aj68Jpm6MNNtGB4+
+# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDcxNjAwNTYwOFowLwYJKoZIhvcN
+# AQkEMSIEIH4DbjdedGY5af3qskF+R66XhF9XccIgTBlrrbQDvvaVMA0GCSqGSIb3
+# DQEBAQUABIICABpbCu//kXb2seBxD0rR4GmqW1WHknv5tgD8mTJjI9fgX9y5k+GE
+# F6hy2rfWUMmiRwz00Q8dyJTEJL7qD1sAyTmVDtpyzK/3k7oTmsLUtQmFb+hrAapT
+# vs7j7h9RAPrRkpw9G5gJZC2/BFG3Fr8cSl7qiwNxPmjrq5Uw00R43HfmvLySjapE
+# U7fjWqFzFORLHjqPTaU/dKEx/fXbMNDZ45kJ8sKrSUTkN1HvaM9Qw77Q03FIzB8T
+# q7bX0gAabtjMy5n+7cV++7XII8zgcJazrcnNEwWUYz+GPqyzR/3H44B4o2OY5zvl
+# ItjXN0/F35ld30fE3tb8NxjB5GnkOlDhSz54p0aNm4ueTfEuzjAC0SmsEe3nYUY6
+# LnN6KtP6zwHu70c+f1JXbyy7+dHvwQT7xtrg0txHAfL/vgHJeZfyPp3Em1vF+oro
+# UI3h+WOmu1wDneuFWX3mD4mL/SpDZ6lf1LPGFnMC+zTjGJPQ3Hh2/z4y0NlJm9s6
+# tJINShjzpD7giX8Q8DacGNgBp4Fs8QBRXbgeUbZQsWsTwQnSvvS2ElyAoU767tbq
+# uA9/8J1L5ctiR97bpxRcktOtwW7pa347id9tkNj5hdlZsoLrY7LKllGgfMK7NdA3
+# jbkMmuZc7nMd+CDpA/7JRHLTzCjmYwR//bF0qTG8K1bDTOG9tw5RhGWu
 # SIG # End signature block

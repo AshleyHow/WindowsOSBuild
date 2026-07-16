@@ -1,7 +1,7 @@
-Function Get-LatestOSBuild {
+﻿Function Get-LatestOSBuild {
     <#
         .SYNOPSIS
-            Gets Windows patch release information (Version, Build, Availability date, Hotpatch, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions.
+            Gets Windows patch release information (Version, Build, Availability date, Hotpatch, Baseline, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions.
             Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows 11, Windows Server 2022 and Windows Server 2025.
         .DESCRIPTION
             Patch information retrieved from Microsoft Release Health / Update History pages and outputted in a usable format.
@@ -951,8 +951,8 @@ Function Get-LatestOSBuild {
 # SIG # Begin signature block
 # MIImxgYJKoZIhvcNAQcCoIImtzCCJrMCAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD5YExfinmbYoFT
-# ZXkwS35+pSm2Rjs0jvyBYgJ2+KWOa6CCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBlUSuYwttVmKtm
+# rVxDkEyZPTo0MfcDuqaOqKTzFvRXa6CCIFYwggWNMIIEdaADAgECAhAOmxiO+dAt
 # 5+/bUOIIQBhaMA0GCSqGSIb3DQEBDAUAMGUxCzAJBgNVBAYTAlVTMRUwEwYDVQQK
 # EwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5jb20xJDAiBgNV
 # BAMTG0RpZ2lDZXJ0IEFzc3VyZWQgSUQgUm9vdCBDQTAeFw0yMjA4MDEwMDAwMDBa
@@ -1129,31 +1129,31 @@ Function Get-LatestOSBuild {
 # dGEgU3lzdGVtcyBTLkEuMSQwIgYDVQQDExtDZXJ0dW0gQ29kZSBTaWduaW5nIDIw
 # MjEgQ0ECECsHnk4klfQkUFDFircoUVowDQYJYIZIAWUDBAIBBQCggYQwGAYKKwYB
 # BAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGCNwIBBDAc
-# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQgfszi
-# 14fPQBrfkxNv2wA+V9PB0rbOIwcl0iDvHWtvSH8wDQYJKoZIhvcNAQEBBQAEggGA
-# 7wcJEZWlfbz7T6WWFW00F0MTQHMmBP0kACOiLoyRN9ndTVLnGEIkG3OLgkfgGFrv
-# cuKboPOU0eWBFg/xWCpUJdIJPOE0Sk36IuAEz1vvCEd1x9DX7UaGCnVmXWWIkRw7
-# xhbdWTBGMpva2Nb0zgMhNlCN5iBehOYCOzvrRVzHMbuTqIpaDIW++mLErNzm8WBQ
-# u+6JcPJMHwuntyvG38gYq/BA1GQgVygDXI7hw4cUlsWgA+UMm/WXtT3GAf8kocI5
-# 5k/cAnBWmBHXJMGBrPeJxxx+03s5ARlAIDNa35ennN17uZ3pD9Q/dZgVmQJ0mBRQ
-# I03AWy5qAzHnFafxvT/ECOSJql/rHkhZVgah38l582I1vGfbVkr0tkF21NLI2eX4
-# xwuLAh4MvZuX2i7nkoEnF1PyZj7HGKjShNrZYLhO3wQ1OnTRcnvInK96ymKwHwU6
-# j7nKjW4A4k7W0PD+tGgJUl9DYQn/Y9z+hIEdZzAM7Bbi8X8DC6IEEKTcrwWMc0jv
+# BgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQxIgQghaGZ
+# Czzmq2SDB/QgNODIxW4/HopClS4WjvkKjY7l64gwDQYJKoZIhvcNAQEBBQAEggGA
+# tISBr1nnpbkwIyh9sY6Syx0xwocTGSNANlqT+D+nj6vHEkU+agQrFa1ItYm4BNMG
+# 6osWiKj3PEzYt4CmVeEhGej/hS7rKGasAKr/7VNRklg9wAQoZmAlRDv3IOANskJn
+# TnOtQNmI1aOvZSfqFS2uh8AICk+mN2KU4WMo2rcy7tI4G/k+vVltgo80B13wGI0g
+# AXWDZvNFQGSlXBBLt2UsHMFNKvVgS0JEGta9YuqekUYbWooaDg8D4K0G/xkFHzwQ
+# SKvKRkGlSbsChkVZPBmwcn28QjpoSnJh0lK8767BKZr1YxDDll9XrlNmmTB1dWPZ
+# epOnTiwH2qZwxycZmOfKhejfAm9BZzkJoeILpljpNqUxzKy+bEthrxdBININOwhN
+# aHtLcry1smx4+WKOOPpva5h8BxnDtkhi3IiEWl1DALBgnSMZv7EXiE6rTuwW2CSz
+# FsaU1jMZyc0kYwWemohR6aWFhFHggjDfJBkg5WE5XmknRw0Hr53Qg95kanzPhx8V
 # oYIDJjCCAyIGCSqGSIb3DQEJBjGCAxMwggMPAgEBMH0waTELMAkGA1UEBhMCVVMx
 # FzAVBgNVBAoTDkRpZ2lDZXJ0LCBJbmMuMUEwPwYDVQQDEzhEaWdpQ2VydCBUcnVz
 # dGVkIEc0IFRpbWVTdGFtcGluZyBSU0E0MDk2IFNIQTI1NiAyMDI1IENBMQIQCoDv
 # GEuN8QWC0cR2p5V0aDANBglghkgBZQMEAgEFAKBpMBgGCSqGSIb3DQEJAzELBgkq
-# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDcxNjAwMTAxMFowLwYJKoZIhvcN
-# AQkEMSIEIKDWcR07MTZpixmIARk6H/C91cQ2+EgStHzq5mlt9sO8MA0GCSqGSIb3
-# DQEBAQUABIICAJPOpK4mVW9lxfI2eEVF8fakGJ6Y2TNSjEIqWmRz2k9GcU9G8txO
-# EirTdYNB/aVRwCFTUTmKaOOKvz9WYDH+e0BOqPEb5C4YW1qanIBRGg7Eww1ovEap
-# ryRElDX9wW79tPbil34yL7i7oZxHe6+raU0WcEuuiH3H7LQtDBkyih241mAvwu9A
-# 3iqZbKw9+r6gs1fTzflmXCof3GUeM04RR8WEqBHM2Tpbz8U4/GpdBBejdMadtZim
-# 1RoUHhCr52gM5QrQghA6+sIPB7jdmgiqs6SsnVFt9vfxdhEUJBNO/Mmv7tZCQxc2
-# l4IDrfG0mh5qRYIZOIqj6gYVliGLpKPE65shdrRaI6Qr5WlAzaAYEDz9MM5a7dJ2
-# SA8BVP6pXp5hqI+ptwPfUDAzKIsiZ63TMuqP0kcEkv5XTFuqVEPtHgtjpfwz5r1V
-# jrTUhP5Dy6+GoEJwmS4KxJKPypUVE/htSlil0Zi29W4QSqQWeJMJknhdR4+aZZCd
-# ZXRuW+2LLa9XAVzIJFIpnKWmbYeMg4/Yt2vFU9dm0vg5IZUR4o0AxC2hYdZ/YFAs
-# MOajPdnaovwjdf6WpBznRNRZYg0DgzpgZHq+xSZSz88u68KzYAGoOibJHaSWp/H2
-# hdSpEHsQCe0BU4Og7sxo1Useerq34tq80+TiwF6qI2M7hA0XkdGpX4Lx
+# hkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI2MDcxNjAwNTYwOVowLwYJKoZIhvcN
+# AQkEMSIEIGBP6VxlJIyo9z6OWCA0ztWZFvEtAxGznuJHuCOgK61BMA0GCSqGSIb3
+# DQEBAQUABIICAH/FZ5Dtl8oWxsxBRxFkkbr9Lar4dCw2KhZze5Ng3hXeMVIo0cV9
+# AXsZFDnI+7TxkAbG6RJDTwuNYRXCm0FwVjWwKLA+2HVH2VPSq5x0l7rPYHUyAeie
+# +LxSHxcPJxkT6UtsGQ4mHqBzzKWDmpQW1g1j0AuK/q7Ab9D18gEgeLtUFIysfHIR
+# 2RnaoN8iVSTBVIbQX9XQ69egXUmYE91sWf19/WDc4ZBEsz2dZ3awSAd8gC2GqnZQ
+# 6Aqb6k7mLTlN/Mc2pgK/dUEaxkzZFzkvlptmjN2L5+AEXYPOgJZs2Y11k30kRR73
+# 8Hght0CoqMgkqX0lnuadyVSg1nbVigMgN5nc+jMm5ZnBdSY/BZNP9IZz+AxxUhab
+# uTQxmA8vFs6mgk4lfWPsZcTYNzJmMvwbDUv8T99Hm2IoqVMbmR6Zht/lxWqUpYvg
+# dGky9GRDOnJWRFSW5UEIH5GO5PctAR0gli01Iy2H/pZM69bfZM1WL/3ETQbdXios
+# Dd12cYPxs17REoGWcnlRlF61HMRYYkhLCyiwKo+qYTbIgdxJnkgzawq5BBZ4DJsE
+# CBjC547C2mcajOmlpRGB3RhIMIoZ3+KtfDPAXCqboQAkimyReza8GuI6B3xqiM6a
+# SmQqdWTpOIPUNRNXoOpTHJDe+uxGWHJPGQr8RcW7H+zhLCNbBK95rPUf
 # SIG # End signature block
