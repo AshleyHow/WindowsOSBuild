@@ -7,7 +7,7 @@
 
 ![alt text](https://github.com/AshleyHow/WindowsOSBuild/blob/main/WindowsOSBuild.png)
 
-Gets Windows patch release information (Version, Build, Availability date, Hotpatch, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows 11, Windows Server 2022 and Windows Server 2025.
+Gets Windows patch release information (Version, Build, Availability date, Hotpatch, Baseline, Preview, Out-of-band, Servicing option, KB article, KB URL and Catalog URL) for Windows client and server versions. Useful for scripting and automation purposes. Supports Windows 10 and Windows Server 2016 onwards. Supports Hotpatch on Windows 11, Windows Server 2022 and Windows Server 2025.
 
 Patch information retrieved from Microsoft Release Health / Update History and relevant Atom feed pages (Preview, Out-of-Band and Hotpatch info) outputted in a usable format. These sources are updated regularly by Microsoft AFTER new patches are released. This means at times this info may not always be in sync with Windows Update.
 
@@ -58,7 +58,7 @@ This parameter is mandatory. OS version number you want to check. Supported acce
 
 | Windows Client OS                          | Version                                                                                                                 |
 | :----------------------------------------- | :-----------------------------------------------------------------------------------------------------------------------|
-| CB/CBB/SAC (Semi-Annual Channel)           | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2, 22H2, 23H2, 24H2, 25H2.                   |
+| CB/CBB/SAC (Semi-Annual Channel)           | 1507, 1511, 1607, 1703, 1709, 1803, 1809, 1903, 1909, 2004, 20H2, 21H1, 21H2, 22H2, 23H2, 24H2, 25H2, 26H1.             |
 | Win 10 LTSB/LTSC                           | 2015 = 1507, 2016 = 1607, 2019 = 1809, 2021 = 21H2.                                                                     |
 | Win 11 LTSC                                | 2024 = 24H2.                                                                                                            |
 
@@ -90,6 +90,18 @@ This parameter is optional. Returns preview release/s only.
   - OutOfBandOnly
 
 This parameter is optional. Returns out-of-band/s only.
+
+  - NoCache
+
+This parameter is optional. Bypasses the local web cache completely for the current command. No cache is read and no cache is written.
+
+  - RefreshCache
+
+This parameter is optional. Forces a fresh download of Microsoft source pages and updates the local cache.
+
+  - CacheTTLHours / TTL
+
+This parameter is optional. Defines cache lifetime in hours. Alias: TTL. Default: 8. Range: 0.01 to 720.
 
 ## Get-CurrentOSBuild Function
 
